@@ -29,12 +29,12 @@ jobs:
         run: npm ci --force
 
       - name: Build
-        run: npm run build
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://hcmgdztsgjvzcyxyayaj.supabase.co' }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_vYCKlU2lbPkXpUDj1sILow_DskJCRVS' }}
-          NEXT_PUBLIC_IMP_CODE: ${{ secrets.NEXT_PUBLIC_IMP_CODE || 'imp61949262' }}
-          NEXT_PUBLIC_PG_PROVIDER: ${{ secrets.NEXT_PUBLIC_PG_PROVIDER || 'html5_inicis.MOIkorcom1' }}
+        run: |
+          export NEXT_PUBLIC_SUPABASE_URL="https://hcmgdztsgjvzcyxyayaj.supabase.co"
+          export NEXT_PUBLIC_SUPABASE_ANON_KEY="sb_publishable_vYCKlU2lbPkXpUDj1sILow_DskJCRVS"
+          export NEXT_PUBLIC_IMP_CODE="imp61949262"
+          export NEXT_PUBLIC_PG_PROVIDER="html5_inicis.MOIkorcom1"
+          npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
