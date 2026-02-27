@@ -107,12 +107,28 @@ books.dreamitbiz.com에서 구매/결제를 사이트 내에서 직접 처리하
           내 서재에서 구매 도서 확인/읽기
 ```
 
-## 빌드 이슈 및 해결
+## 이슈 및 해결
 
-1. **`useSearchParams()` Suspense 필요**
-   - 문제: checkout/success 페이지에서 `useSearchParams()` 사용 시 빌드 실패
-   - 원인: Next.js 16에서 CSR bailout 방지를 위해 Suspense 경계 필수
-   - 해결: 컴포넌트를 분리하고 `<Suspense>` 래핑
+### 1. `useSearchParams()` Suspense 필요
+- **문제**: checkout/success 페이지에서 `useSearchParams()` 사용 시 빌드 실패
+- **원인**: Next.js 16에서 CSR bailout 방지를 위해 Suspense 경계 필수
+- **해결**: 컴포넌트를 분리하고 `<Suspense>` 래핑
+
+### 2. 로그인 흐름 버그 5건 (2d609e7)
+| # | 문제 | 수정 |
+|---|------|------|
+| 1 | LoginModal 재오픈 시 이전 입력/에러 잔류 | `useEffect(open)` → email/password/error 초기화 |
+| 2 | PaymentForm 자동채움 — `\|\|` 연산자로 입력 수정 불가 | `useEffect`로 초기값만 세팅, 이후 자유 수정 |
+| 3 | 체크아웃에서 로그인 후 수동 재결제 필요 | `pendingSubmit` ref → 로그인 성공 시 `requestSubmit()` 자동 호출 |
+| 4 | 로그아웃 시 토스트 알림 없음 | `logout()` 후 `toast('로그아웃되었습니다', 'info')` 추가 |
+| 5 | 토큰 없는데 매번 `/auth/me` API 호출 | `localStorage.getItem('auth_token')` 확인 후 없으면 호출 생략 |
+
+### 3. 로그인/로그아웃 모달·드롭다운 위치 오류 (74ddeae)
+- **문제**: Dialog(로그인 모달)와 UserMenu(로그아웃 드롭다운)가 `<header sticky z-50>` 안에서 렌더링되어 헤더의 스태킹 컨텍스트에 갇힘 → 화면 상단에 붙어 표시
+- **원인**: CSS stacking context — 부모(`header`)가 `position: sticky; z-index: 50`으로 스태킹 컨텍스트를 생성하면, 자식의 `position: fixed; z-index`가 부모 레이어 안에 한정됨
+- **해결**:
+  - `Dialog`: `createPortal(…, document.body)` + `z-[9999]` — body 직접 렌더링으로 헤더 탈출
+  - `UserMenu` 드롭다운: `createPortal` + `getBoundingClientRect()` — 버튼 위치 기반 fixed 포지셔닝, `z-[9998]`
 
 ## 파일 구조
 
