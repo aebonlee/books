@@ -212,7 +212,21 @@ src/
     └── en.json              ← MODIFIED (동일 영어 번역)
 ```
 
-### 5. 코드 품질 개선 (2de1a18)
+### 5. 배포 후 클라이언트 사이드 에러 (65d6340)
+- **문제**: `books.dreamitbiz.com/ko` 접속 시 "Application error: a client-side exception has occurred" 표시
+- **분석**:
+  - 로컬 빌드는 정상 (52 pages)
+  - GitHub Actions 배포도 성공
+  - 배포된 JS 청크에서 Supabase URL(`hcmgdztsgjvzcyxyayaj`)이 인라인되지 않은 것을 확인
+  - `@supabase/realtime-js` → `ws` 패키지의 browser.js가 `throw Error('ws does not work in the browser')` 포함
+  - 정확한 에러 원인 파악이 어려워 방어적 코딩으로 해결
+- **해결**:
+  - `providers.tsx` — **ErrorBoundary** 클래스 컴포넌트 추가, 에러 시 "문제가 발생했습니다" + 실제 에러 메시지 표시
+  - `supabase.ts` — `createClient`를 try-catch로 감쌈, `initFailed` 플래그로 실패 시 재시도 방지
+  - `auth-context.tsx` — `onAuthStateChange` 전체를 try-catch로 감쌈, 실패 시 `isLoading=false` 강제 해제
+  - `cart-context.tsx` — `saveCart`에 `typeof window` 체크 + try-catch 추가
+
+### 6. 코드 품질 개선 (2de1a18)
 
 | # | 항목 | 변경 |
 |---|------|------|
@@ -220,7 +234,7 @@ src/
 | 2 | 에러 silent catch | `purchases.ts`, `orders.ts`, `library/page.tsx`에 `console.error` 로깅 추가 |
 | 3 | 관리자 이메일 하드코딩 | `ADMIN_EMAILS` → `NEXT_PUBLIC_ADMIN_EMAILS` 환경변수로 외부화 (기본값 유지) |
 
-### 6. 전체 통합 검증 체크리스트
+### 7. 전체 통합 검증 체크리스트
 
 | 항목 | 상태 |
 |------|------|
