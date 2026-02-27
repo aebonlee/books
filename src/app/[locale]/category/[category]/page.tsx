@@ -57,7 +57,7 @@ export default async function CategoryPage({
         </p>
       </div>
 
-      <BookGrid books={books} locale={locale} />
+      <BookGrid books={books} locale={locale} layout={categorySlug === 'lectures' ? 'landscape' : 'portrait'} />
     </div>
   );
 }
