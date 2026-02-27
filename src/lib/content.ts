@@ -26,7 +26,18 @@ export function getBookBySlug(slug: string): Book | undefined {
   return getBooks().find((book) => book.slug === slug);
 }
 
-export function getBooksByCategory(category: ContentCategory): Book[] {
+/** 디스플레이 카테고리 → 실제 콘텐츠 카테고리 매핑 */
+const categoryMapping: Record<string, ContentCategory[]> = {
+  digital: ['digital'],
+  textbooks: ['textbooks', 'publications'],
+  lectures: ['lectures', 'workbooks'],
+};
+
+export function getBooksByCategory(category: ContentCategory | string): Book[] {
+  const mapped = categoryMapping[category];
+  if (mapped) {
+    return getAllBooks().filter((book) => mapped.includes(book.category));
+  }
   return getAllBooks().filter((book) => book.category === category);
 }
 

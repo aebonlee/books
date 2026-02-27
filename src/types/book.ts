@@ -55,7 +55,7 @@ export interface TocItem {
 }
 
 export interface CategoryInfo {
-  slug: ContentCategory;
+  slug: string;
   nameKo: string;
   nameEn: string;
   descriptionKo: string;

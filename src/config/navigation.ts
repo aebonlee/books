@@ -6,36 +6,11 @@ export interface NavItem {
 }
 
 export const mainNav: NavItem[] = [
-  {
-    titleKo: '전체 카탈로그',
-    titleEn: 'Catalog',
-    href: '/catalog',
-  },
-  {
-    titleKo: '간행물',
-    titleEn: 'Publications',
-    href: '/category/publications',
-  },
-  {
-    titleKo: '교재',
-    titleEn: 'Textbooks',
-    href: '/category/textbooks',
-  },
-  {
-    titleKo: '강의안',
-    titleEn: 'Lectures',
-    href: '/category/lectures',
-  },
-  {
-    titleKo: '실습교재',
-    titleEn: 'Workbooks',
-    href: '/category/workbooks',
-  },
-  {
-    titleKo: '디지털교과서',
-    titleEn: 'Digital',
-    href: '/category/digital',
-  },
+  { titleKo: '전체 카탈로그', titleEn: 'Catalog', href: '/catalog' },
+  { titleKo: '전자출판', titleEn: 'E-Publishing', href: '/category/digital' },
+  { titleKo: '도서 & 교육교재', titleEn: 'Books & Textbooks', href: '/category/textbooks' },
+  { titleKo: '강의안 및 실습자료', titleEn: 'Lectures & Labs', href: '/category/lectures' },
+  { titleKo: '맞춤 제작의뢰', titleEn: 'Custom Request', href: '/custom-order' },
 ];
 
 export const footerNav = {

@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import { BookGrid } from '@/components/book/book-grid';
 import { categories, getCategoryBySlug } from '@/config/categories';
 import { getBooksByCategory } from '@/lib/content';
-import type { ContentCategory } from '@/types/book';
 
 export function generateStaticParams() {
   return categories.map((cat) => ({ category: cat.slug }));
@@ -35,19 +34,16 @@ export default async function CategoryPage({
   const category = getCategoryBySlug(categorySlug);
   if (!category) notFound();
 
-  const books = getBooksByCategory(categorySlug as ContentCategory);
+  const books = getBooksByCategory(categorySlug);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-8">
         <div className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full ${category.color} text-white`}>
           <span className="text-xl">
-            {category.icon === 'BookOpen' && '📖'}
-            {category.icon === 'Newspaper' && '📰'}
+            {category.icon === 'Tablet' && '📱'}
             {category.icon === 'GraduationCap' && '🎓'}
             {category.icon === 'Presentation' && '📊'}
-            {category.icon === 'Code' && '💻'}
-            {category.icon === 'Tablet' && '📱'}
           </span>
         </div>
         <h1 className="text-3xl font-bold text-gray-900">

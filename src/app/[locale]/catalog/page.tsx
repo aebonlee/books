@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { categories } from '@/config/categories';
 import { getAllBooks } from '@/lib/content';
 import { Search, X } from 'lucide-react';
-import type { ContentCategory } from '@/types/book';
 
 export default function CatalogPage() {
   const t = useTranslations('catalog');
@@ -40,9 +39,15 @@ export default function CatalogPage() {
       );
     }
 
-    // Category filter
+    // Category filter (with merged category mapping)
     if (selectedCategory !== 'all') {
-      books = books.filter((b) => b.category === selectedCategory);
+      const categoryMap: Record<string, string[]> = {
+        digital: ['digital'],
+        textbooks: ['textbooks', 'publications'],
+        lectures: ['lectures', 'workbooks'],
+      };
+      const mapped = categoryMap[selectedCategory] || [selectedCategory];
+      books = books.filter((b) => mapped.includes(b.category));
     }
 
     // Free only filter
