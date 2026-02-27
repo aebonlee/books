@@ -16,7 +16,9 @@ import {
 } from 'lucide-react';
 
 export function generateStaticParams() {
-  return getAllBooks().map((book) => ({ slug: book.slug }));
+  const books = getAllBooks();
+  if (books.length === 0) return [{ slug: '_' }];
+  return books.map((book) => ({ slug: book.slug }));
 }
 
 export async function generateMetadata({

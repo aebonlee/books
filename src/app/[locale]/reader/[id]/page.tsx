@@ -1,19 +1,12 @@
 import { setRequestLocale } from 'next-intl/server';
 import { ReaderClient } from './reader-client';
 
+import { getAllBooks } from '@/lib/content';
+
 export function generateStaticParams() {
-  const slugs = [
-    'python-programming-basics',
-    'ai-trends-2025',
-    'cloud-computing-news',
-    'web-development-lecture',
-    'database-workshop',
-    'interactive-javascript',
-  ];
-  const locales = ['ko', 'en'];
-  return locales.flatMap((locale) =>
-    slugs.map((id) => ({ locale, id }))
-  );
+  const books = getAllBooks();
+  if (books.length === 0) return [{ id: '_' }];
+  return books.map((book) => ({ id: book.slug }));
 }
 
 export default async function ReaderPage({
