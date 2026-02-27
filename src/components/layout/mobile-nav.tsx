@@ -4,7 +4,7 @@ import { useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { mainNav } from '@/config/navigation';
 import { Separator } from '@/components/ui/separator';
-import { ShoppingCart, BookOpen, LogIn } from 'lucide-react';
+import { ShoppingCart, BookOpen } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
 
 interface MobileNavProps {
@@ -50,11 +50,10 @@ export function MobileNav({ onClose }: MobileNavProps) {
         {!isLoggedIn && (
           <Link
             href="/login"
-            className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-blue-600"
+            className="mt-1 mx-3 inline-flex items-center justify-center rounded-full bg-blue-600 px-[14px] py-[5px] text-[12px] font-semibold text-white tracking-wide transition-all hover:bg-blue-700"
             onClick={onClose}
           >
-            <LogIn className="h-4 w-4" />
-            {locale === 'ko' ? '로그인' : 'Login'}
+            Login
           </Link>
         )}
       </nav>

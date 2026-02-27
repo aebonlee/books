@@ -7,7 +7,7 @@ import { Link, usePathname } from '@/i18n/navigation';
 import { useAuth } from '@/contexts/auth-context';
 import { useToast } from '@/components/ui/toast';
 import { Button } from '@/components/ui/button';
-import { User, BookOpen, LogOut, LogIn } from 'lucide-react';
+import { User, BookOpen, LogOut } from 'lucide-react';
 
 export function UserMenu() {
   const locale = useLocale();
@@ -66,14 +66,11 @@ export function UserMenu() {
   if (!isLoggedIn) {
     const loginHref = `/login?from=${encodeURIComponent(pathname)}`;
     return (
-      <Link href={loginHref}>
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label={locale === 'ko' ? '로그인' : 'Login'}
-        >
-          <LogIn className="h-4 w-4" />
-        </Button>
+      <Link
+        href={loginHref}
+        className="inline-flex items-center justify-center rounded-full bg-blue-600 px-[18px] py-[7px] text-[13px] font-semibold text-white tracking-wide transition-all hover:bg-blue-700 hover:-translate-y-px hover:shadow-[0_4px_12px_rgba(0,70,200,0.3)]"
+      >
+        Login
       </Link>
     );
   }
