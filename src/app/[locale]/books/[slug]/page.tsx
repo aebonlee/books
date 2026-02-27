@@ -4,16 +4,12 @@ import Image from 'next/image';
 import { getAllBooks, getBookBySlug, getRelatedBooks } from '@/lib/content';
 import { BookGrid } from '@/components/book/book-grid';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { getCategoryName } from '@/config/categories';
-import { formatPrice, formatDate } from '@/lib/utils';
-import { siteConfig } from '@/config/site';
+import { formatDate } from '@/lib/utils';
+import { BookCTA } from './book-cta';
 import {
   BookOpen,
   Calendar,
-  Download,
-  Eye,
-  ShoppingCart,
   Tag,
   User,
   FileText,
@@ -131,48 +127,8 @@ export default async function BookDetailPage({
           )}
 
           {/* Price & Actions */}
-          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
-            {/* Price */}
-            <div className="text-2xl font-bold text-gray-900">
-              {book.isFree ? (
-                <span className="text-green-600">{locale === 'ko' ? '무료' : 'Free'}</span>
-              ) : book.price ? (
-                formatPrice(book.price, locale)
-              ) : null}
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex gap-3">
-              {book.isFree ? (
-                <>
-                  {book.assets.some((a) => a.type === 'pdf' || a.type === 'epub') && (
-                    <Button>
-                      <Download className="mr-2 h-4 w-4" />
-                      {locale === 'ko' ? '다운로드' : 'Download'}
-                    </Button>
-                  )}
-                  <Button variant="outline">
-                    <Eye className="mr-2 h-4 w-4" />
-                    {locale === 'ko' ? '온라인 읽기' : 'Read Online'}
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <a href={`${siteConfig.links.cart}?book=${book.slug}`}>
-                    <Button>
-                      <ShoppingCart className="mr-2 h-4 w-4" />
-                      {locale === 'ko' ? '구매하기' : 'Buy Now'}
-                    </Button>
-                  </a>
-                  {book.sampleUrl && (
-                    <Button variant="outline">
-                      <Eye className="mr-2 h-4 w-4" />
-                      {locale === 'ko' ? '미리보기' : 'Preview'}
-                    </Button>
-                  )}
-                </>
-              )}
-            </div>
+          <div className="mt-8">
+            <BookCTA book={book} />
           </div>
 
           {/* Available Formats */}

@@ -66,6 +66,56 @@
     "relatedBooks": "Related Books",
     "description": "Description"
   },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "emptyDescription": "Add some books to your cart to get started",
+    "items": "{count} item(s)",
+    "clearAll": "Clear All",
+    "continueShopping": "Continue Shopping",
+    "proceedToCheckout": "Proceed to Checkout",
+    "addedToCart": "Added to cart",
+    "viewCart": "View Cart",
+    "addToCart": "Add to Cart",
+    "buyNow": "Buy Now"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "backToCart": "Back to Cart",
+    "emptyCart": "No items to checkout",
+    "emptyCartDescription": "Please add items to your cart first",
+    "buyerInfo": "Buyer Information",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "paymentMethod": "Payment Method",
+    "cardPayment": "Credit Card",
+    "cardPaymentDescription": "Pay with credit or debit card",
+    "agreeToPayment": "I have reviewed my order and agree to proceed with payment",
+    "payNow": "Pay Now",
+    "orderSummary": "Order Summary",
+    "total": "Total"
+  },
+  "payment": {
+    "success": "Payment Complete!",
+    "successDescription": "Thank you for your purchase. Check your library for the purchased books.",
+    "orderId": "Order ID",
+    "goToLibrary": "Go to Library",
+    "continueBrowsing": "Continue Browsing",
+    "error": "An error occurred during payment",
+    "verificationFailed": "Payment verification failed"
+  },
+  "auth": {
+    "login": "Login",
+    "loginDescription": "Please login to continue with your purchase",
+    "email": "Email",
+    "password": "Password",
+    "loginSuccess": "Logged in successfully",
+    "loginError": "Invalid email or password",
+    "noAccount": "Don't have an account?",
+    "register": "Register",
+    "logoutSuccess": "Logged out successfully"
+  },
   "library": {
     "title": "My Library",
     "description": "Manage your purchased content",

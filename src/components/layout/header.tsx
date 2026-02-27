@@ -7,12 +7,13 @@ import { mainNav } from '@/config/navigation';
 import { siteConfig } from '@/config/site';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { CartIcon } from '@/components/commerce/cart-icon';
+import { UserMenu } from '@/components/commerce/user-menu';
 import { MobileNav } from './mobile-nav';
 import {
   BookOpen,
   Search,
   Globe,
-  User,
   Menu,
   X,
 } from 'lucide-react';
@@ -96,12 +97,11 @@ export function Header() {
             <Globe className="h-4 w-4" />
           </Button>
 
-          {/* Login */}
-          <a href={siteConfig.links.login}>
-            <Button variant="ghost" size="icon" aria-label={t('login')}>
-              <User className="h-4 w-4" />
-            </Button>
-          </a>
+          {/* Cart */}
+          <CartIcon />
+
+          {/* User Menu */}
+          <UserMenu />
 
           {/* Mobile Menu Toggle */}
           <Button

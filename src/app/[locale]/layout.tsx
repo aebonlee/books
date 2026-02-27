@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
+import { Providers } from '@/components/providers';
 import { siteConfig } from '@/config/site';
 import '@/app/globals.css';
 
@@ -49,11 +50,13 @@ export default async function LocaleLayout({
     <html lang={locale} suppressHydrationWarning>
       <body className="min-h-screen bg-white font-sans antialiased">
         <NextIntlClientProvider messages={messages}>
-          <div className="relative flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
+          <Providers>
+            <div className="relative flex min-h-screen flex-col">
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
+          </Providers>
         </NextIntlClientProvider>
       </body>
     </html>
