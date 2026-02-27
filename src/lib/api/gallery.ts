@@ -49,7 +49,7 @@ export async function getGalleryItemsByCategory(
   if (!client) return [];
 
   const { data, error } = await client
-    .from('gallery_items')
+    .from('pub_gallery_items')
     .select('*')
     .eq('category', category)
     .eq('is_published', true)
@@ -72,7 +72,7 @@ export async function getGalleryItemsAdmin(
   if (!client) return [];
 
   let query = client
-    .from('gallery_items')
+    .from('pub_gallery_items')
     .select('*')
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: false });
@@ -99,7 +99,7 @@ export async function createGalleryItem(
   if (!client) throw new Error('Supabase not configured');
 
   const { data, error } = await client
-    .from('gallery_items')
+    .from('pub_gallery_items')
     .insert(itemData)
     .select()
     .single();
@@ -117,7 +117,7 @@ export async function updateGalleryItem(
   if (!client) throw new Error('Supabase not configured');
 
   const { data, error } = await client
-    .from('gallery_items')
+    .from('pub_gallery_items')
     .update(itemData)
     .eq('id', id)
     .select()
@@ -133,7 +133,7 @@ export async function deleteGalleryItem(id: number): Promise<void> {
   if (!client) throw new Error('Supabase not configured');
 
   const { error } = await client
-    .from('gallery_items')
+    .from('pub_gallery_items')
     .delete()
     .eq('id', id);
 
