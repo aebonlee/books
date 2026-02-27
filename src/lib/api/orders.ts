@@ -1,6 +1,21 @@
 import { getSupabase } from '@/lib/supabase';
 import type { OrderRequest, OrderResponse } from '@/types/commerce';
 
+/** 마지막 주문의 전화번호 조회 (자동 채우기용) */
+export async function getLastBuyerPhone(userId: string): Promise<string> {
+  const client = getSupabase();
+  if (!client) return '';
+  const { data } = await client
+    .from('orders')
+    .select('user_phone')
+    .eq('user_id', userId)
+    .not('user_phone', 'is', null)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+  return data?.user_phone || '';
+}
+
 export async function createOrder(data: OrderRequest): Promise<OrderResponse> {
   const client = getSupabase();
 

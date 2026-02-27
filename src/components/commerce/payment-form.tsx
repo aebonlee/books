@@ -12,7 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { OrderSummary } from './order-summary';
 import { LoginModal } from './login-modal';
-import { createOrder, verifyPayment } from '@/lib/api';
+import { createOrder, verifyPayment, getLastBuyerPhone } from '@/lib/api';
 import { requestPayment } from '@/lib/payment/pg-bridge';
 import type { PaymentMethod } from '@/types/commerce';
 import { CreditCard, Loader2, ShieldCheck } from 'lucide-react';
@@ -55,8 +55,17 @@ export function PaymentForm() {
     if (user || profile) {
       const name = profile?.display_name || user?.user_metadata?.full_name || '';
       const email = profile?.email || user?.email || '';
+      const phone = user?.phone || user?.user_metadata?.phone || '';
       setBuyerName((prev) => prev || name);
       setBuyerEmail((prev) => prev || email);
+      if (phone) setBuyerPhone((prev) => prev || phone);
+
+      // 이전 주문에서 전화번호 가져오기
+      if (!phone && user?.id) {
+        getLastBuyerPhone(user.id).then((p) => {
+          if (p) setBuyerPhone((prev) => prev || p);
+        });
+      }
     }
   }, [user, profile]);
 
