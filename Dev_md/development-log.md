@@ -395,3 +395,84 @@ Cloudflare DNS 패널에서 다음 레코드를 확인/추가:
 - `185.199.111.153`
 
 > **주의**: Cloudflare 프록시(주황색 구름)를 켜면 GitHub Pages HTTPS 인증서 발급이 실패할 수 있음. 초기 설정 시 "DNS only"로 설정 권장.
+
+---
+
+## 관리자용 갤러리 게시판 시스템 (Supabase CRUD + 장바구니) ✅
+
+### 배경
+전자출판 / 도서&교육교재 / 강의안및실습자료 3개 카테고리 페이지를 관리자가 CRUD로 관리하는 동적 갤러리 게시판으로 전환.
+- **기존**: Velite MDX 정적 빌드 콘텐츠 (빌드 타임에 결정)
+- **변경**: Supabase `gallery_items` 테이블 → 클라이언트 사이드 동적 로딩
+- 관리자가 항목 등록/수정/삭제, 카테고리 구분, 장바구니 연동
+
+### 구현 내용
+
+#### Phase 1: 데이터베이스 (SQL — Supabase 대시보드에서 수동 실행)
+- `gallery_items` 테이블 생성
+  - `id`, `slug`, `title`, `title_en`, `description`, `description_en`, `category`, `cover_image`, `price`, `is_free`, `featured`, `sort_order`, `is_published`, `author_name`, `tags`, `created_at`, `updated_at`
+  - `category` CHECK: `'digital'`, `'textbooks'`, `'lectures'`
+  - `updated_at` 자동 갱신 트리거
+- RLS 정책:
+  - `gallery_public_read`: 공개 항목 누구나 읽기
+  - `gallery_admin_*`: 관리자 이메일(`aebon@kakao.com`, `aebon@kyonggi.ac.kr`)만 INSERT/UPDATE/DELETE
+- 인덱스: `(category, is_published, sort_order)`
+
+#### Phase 2: API 모듈 — `src/lib/api/gallery.ts` (신규)
+기존 `custom-requests.ts`와 동일한 패턴으로 구현:
+
+| 함수 | 용도 |
+|------|------|
+| `getGalleryItemsByCategory(category)` | 공개 항목 조회 (카테고리 페이지) |
+| `getGalleryItemsAdmin(category?)` | 전체 항목 조회 (관리자, 비공개 포함) |
+| `createGalleryItem(data)` | 항목 생성 |
+| `updateGalleryItem(id, data)` | 항목 수정 |
+| `deleteGalleryItem(id)` | 항목 삭제 |
+| `uploadCoverImage(file, slug)` | Supabase Storage 이미지 업로드 |
+
+`src/lib/api/index.ts`에 gallery 관련 함수/타입 re-export 추가.
+
+#### Phase 3: 갤러리 카드 — `src/components/gallery/gallery-card.tsx` (신규)
+- 기존 `BookCard` 패턴을 따르되, GalleryItem 데이터 모델에 맞게 구현
+- `layout` prop: `portrait` (3:4 비율) / `landscape` (4:3 비율)
+- 인라인 장바구니 버튼: `useCart().addItem()` 호출
+- 뱃지: 추천(featured), 무료(is_free)
+- 이미 장바구니에 있으면 체크 아이콘 표시
+
+#### Phase 4: 카테고리 페이지 전환
+- **`gallery-grid-client.tsx` (신규)**: `'use client'` 컴포넌트, `useEffect`로 `getGalleryItemsByCategory()` 호출
+  - 로딩 스켈레톤 → 빈 상태 → GalleryCard 그리드 렌더링
+- **`page.tsx` (수정)**: Velite `getBooksByCategory` + `BookGrid` 제거 → `<GalleryGridClient>` 교체
+  - `generateStaticParams()`, `generateMetadata()` 유지 (정적 셸)
+
+#### Phase 5: 관리자 페이지 — `src/app/[locale]/admin/gallery/page.tsx` (신규)
+- **접근 제어**: `useAuth().isAdmin` → 비관리자 "접근 권한 없음" 표시
+- **테이블 뷰**: 이미지 썸네일, 제목, 카테고리, 가격, 공개/추천 상태, 수정/삭제 버튼
+- **카테고리 필터**: 전체/전자출판/도서&교육교재/강의안및실습자료 탭
+- **생성/수정 Dialog 폼**: 제목(한/영), 슬러그(auto-generate), 카테고리, 설명(한/영), 커버 이미지(URL 또는 파일 업로드), 가격, 무료/추천/공개 체크박스, 정렬 순서, 저자명, 태그
+
+#### Phase 6: i18n 추가
+`ko.json` / `en.json`에 `gallery` + `admin.gallery` 섹션 추가.
+
+### 파일 변경 요약
+
+| 파일 | 작업 |
+|------|------|
+| `src/lib/api/gallery.ts` | **신규** — Supabase CRUD + 이미지 업로드 |
+| `src/lib/api/index.ts` | **수정** — gallery re-export 추가 |
+| `src/components/gallery/gallery-card.tsx` | **신규** — 갤러리 카드 (장바구니 버튼) |
+| `src/app/[locale]/category/[category]/gallery-grid-client.tsx` | **신규** — 클라이언트 갤러리 그리드 |
+| `src/app/[locale]/category/[category]/page.tsx` | **수정** — Velite→Supabase 전환 |
+| `src/app/[locale]/admin/gallery/page.tsx` | **신규** — 관리자 CRUD 대시보드 |
+| `src/i18n/messages/ko.json` | **수정** — gallery, admin.gallery 메시지 |
+| `src/i18n/messages/en.json` | **수정** — gallery, admin.gallery 메시지 |
+
+### 빌드 결과
+- `npm run build` 성공 — 52 pages
+- `/ko/admin/gallery`, `/en/admin/gallery` 정적 생성 확인
+- 카테고리 페이지 3개 정상 빌드
+
+### Supabase 설정 필요 사항
+1. SQL Editor에서 테이블/RLS/트리거 생성 (Phase 1 SQL)
+2. Storage에 `public-assets` 버킷 생성 (이미지 업로드용)
+3. Storage 정책: 인증 사용자 업로드, 공개 읽기

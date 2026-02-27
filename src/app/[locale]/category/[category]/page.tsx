@@ -1,8 +1,8 @@
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { BookGrid } from '@/components/book/book-grid';
 import { categories, getCategoryBySlug } from '@/config/categories';
-import { getBooksByCategory } from '@/lib/content';
+import { GalleryGridClient } from './gallery-grid-client';
+import type { GalleryCategory } from '@/lib/api/gallery';
 
 export function generateStaticParams() {
   return categories.map((cat) => ({ category: cat.slug }));
@@ -34,8 +34,6 @@ export default async function CategoryPage({
   const category = getCategoryBySlug(categorySlug);
   if (!category) notFound();
 
-  const books = getBooksByCategory(categorySlug);
-
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-8">
@@ -52,12 +50,13 @@ export default async function CategoryPage({
         <p className="mt-2 text-gray-600">
           {locale === 'ko' ? category.descriptionKo : category.descriptionEn}
         </p>
-        <p className="mt-1 text-sm text-gray-400">
-          {books.length} {locale === 'ko' ? '권' : 'books'}
-        </p>
       </div>
 
-      <BookGrid books={books} locale={locale} layout={categorySlug === 'lectures' ? 'landscape' : 'portrait'} />
+      <GalleryGridClient
+        category={categorySlug as GalleryCategory}
+        locale={locale}
+        layout={categorySlug === 'lectures' ? 'landscape' : 'portrait'}
+      />
     </div>
   );
 }
