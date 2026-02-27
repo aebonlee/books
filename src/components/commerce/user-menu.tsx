@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { useAuth } from '@/contexts/auth-context';
+import { useToast } from '@/components/ui/toast';
 import { Button } from '@/components/ui/button';
 import { LoginModal } from './login-modal';
 import { User, BookOpen, LogOut, LogIn } from 'lucide-react';
@@ -11,6 +12,7 @@ import { User, BookOpen, LogOut, LogIn } from 'lucide-react';
 export function UserMenu() {
   const locale = useLocale();
   const { user, isAuthenticated, isLoading, logout } = useAuth();
+  const { toast } = useToast();
   const [menuOpen, setMenuOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -80,6 +82,10 @@ export function UserMenu() {
             onClick={() => {
               logout();
               setMenuOpen(false);
+              toast(
+                locale === 'ko' ? '로그아웃되었습니다' : 'Logged out successfully',
+                'info',
+              );
             }}
             className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
           >

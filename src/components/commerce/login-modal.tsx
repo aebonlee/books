@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { useAuth } from '@/contexts/auth-context';
 import { useToast } from '@/components/ui/toast';
@@ -29,6 +29,15 @@ export function LoginModal({ open, onClose, onSuccess }: LoginModalProps) {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // 모달 열릴 때 폼 초기화
+  useEffect(() => {
+    if (open) {
+      setEmail('');
+      setPassword('');
+      setError('');
+    }
+  }, [open]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

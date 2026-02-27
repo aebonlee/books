@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/contexts/auth-context';
@@ -31,16 +31,31 @@ export function PaymentForm() {
   const [buyerPhone, setBuyerPhone] = useState('');
   const [paymentMethod] = useState<PaymentMethod>('card');
   const [agreed, setAgreed] = useState(false);
+  const pendingSubmit = useRef(false);
 
-  // Pre-fill from user
-  const name = buyerName || user?.name || '';
-  const email = buyerEmail || user?.email || '';
-  const phone = buyerPhone || user?.phone || '';
+  // 로그인 사용자 정보로 초기값 세팅 (최초 1회)
+  useEffect(() => {
+    if (user) {
+      setBuyerName((prev) => prev || user.name || '');
+      setBuyerEmail((prev) => prev || user.email || '');
+      setBuyerPhone((prev) => prev || user.phone || '');
+    }
+  }, [user]);
+
+  // 로그인 성공 후 대기 중인 결제 자동 재시도
+  useEffect(() => {
+    if (isAuthenticated && pendingSubmit.current) {
+      pendingSubmit.current = false;
+      const form = document.getElementById('checkout-form') as HTMLFormElement;
+      form?.requestSubmit();
+    }
+  }, [isAuthenticated]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!isAuthenticated) {
+      pendingSubmit.current = true;
       setLoginOpen(true);
       return;
     }
@@ -57,7 +72,7 @@ export function PaymentForm() {
           price: i.price,
           quantity: i.quantity,
         })),
-        buyer: { name, email, phone },
+        buyer: { name: buyerName, email: buyerEmail, phone: buyerPhone },
         paymentMethod,
       });
 
@@ -99,7 +114,7 @@ export function PaymentForm() {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-8 lg:grid-cols-5">
+      <form id="checkout-form" onSubmit={handleSubmit} className="grid grid-cols-1 gap-8 lg:grid-cols-5">
         {/* Left: Buyer info + payment */}
         <div className="lg:col-span-3 space-y-6">
           <div>
@@ -114,7 +129,7 @@ export function PaymentForm() {
                 </Label>
                 <Input
                   id="buyerName"
-                  value={name}
+                  value={buyerName}
                   onChange={(e) => setBuyerName(e.target.value)}
                   required
                   className="mt-1"
@@ -127,7 +142,7 @@ export function PaymentForm() {
                 <Input
                   id="buyerEmail"
                   type="email"
-                  value={email}
+                  value={buyerEmail}
                   onChange={(e) => setBuyerEmail(e.target.value)}
                   required
                   className="mt-1"
@@ -140,7 +155,7 @@ export function PaymentForm() {
                 <Input
                   id="buyerPhone"
                   type="tel"
-                  value={phone}
+                  value={buyerPhone}
                   onChange={(e) => setBuyerPhone(e.target.value)}
                   required
                   placeholder="010-0000-0000"

@@ -27,6 +27,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   const refreshUser = useCallback(async () => {
+    // 토큰이나 쿠키가 없으면 API 호출 생략 (불필요한 네트워크 에러 방지)
+    const hasToken = typeof window !== 'undefined' && localStorage.getItem('auth_token');
+    if (!hasToken) {
+      setUser(null);
+      return;
+    }
     try {
       const me = await authApi.getMe();
       setUser(me);
