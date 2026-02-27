@@ -18,6 +18,22 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
 }
 
+/* ── Design tokens matching www.dreamitbiz.com ── */
+:root {
+  --dit-blue: #0046C8;
+  --dit-blue-dark: #002E8A;
+  --dit-blue-light: #4A8FE7;
+  --dit-text: #111827;
+  --dit-text-secondary: #4B5563;
+  --dit-border: #E5E7EB;
+  --dit-glass-bg: rgba(255, 255, 255, 0.85);
+  --dit-glass-blur: 12px;
+  --dit-nav-height: 72px;
+  --dit-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --dit-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04);
+  --dit-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* Base styles */
 @layer base {
   * {
@@ -28,6 +44,357 @@
     color: theme(--color-gray-900);
     background: white;
   }
+}
+
+/* ── Navbar (www.dreamitbiz.com style) ── */
+.dit-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  background: var(--dit-glass-bg);
+  backdrop-filter: blur(var(--dit-glass-blur));
+  -webkit-backdrop-filter: blur(var(--dit-glass-blur));
+  border-bottom: 1px solid var(--dit-border);
+  transition: var(--dit-transition);
+}
+
+.dit-navbar.scrolled {
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom-color: transparent;
+  box-shadow: var(--dit-shadow-md);
+}
+
+.dit-navbar-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--dit-nav-height);
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) { .dit-navbar-inner { padding: 0 1.5rem; } }
+@media (min-width: 1024px) { .dit-navbar-inner { padding: 0 2rem; } }
+
+/* Logo */
+.dit-logo h1 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin: 0;
+  line-height: 1;
+}
+.dit-logo .brand-dream { color: var(--dit-blue); }
+.dit-logo .brand-it { color: var(--dit-text); }
+.dit-logo .brand-biz { color: var(--dit-blue-dark); }
+.dit-logo .brand-sub {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--dit-text-secondary);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  display: block;
+  margin-top: 2px;
+}
+
+/* Nav links */
+.dit-nav { display: none; align-items: center; gap: 0; }
+@media (min-width: 1024px) { .dit-nav { display: flex; } }
+
+.dit-nav-link {
+  display: block;
+  padding: 12px 14px;
+  color: var(--dit-text);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: color 0.2s ease;
+  position: relative;
+  white-space: nowrap;
+}
+
+.dit-nav-link:hover,
+.dit-nav-link.active {
+  color: var(--dit-blue);
+}
+
+.dit-nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 14px;
+  right: 14px;
+  height: 3px;
+  background: var(--dit-blue);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.dit-nav-link:hover::after,
+.dit-nav-link.active::after {
+  transform: scaleX(1);
+}
+
+/* Actions area */
+.dit-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Language switcher (circular button) */
+.dit-lang-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--dit-blue);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  border: 2px solid var(--dit-blue);
+  cursor: pointer;
+  transition: var(--dit-transition);
+}
+
+.dit-lang-btn:hover {
+  background: white;
+  color: var(--dit-blue);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 70, 200, 0.2);
+}
+
+/* Login button (pill) */
+.dit-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 18px;
+  border-radius: 20px;
+  background: var(--dit-blue);
+  color: white !important;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none !important;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+  border: none;
+  cursor: pointer;
+}
+
+.dit-login-btn:hover {
+  background: var(--dit-blue-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 70, 200, 0.3);
+}
+
+/* Action icon button */
+.dit-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--dit-text-secondary);
+  transition: var(--dit-transition);
+}
+
+.dit-icon-btn:hover {
+  background: #f3f4f6;
+  color: var(--dit-blue);
+}
+
+/* Mobile hamburger */
+.dit-mobile-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+@media (min-width: 1024px) { .dit-mobile-toggle { display: none; } }
+
+.dit-mobile-toggle span {
+  width: 22px;
+  height: 2px;
+  background: var(--dit-text);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.dit-mobile-toggle.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.dit-mobile-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+.dit-mobile-toggle.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* ── Mobile nav overlay ── */
+.dit-mobile-nav {
+  display: block;
+  border-top: 1px solid var(--dit-border);
+  background: white;
+  padding: 12px 0;
+}
+
+@media (min-width: 1024px) { .dit-mobile-nav { display: none; } }
+
+.dit-mobile-nav a {
+  display: block;
+  padding: 12px 24px;
+  color: var(--dit-text);
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.dit-mobile-nav a:hover {
+  background: rgba(0, 70, 200, 0.04);
+  color: var(--dit-blue);
+}
+
+.dit-mobile-nav .dit-mobile-sep {
+  height: 1px;
+  background: var(--dit-border);
+  margin: 8px 24px;
+}
+
+/* ── Footer (www.dreamitbiz.com style) ── */
+.dit-footer {
+  background: linear-gradient(180deg, #111827 0%, #0A0F1A 100%);
+  color: white;
+  padding: 64px 0 32px;
+}
+
+.dit-footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) { .dit-footer-inner { padding: 0 1.5rem; } }
+@media (min-width: 1024px) { .dit-footer-inner { padding: 0 2rem; } }
+
+.dit-footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+@media (min-width: 768px) {
+  .dit-footer-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (min-width: 1024px) {
+  .dit-footer-grid { grid-template-columns: 2fr 1.5fr 1.3fr; }
+}
+
+/* Footer brand */
+.dit-footer-brand h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.dit-footer-brand .brand-dream { color: var(--dit-blue-light); }
+.dit-footer-brand .brand-it { color: #FFFFFF; }
+.dit-footer-brand .brand-biz { color: var(--dit-blue-light); }
+
+.dit-footer-brand > p {
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.7;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.dit-company-info {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dit-company-info p {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 13px;
+  margin-bottom: 4px;
+  line-height: 1.7;
+}
+
+.dit-company-info p strong {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Footer links */
+.dit-footer-section h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: #FFFFFF;
+}
+
+.dit-footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  columns: 2;
+  column-gap: 24px;
+}
+
+.dit-footer-links li {
+  margin-bottom: 8px;
+  break-inside: avoid;
+}
+
+.dit-footer-links a {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s ease;
+  line-height: 1.6;
+}
+
+.dit-footer-links a:hover {
+  color: #93C5FD;
+}
+
+/* Footer contact */
+.dit-footer-contact p {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 14px;
+  margin-bottom: 8px;
+  line-height: 1.7;
+}
+
+.dit-footer-contact .hours {
+  margin-top: 10px;
+  font-style: italic;
+}
+
+/* Footer bottom */
+.dit-footer-bottom {
+  text-align: center;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
 }
 
 /* Prose styles for MDX content */

@@ -92,6 +92,44 @@
 2. **CategoryInfo.slug 타입 완화**: `ContentCategory` → `string`으로 변경하여 디스플레이 카테고리 유연성 확보
 3. **카테고리 매핑 이중 적용**: `content.ts`의 `getBooksByCategory()`와 `catalog/page.tsx`의 필터 모두에 동일 매핑 적용
 
+## 강의안 카테고리 가로형 레이아웃
+
+강의안 및 실습자료는 PT/슬라이드 스타일 PDF이므로, 가로형(4:3) 카드 레이아웃 + 4열 그리드 적용.
+- `BookGrid`/`BookCard`에 `layout` prop 추가 (`'portrait'` | `'landscape'`)
+- `lectures` 카테고리에서만 `layout="landscape"` 적용
+
+## 헤더/푸터 www.dreamitbiz.com 통일 디자인
+
+books.dreamitbiz.com의 헤더와 푸터를 www.dreamitbiz.com과 동일한 스타일로 재작성.
+
+### 헤더 변경
+- **로고**: BookOpen 아이콘 → "DreamIT Biz" 텍스트 브랜딩 (brand-dream: #0046C8, brand-it: #111827, brand-biz: #002E8A) + "PUBLISHING" 서브텍스트
+- **네비게이션**: Tailwind 클래스 → CSS 커스텀 스타일 (밑줄 애니메이션, 14px font-weight:500)
+- **배경**: Glassmorphism (backdrop-filter: blur(12px), rgba(255,255,255,0.85))
+- **스크롤**: 스크롤 시 반투명 → 불투명 + 그림자 전환
+- **언어 전환**: Globe 아이콘 → 원형 파란 버튼 (EN/KR)
+- **로그인**: 아이콘 → 알약형 파란 버튼 (Login)
+- **모바일**: Lucide Menu 아이콘 → 3줄 햄버거 CSS 애니메이션
+
+### 푸터 변경
+- **배경**: gray-50 → 다크 그라데이션 (#111827 → #0A0F1A)
+- **레이아웃**: 2+1+1 그리드 → www와 동일한 3열 (Brand 2fr | Links 1.5fr | Contact 1.3fr)
+- **브랜드 영역**: 로고 + 설명 + 사업자 정보 (대표이사, 사업자등록번호, 통신판매신고)
+- **바로가기**: www.dreamitbiz.com 전체 서비스 링크 (2열 텍스트)
+- **연락처**: 주소, 이메일, 전화, 카카오톡, 영업시간
+- **Copyright**: 밝은 회색 → 어두운 배경 위 흰색 투명
+
+### 추가된 CSS 변수 (globals.css)
+```css
+--dit-blue: #0046C8;
+--dit-blue-dark: #002E8A;
+--dit-blue-light: #4A8FE7;
+--dit-text: #111827;
+--dit-glass-bg: rgba(255, 255, 255, 0.85);
+--dit-glass-blur: 12px;
+--dit-nav-height: 72px;
+```
+
 ## 빌드 결과
 
 ```
