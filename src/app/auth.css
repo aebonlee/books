@@ -1,0 +1,238 @@
+/* ============================================
+   Auth Styles — Login Page (ported from www)
+   ============================================ */
+
+/* Full-page centered layout */
+.auth-fullpage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  padding: 120px 16px 60px;
+  box-sizing: border-box;
+}
+
+.auth-center-wrapper {
+  width: 100%;
+  max-width: 420px;
+}
+
+/* Google-style card */
+.auth-card-google {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 48px 40px 36px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Brand logo */
+.auth-logo-area {
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.auth-logo-area .brand-dream {
+  color: #2563eb;
+}
+
+.auth-logo-area .brand-it {
+  color: #dc2626;
+}
+
+.auth-logo-area .brand-biz {
+  color: #1e293b;
+}
+
+/* Heading & subtitle */
+.auth-heading {
+  font-size: 22px;
+  font-weight: 400;
+  color: #1e293b;
+  text-align: center;
+  margin: 0 0 4px;
+}
+
+.auth-sub {
+  font-size: 14px;
+  color: #6b7280;
+  text-align: center;
+  margin: 0 0 32px;
+}
+
+/* Method selection buttons */
+.auth-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.auth-method-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #1e293b;
+}
+
+.auth-method-btn:hover {
+  background: #f8f9fa;
+  border-color: #d1d5db;
+}
+
+.auth-method-btn svg {
+  flex-shrink: 0;
+}
+
+.auth-method-btn.kakao {
+  background: #FEE500;
+  border-color: #FEE500;
+  color: #3C1E1E;
+}
+
+.auth-method-btn.kakao:hover {
+  background: #F5DC00;
+  border-color: #F5DC00;
+}
+
+/* Email form (step 2) */
+.auth-email-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.auth-input-group input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #1e293b;
+  background: #ffffff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.auth-input-group input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.auth-form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.auth-back-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.auth-back-btn:hover {
+  background: rgba(37, 99, 235, 0.06);
+}
+
+.auth-next-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.auth-next-btn:hover {
+  background: #1d4ed8;
+}
+
+.auth-next-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Error message */
+.auth-error {
+  padding: 10px 14px;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-left: 4px solid #dc2626;
+  border-radius: 6px;
+  color: #dc2626;
+  font-size: 13px;
+}
+
+/* Bottom link (signup) */
+.auth-bottom-link {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.auth-bottom-link a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-bottom-link a:hover {
+  text-decoration: underline;
+}
+
+/* Forgot password link */
+.auth-forgot-link {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.auth-forgot-link a {
+  font-size: 13px;
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.auth-forgot-link a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .auth-fullpage {
+    padding: 100px 12px 40px;
+  }
+
+  .auth-card-google {
+    padding: 32px 24px 28px;
+  }
+}

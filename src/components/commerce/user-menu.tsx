@@ -3,19 +3,18 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocale } from 'next-intl';
-import { Link } from '@/i18n/navigation';
+import { Link, usePathname } from '@/i18n/navigation';
 import { useAuth } from '@/contexts/auth-context';
 import { useToast } from '@/components/ui/toast';
 import { Button } from '@/components/ui/button';
-import { LoginModal } from './login-modal';
 import { User, BookOpen, LogOut, LogIn } from 'lucide-react';
 
 export function UserMenu() {
   const locale = useLocale();
   const { user, profile, isLoggedIn, isLoading, signOut } = useAuth();
   const { toast } = useToast();
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [loginOpen, setLoginOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -65,18 +64,17 @@ export function UserMenu() {
   }
 
   if (!isLoggedIn) {
+    const loginHref = `/login?from=${encodeURIComponent(pathname)}`;
     return (
-      <>
+      <Link href={loginHref}>
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => setLoginOpen(true)}
           aria-label={locale === 'ko' ? '로그인' : 'Login'}
         >
           <LogIn className="h-4 w-4" />
         </Button>
-        <LoginModal open={loginOpen} onClose={() => setLoginOpen(false)} />
-      </>
+      </Link>
     );
   }
 

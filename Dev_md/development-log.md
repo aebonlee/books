@@ -295,6 +295,37 @@ D:/books/
 
 ---
 
+## 전용 로그인 페이지 구현 (www.dreamitbiz.com 동일 스타일)
+
+### 배경
+기존에는 헤더의 로그인 버튼 클릭 시 모달(Dialog)로 로그인 폼을 표시.
+www.dreamitbiz.com은 Google 스타일의 전용 로그인 페이지(`/login`)를 사용하고 있어 동일한 형태로 전환.
+
+### 변경 내용
+
+#### 1. 신규 파일
+- **`src/app/[locale]/login/page.tsx`** — 전용 로그인 페이지
+  - Google 스타일 카드 (420px max-width, 중앙 정렬, 흰색 카드)
+  - 2단계 플로우: 방법 선택(Google/Kakao/Email) → 이메일 폼
+  - 브랜드 로고: `Dream` `IT` `Biz`
+  - OAuth 콜백 에러 감지, 이미 로그인 시 리다이렉트
+  - `useSearchParams`를 Suspense 경계로 래핑 (Next.js 16 요구사항)
+- **`src/app/auth.css`** — www의 auth.css에서 로그인 관련 스타일만 추출
+  - CSS 변수 대신 직접 색상값 사용 (www와 일치)
+  - 반응형: 768px 이하 모바일 대응
+
+#### 2. 수정 파일
+- **`src/components/commerce/user-menu.tsx`** — 비로그인 시 LoginModal 열기 → `/login?from=현재경로`로 이동
+- **`src/components/layout/mobile-nav.tsx`** — 모바일 메뉴에 로그인 링크 추가 (`/login`)
+- **`src/components/commerce/login-modal.tsx`** — 체크아웃용 모달을 www 스타일(auth-card-google)로 통일
+- **`src/i18n/messages/ko.json`** / **`en.json`** — `auth.loginTitle`, `loginSubtitle`, `emailPlaceholder`, `passwordPlaceholder`, `back`, `loggingIn`, `forgotPassword`, `signUp` 키 추가
+
+### 빌드 결과
+- `npm run build` 성공 — 54 pages (login 페이지 추가)
+- `/ko/login`, `/en/login` 정적 생성 확인
+
+---
+
 ## 커밋 이력
 
 | 커밋 | 내용 |
