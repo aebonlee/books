@@ -2,9 +2,11 @@
 
 ## 프로젝트 개요
 - **프로젝트명**: DreamIT Biz 출판사 서브사이트
-- **도메인**: books.dreamitbiz.com
+- **도메인**: https://books.dreamitbiz.com
+- **리포지토리**: https://github.com/aebonlee/books
 - **시작일**: 2026-02-27
 - **기술 스택**: Next.js 16.1.6, React 19, TypeScript, Tailwind CSS v4, next-intl, Velite, PDF.js, epub.js, Sandpack
+- **배포**: GitHub Pages (GitHub Actions 자동 배포)
 
 ---
 
@@ -98,6 +100,7 @@
    - 가격/구매 CTA
    - MDX 본문 렌더링
    - 관련 도서 추천
+   - JSON-LD 구조화 데이터 (`json-ld.tsx`)
 
 5. **도서 컴포넌트**
    - `BookCard` - 커버, 배지, locale별 제목/가격
@@ -117,19 +120,17 @@
 ## Phase 3: 인증/결제 연동 ✅
 
 ### 완료 항목
-1. **API 라우트**
-   - `src/app/api/auth/route.ts` - 쿠키 기반 인증 검증
-   - `src/app/api/auth/purchases/route.ts` - 구매 이력/북마크/독서 진행률
-   - `src/app/api/content/[id]/route.ts` - 콘텐츠 스트리밍 (인증 필요)
-
-2. **내 서재** (`src/app/[locale]/library/page.tsx`)
+1. **내 서재** (`src/app/[locale]/library/page.tsx`)
    - 인증 게이트 (미로그인 시 로그인 유도)
    - 통계 카드 (보유 도서, 진행 중, 완료, 북마크)
    - 구매 콘텐츠 목록
 
-3. **SSO 연동**
+2. **SSO 연동 설계**
    - `dreamitbiz_auth` 쿠키 기반 세션 관리
    - 로그인/회원가입/결제는 www.dreamitbiz.com으로 위임
+
+> **참고**: GitHub Pages 정적 배포로 전환하면서 API 라우트(`/api/auth`, `/api/content`)는 제거됨.
+> 추후 메인 사이트 API 또는 별도 백엔드에서 인증/결제 처리 예정.
 
 ---
 
@@ -148,9 +149,10 @@
    - 챕터 네비게이션
    - 읽기 진행률 표시
 
-3. **리더 페이지** (`src/app/[locale]/reader/[id]/page.tsx`)
-   - PDF/ePub 자동 감지
-   - locale 기반 UI 텍스트
+3. **리더 페이지** (`src/app/[locale]/reader/[id]/`)
+   - `page.tsx` (서버) + `reader-client.tsx` (클라이언트) 분리 구조
+   - `generateStaticParams`로 정적 생성
+   - PDF/ePub 타입별 뷰어 렌더링
 
 ---
 
@@ -177,8 +179,8 @@
 
 ### 완료 항목
 1. **SEO 최적화**
-   - `src/app/sitemap.ts` - 동적 사이트맵 생성 (ko/en 양 locale)
-   - `src/app/robots.ts` - 크롤링 규칙 (/api/, /reader/ 차단)
+   - `public/sitemap.xml` - 정적 사이트맵 (ko/en, 28개 URL)
+   - `public/robots.txt` - 크롤링 규칙 (/reader/ 차단)
    - `json-ld.tsx` - Schema.org Book 구조화 데이터
 
 2. **에러 처리**
@@ -190,8 +192,7 @@
    - `public/images/placeholder-cover.svg` - 도서 커버 플레이스홀더
 
 4. **설정 파일 최적화**
-   - `next.config.ts` - Turbopack 호환 Velite 통합
-   - `middleware.ts` - next-intl i18n 라우팅
+   - `next.config.ts` - Turbopack 호환 Velite 통합, `output: 'export'`
 
 5. **개발 문서**
    - `Dev_md/architecture.md` - 아키텍처 문서
@@ -199,11 +200,51 @@
 
 ---
 
+## Phase 7: GitHub Pages 배포 전환 ✅
+
+### 배경
+- 초기 Vercel 배포에서 GitHub Pages 정적 배포로 전환
+- 서버 사이드 기능 제거, 순수 정적 사이트로 변환
+
+### 변경 사항
+1. **`next.config.ts`**
+   - `output: 'export'` 추가 (정적 HTML 생성)
+   - `images: { unoptimized: true }` (GH Pages는 Image Optimization 미지원)
+
+2. **제거된 파일**
+   - `middleware.ts` - 정적 export에서 미지원
+   - `src/app/api/auth/route.ts` - 서버 사이드 전용
+   - `src/app/api/auth/purchases/route.ts` - 서버 사이드 전용
+   - `src/app/api/content/[id]/route.ts` - 서버 사이드 전용
+   - `src/app/robots.ts` - 정적 파일로 전환
+   - `src/app/sitemap.ts` - 정적 파일로 전환
+
+3. **추가된 파일**
+   - `.github/workflows/deploy.yml` - GitHub Actions 자동 배포
+   - `public/CNAME` - 커스텀 도메인 (`books.dreamitbiz.com`)
+   - `public/.nojekyll` - Jekyll 처리 비활성화
+   - `public/robots.txt` - 정적 robots.txt
+   - `public/sitemap.xml` - 정적 사이트맵
+   - `src/app/[locale]/reader/[id]/reader-client.tsx` - 클라이언트 컴포넌트 분리
+
+4. **수정된 파일**
+   - `src/app/page.tsx` - 서버 `redirect()` → 클라이언트 사이드 `router.replace()`
+   - `src/app/[locale]/reader/[id]/page.tsx` - 서버/클라이언트 분리, `generateStaticParams` 추가
+
+### 배포 설정
+- **GitHub Pages**: Actions workflow 모드
+- **커스텀 도메인**: `books.dreamitbiz.com`
+- **DNS**: Cloudflare DNS에서 CNAME `books` → `aebonlee.github.io` 설정 필요
+- **빌드 결과**: 46개 정적 페이지 (`out/` 디렉토리)
+
+---
+
 ## 주요 기술 결정
 
 | 항목 | 선택 | 이유 |
 |------|------|------|
-| 프레임워크 | Next.js 16 (App Router) | SSR/SSG, 파일 기반 라우팅, 최신 React 19 |
+| 프레임워크 | Next.js 16 (App Router) | SSG, 파일 기반 라우팅, 최신 React 19 |
+| 배포 | GitHub Pages + Actions | 무료 호스팅, 자동 CI/CD, 커스텀 도메인 |
 | 스타일링 | Tailwind CSS v4 | 유틸리티 우선, @theme 블록으로 브랜드 커스텀 |
 | 콘텐츠 관리 | Velite (MDX) | 빌드 타임 처리, 타입 세이프 스키마 |
 | i18n | next-intl v4 | App Router 네이티브 지원, 서버 컴포넌트 |
@@ -219,29 +260,62 @@
 
 ```
 D:/books/
-├── content/books/          # 6개 샘플 MDX 콘텐츠
-├── Dev_md/                 # 개발 문서
-├── public/images/          # 플레이스홀더 이미지
+├── .github/workflows/      # GitHub Actions 배포
+├── content/books/           # 6개 샘플 MDX 콘텐츠
+├── Dev_md/                  # 개발 문서
+├── public/
+│   ├── images/              # 플레이스홀더 이미지
+│   ├── CNAME                # 커스텀 도메인
+│   ├── robots.txt           # 크롤링 규칙
+│   └── sitemap.xml          # 사이트맵
 ├── src/
 │   ├── app/
-│   │   ├── [locale]/       # i18n 라우트 (13개 페이지)
-│   │   ├── api/            # 3개 API 라우트
-│   │   └── *.ts            # sitemap, robots 등
+│   │   ├── [locale]/        # i18n 라우트 (14개 페이지)
+│   │   ├── not-found.tsx    # 글로벌 404
+│   │   ├── page.tsx         # 루트 → /ko 리다이렉트
+│   │   ├── layout.tsx       # 루트 레이아웃
+│   │   └── globals.css      # 글로벌 스타일
 │   ├── components/
-│   │   ├── ui/             # 6개 기본 UI
-│   │   ├── layout/         # 3개 레이아웃
-│   │   ├── book/           # 3개 도서 관련
-│   │   ├── reader/         # 2개 리더
-│   │   ├── mdx/            # 4개 MDX
-│   │   └── search/         # 1개 검색
-│   ├── config/             # 3개 설정
-│   ├── i18n/               # 5개 i18n 파일
-│   ├── lib/                # 2개 유틸리티
-│   └── types/              # 1개 타입 정의
-├── middleware.ts            # i18n 미들웨어
-├── next.config.ts          # Next.js + Velite 설정
-├── velite.config.ts        # 콘텐츠 스키마
-└── package.json            # 의존성 관리
+│   │   ├── ui/              # 6개 기본 UI
+│   │   ├── layout/          # 3개 레이아웃
+│   │   ├── book/            # 3개 도서 관련
+│   │   ├── reader/          # 2개 리더
+│   │   ├── mdx/             # 4개 MDX
+│   │   └── search/          # 1개 검색
+│   ├── config/              # 3개 설정
+│   ├── i18n/                # 5개 i18n 파일
+│   ├── lib/                 # 2개 유틸리티
+│   └── types/               # 1개 타입 정의
+├── next.config.ts           # Next.js + Velite + static export
+├── velite.config.ts         # 콘텐츠 스키마
+└── package.json             # 의존성 관리
 ```
 
-**총 파일 수**: 약 50개 소스 파일
+**총 파일 수**: 약 48개 소스 파일 (API routes 제거 후)
+
+---
+
+## 커밋 이력
+
+| 커밋 | 내용 |
+|------|------|
+| `0926816` | feat: DreamIT Biz 출판사 서브사이트 전체 구현 (Phase 1~6) |
+| `18bf773` | refactor: GitHub Pages 정적 배포로 전환 (Phase 7) |
+
+---
+
+## DNS 설정 안내
+
+Cloudflare DNS 패널에서 다음 레코드를 확인/추가:
+
+| 타입 | 이름 | 값 | 프록시 |
+|------|------|---|--------|
+| CNAME | books | aebonlee.github.io | DNS only (프록시 OFF) |
+
+또는 A 레코드 사용 시:
+- `185.199.108.153`
+- `185.199.109.153`
+- `185.199.110.153`
+- `185.199.111.153`
+
+> **주의**: Cloudflare 프록시(주황색 구름)를 켜면 GitHub Pages HTTPS 인증서 발급이 실패할 수 있음. 초기 설정 시 "DNS only"로 설정 권장.
