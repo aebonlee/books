@@ -3,26 +3,31 @@
  */
 import { getSupabase } from './supabase';
 
+/** 현재 페이지 URL (hash 제외) — OAuth 리다이렉트용 */
+function currentPageUrl() {
+  return window.location.origin + window.location.pathname + window.location.search;
+}
+
 /** Google OAuth 로그인 */
-export async function signInWithGoogle() {
+export async function signInWithGoogle(redirectTo?: string) {
   const client = getSupabase();
   if (!client) throw new Error('Supabase not configured');
   const { data, error } = await client.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: window.location.origin },
+    options: { redirectTo: redirectTo || currentPageUrl() },
   });
   if (error) throw error;
   return data;
 }
 
 /** Kakao OAuth 로그인 */
-export async function signInWithKakao() {
+export async function signInWithKakao(redirectTo?: string) {
   const client = getSupabase();
   if (!client) throw new Error('Supabase not configured');
   const { data, error } = await client.auth.signInWithOAuth({
     provider: 'kakao',
     options: {
-      redirectTo: window.location.origin,
+      redirectTo: redirectTo || currentPageUrl(),
       scopes: 'profile_nickname profile_image account_email',
     },
   });

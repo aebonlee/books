@@ -17,6 +17,8 @@ import { requestPayment } from '@/lib/payment/pg-bridge';
 import type { PaymentMethod } from '@/types/commerce';
 import { CreditCard, Loader2, ShieldCheck } from 'lucide-react';
 
+const BUYER_STORAGE_KEY = 'dreamitbiz_checkout_buyer';
+
 export function PaymentForm() {
   const locale = useLocale();
   const router = useRouter();
@@ -33,7 +35,22 @@ export function PaymentForm() {
   const [agreed, setAgreed] = useState(false);
   const pendingSubmit = useRef(false);
 
-  // Supabase 사용자 정보로 초기값 세팅
+  // 1) sessionStorage에서 주문자 정보 복원 (OAuth 리다이렉트 후)
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem(BUYER_STORAGE_KEY);
+      if (saved) {
+        const data = JSON.parse(saved);
+        if (data.name) setBuyerName(data.name);
+        if (data.email) setBuyerEmail(data.email);
+        if (data.phone) setBuyerPhone(data.phone);
+        if (data.agreed) setAgreed(true);
+        sessionStorage.removeItem(BUYER_STORAGE_KEY);
+      }
+    } catch { /* ignore */ }
+  }, []);
+
+  // 2) Supabase 사용자 정보로 빈 필드 자동 채우기
   useEffect(() => {
     if (user || profile) {
       const name = profile?.display_name || user?.user_metadata?.full_name || '';
@@ -43,19 +60,28 @@ export function PaymentForm() {
     }
   }, [user, profile]);
 
-  // 로그인 성공 후 대기 중인 결제 자동 재시도
+  // 3) 이메일 로그인 후 자동 재제출 — buyerEmail이 채워진 후에만 실행
   useEffect(() => {
-    if (isLoggedIn && pendingSubmit.current) {
+    if (isLoggedIn && pendingSubmit.current && buyerEmail) {
       pendingSubmit.current = false;
       const form = document.getElementById('checkout-form') as HTMLFormElement;
       form?.requestSubmit();
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, buyerEmail]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!isLoggedIn) {
+      // OAuth 리다이렉트에 대비해 주문자 정보를 sessionStorage에 저장
+      try {
+        sessionStorage.setItem(BUYER_STORAGE_KEY, JSON.stringify({
+          name: buyerName,
+          email: buyerEmail,
+          phone: buyerPhone,
+          agreed,
+        }));
+      } catch { /* ignore */ }
       pendingSubmit.current = true;
       setLoginOpen(true);
       return;
@@ -86,6 +112,8 @@ export function PaymentForm() {
 
         if (verification.verified) {
           clearCart();
+          // 결제 완료 시 sessionStorage 정리
+          try { sessionStorage.removeItem(BUYER_STORAGE_KEY); } catch { /* ignore */ }
           router.push(`/checkout/success?orderId=${order.orderId}`);
           return;
         }
@@ -93,6 +121,7 @@ export function PaymentForm() {
       }
 
       clearCart();
+      try { sessionStorage.removeItem(BUYER_STORAGE_KEY); } catch { /* ignore */ }
       router.push(`/checkout/success?orderId=${order.orderId}`);
     } catch (err) {
       toast(
