@@ -354,6 +354,23 @@ OAuth redirect URL이 경로까지 포함하므로, Supabase 대시보드 > Auth
 
 ---
 
+## GitHub Actions 환경변수 빌드 실패 수정
+
+### 근본 원인
+GitHub Actions 워크플로우의 `env:` 블록에서 `${{ secrets.X }}`가 미설정 시 빈 문자열(`""`)로 평가됨 → `.env.production`의 정상 값을 덮어씀 → Supabase URL/Key가 빈 문자열로 빌드됨 → 배포된 사이트에서 인증 완전 비활성화.
+
+### 증상
+- 배포된 JS 번들에 Supabase URL/Key 미포함 확인
+- 로그인 페이지에서 버튼 클릭 시 무반응 (Supabase 클라이언트 null)
+
+### 수정 내용
+`deploy.yml`의 빌드 단계를 수정:
+- secrets를 임시 변수(`_SUPABASE_URL` 등)에 할당
+- `if [ -n "$VAR" ]` 조건으로 비어있지 않을 때만 `export`
+- secrets 미설정 시 `.env.production` 값이 그대로 사용됨
+
+---
+
 ## 커밋 이력
 
 | 커밋 | 내용 |
