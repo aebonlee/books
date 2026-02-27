@@ -212,6 +212,27 @@ src/
     └── en.json              ← MODIFIED (동일 영어 번역)
 ```
 
+### 5. 코드 품질 개선 (2de1a18)
+
+| # | 항목 | 변경 |
+|---|------|------|
+| 1 | OAuth redirect URL 불안정 | `origin + pathname` → `origin`만 사용 (OAuth 콜백 경로 일관성 확보) |
+| 2 | 에러 silent catch | `purchases.ts`, `orders.ts`, `library/page.tsx`에 `console.error` 로깅 추가 |
+| 3 | 관리자 이메일 하드코딩 | `ADMIN_EMAILS` → `NEXT_PUBLIC_ADMIN_EMAILS` 환경변수로 외부화 (기본값 유지) |
+
+### 6. 전체 통합 검증 체크리스트
+
+| 항목 | 상태 |
+|------|------|
+| 로컬 빌드 (52 pages) | ✅ 성공 |
+| GitHub Actions 배포 (5회 연속) | ✅ 성공 |
+| `.env.local` 환경변수 4개 | ✅ www와 동일 값 확인 |
+| GitHub Secrets 4개 | ✅ 배포 성공으로 확인 |
+| Supabase DB 테이블 (`orders`, `order_items`, `user_profiles`) | ✅ www에 이미 존재, 컬럼명 일치 |
+| Edge Functions (`verify-payment`, `portone-webhook`) | ✅ www에 이미 배포됨 |
+| RLS 정책 (22개+) | ✅ 설정 완료 |
+| OAuth redirect URL 등록 (Google/Kakao) | ✅ 수동 처리 완료 |
+
 ## 배포 환경변수 (GitHub Secrets 필요)
 
 | Secret 이름 | 용도 |
@@ -223,11 +244,11 @@ src/
 
 ## 향후 작업
 
-- [ ] GitHub Repository Secrets 설정 (위 4개 환경변수)
-- [ ] Supabase에 `orders`, `order_items` 테이블 생성 (아직 미생성 시)
-- [ ] Supabase Edge Function `verify-payment` 배포
+- [x] ~~GitHub Repository Secrets 설정 (위 4개 환경변수)~~ ✅
+- [x] ~~Supabase에 `orders`, `order_items` 테이블 생성~~ ✅ (www에 이미 존재)
+- [x] ~~Supabase Edge Function `verify-payment` 배포~~ ✅ (www에 이미 배포)
+- [x] ~~OAuth redirect URL에 books.dreamitbiz.com 등록 (Google/Kakao)~~ ✅ 수동 처리 완료
 - [ ] PortOne 실서비스 가맹점 ID 설정 (현재 테스트 MID)
-- [ ] OAuth redirect URL에 books.dreamitbiz.com 등록 (Google/Kakao)
 - [ ] 결제 수단 추가 (계좌이체, 가상계좌 등)
 - [ ] 주문 내역 상세 페이지
 - [ ] 환불 기능
