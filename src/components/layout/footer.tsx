@@ -1,4 +1,31 @@
 import { useTranslations, useLocale } from 'next-intl';
+import { mainNav } from '@/config/navigation';
+
+function FooterLinks({ locale }: { locale: string }) {
+  const siteLinks = [
+    ...mainNav.map((item) => ({
+      label: locale === 'ko' ? item.titleKo : item.titleEn,
+      href: item.href,
+      internal: true,
+    })),
+    { label: locale === 'ko' ? '장바구니' : 'Cart', href: '/cart', internal: true },
+    { label: locale === 'ko' ? '내 서재' : 'My Library', href: '/library', internal: true },
+  ];
+
+  const base = 'https://books.dreamitbiz.com/' + locale;
+
+  return (
+    <ul className="dit-footer-links">
+      {siteLinks.map((link) => (
+        <li key={link.href}>
+          <a href={link.internal ? `${base}${link.href}` : link.href}>
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export function Footer() {
   const t = useTranslations('footer');
@@ -26,23 +53,14 @@ export function Footer() {
               <p>{locale === 'ko' ? '대표이사' : 'CEO'}: 이애본</p>
               <p>{locale === 'ko' ? '사업자등록번호' : 'Business No'}: 601-45-20154</p>
               <p>{locale === 'ko' ? '통신판매신고' : 'E-Commerce'}: 제2024-수원팔달-0584호</p>
+              <p>{locale === 'ko' ? '출판사 신고번호' : 'Publisher No'}: 제2026-000026호</p>
             </div>
           </div>
 
           {/* Quick Links */}
           <div className="dit-footer-section">
             <h4>{locale === 'ko' ? '바로가기' : 'Quick Links'}</h4>
-            <ul className="dit-footer-links">
-              <li><a href="https://www.dreamitbiz.com/">{locale === 'ko' ? '홈' : 'Home'}</a></li>
-              <li><a href="https://www.dreamitbiz.com/services">{locale === 'ko' ? 'IT 서비스' : 'IT Services'}</a></li>
-              <li><a href="https://www.dreamitbiz.com/consulting">{locale === 'ko' ? '컨설팅' : 'Consulting'}</a></li>
-              <li><a href="https://www.dreamitbiz.com/education">{locale === 'ko' ? '교육' : 'Education'}</a></li>
-              <li><a href="https://www.dreamitbiz.com/publishing">{locale === 'ko' ? '출판' : 'Publishing'}</a></li>
-              <li><a href="https://www.dreamitbiz.com/shop">{locale === 'ko' ? '쇼핑' : 'Shop'}</a></li>
-              <li><a href="https://www.dreamitbiz.com/about">{locale === 'ko' ? '회사 소개' : 'About'}</a></li>
-              <li><a href="https://www.dreamitbiz.com/about/ceo">{locale === 'ko' ? 'CEO 소개' : 'CEO Profile'}</a></li>
-              <li><a href="https://www.dreamitbiz.com/contact">{locale === 'ko' ? '문의하기' : 'Contact'}</a></li>
-            </ul>
+            <FooterLinks locale={locale} />
           </div>
 
           {/* Contact */}
