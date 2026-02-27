@@ -8,62 +8,101 @@ import {
   useCallback,
   type ReactNode,
 } from 'react';
-import type { User, LoginRequest } from '@/types/commerce';
-import * as authApi from '@/lib/api/auth';
+import type { User } from '@supabase/supabase-js';
+import { getSupabase } from '@/lib/supabase';
+import { getProfile, signOut as authSignOut, type UserProfile } from '@/lib/auth';
+
+const ADMIN_EMAILS = ['aebon@kakao.com', 'aebon@kyonggi.ac.kr'];
 
 interface AuthContextValue {
   user: User | null;
-  isAuthenticated: boolean;
+  profile: UserProfile | null;
   isLoading: boolean;
-  login: (data: LoginRequest) => Promise<void>;
-  logout: () => Promise<void>;
-  refreshUser: () => Promise<void>;
+  isLoggedIn: boolean;
+  isAdmin: boolean;
+  signOut: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const refreshUser = useCallback(async () => {
-    // 토큰이나 쿠키가 없으면 API 호출 생략 (불필요한 네트워크 에러 방지)
-    const hasToken = typeof window !== 'undefined' && localStorage.getItem('auth_token');
-    if (!hasToken) {
-      setUser(null);
+  const loadProfile = useCallback(async (authUser: User | null) => {
+    if (!authUser) {
+      setProfile(null);
       return;
     }
-    try {
-      const me = await authApi.getMe();
-      setUser(me);
-    } catch {
-      setUser(null);
-    }
+    const p = await getProfile(authUser.id);
+    setProfile(p as UserProfile | null);
   }, []);
 
   useEffect(() => {
-    refreshUser().finally(() => setIsLoading(false));
-  }, [refreshUser]);
+    const client = getSupabase();
+    if (!client) {
+      setIsLoading(false);
+      return;
+    }
 
-  const login = useCallback(async (data: LoginRequest) => {
-    const res = await authApi.login(data);
-    setUser(res.user);
-  }, []);
+    const {
+      data: { subscription },
+    } = client.auth.onAuthStateChange((event, session) => {
+      const u = session?.user ?? null;
+      setUser(u);
+      if (u) {
+        loadProfile(u);
+      } else {
+        setProfile(null);
+      }
+      if (event === 'INITIAL_SESSION') {
+        setIsLoading(false);
+      }
+    });
 
-  const logout = useCallback(async () => {
-    await authApi.logout();
+    // 안전장치: INITIAL_SESSION이 5초 내 안 오면 loading 해제
+    const fallbackTimer = setTimeout(() => {
+      setIsLoading((prev) => {
+        if (prev) console.warn('Auth: INITIAL_SESSION timeout, forcing loading=false');
+        return false;
+      });
+    }, 5000);
+
+    return () => {
+      clearTimeout(fallbackTimer);
+      subscription.unsubscribe();
+    };
+  }, [loadProfile]);
+
+  const signOut = useCallback(async () => {
+    await authSignOut();
     setUser(null);
+    setProfile(null);
   }, []);
+
+  const refreshProfile = useCallback(async () => {
+    if (user) await loadProfile(user);
+  }, [user, loadProfile]);
+
+  // admin 판별
+  const allEmails = [
+    user?.email,
+    profile?.email,
+  ].filter(Boolean).map((e) => (e as string).toLowerCase());
+  const isAdmin = allEmails.some((e) => ADMIN_EMAILS.includes(e));
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        isAuthenticated: !!user,
+        profile,
         isLoading,
-        login,
-        logout,
-        refreshUser,
+        isLoggedIn: !!user,
+        isAdmin,
+        signOut,
+        refreshProfile,
       }}
     >
       {children}

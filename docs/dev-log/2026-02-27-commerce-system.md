@@ -17,9 +17,9 @@ books.dreamitbiz.com에서 구매/결제를 사이트 내에서 직접 처리하
 | 영역 | 기술 | 설명 |
 |------|------|------|
 | 장바구니 | React Context + localStorage | 클라이언트 사이드 상태 관리 |
-| 인증 | www.dreamitbiz.com API | 서브도메인 쿠키 공유 + Bearer 토큰 fallback |
-| 결제 | PortOne(Iamport) SDK | 클라이언트 사이드 PG 연동 |
-| 주문 관리 | www.dreamitbiz.com API | 주문 생성, 결제 검증 |
+| 인증 | **Supabase Auth** (Google/Kakao/Email) | www.dreamitbiz.com과 동일 Supabase 프로젝트 공유 |
+| 결제 | PortOne V1 (Iamport) SDK | 클라이언트 사이드 PG 연동 (`imp61949262`) |
+| 주문 관리 | **Supabase DB + Edge Functions** | orders/order_items 테이블, verify-payment 함수 |
 | 정적 사이트 | `'use client'` 컴포넌트 | Next.js static export 호환 |
 
 ## 구현 내역
@@ -28,17 +28,19 @@ books.dreamitbiz.com에서 구매/결제를 사이트 내에서 직접 처리하
 
 | 파일 | 역할 |
 |------|------|
-| `src/types/commerce.ts` | 상거래 타입 정의 (CartItem, User, Order, Payment, Purchase) |
-| `src/config/site.ts` | API 엔드포인트 추가 (auth, orders, purchases) |
-| `src/lib/api/client.ts` | HTTP 클라이언트 (credentials: include + Bearer fallback) |
-| `src/lib/api/auth.ts` | 인증 API (login, logout, getMe) |
-| `src/lib/api/orders.ts` | 주문 API (createOrder, verifyPayment) |
-| `src/lib/api/purchases.ts` | 구매 내역 API (getPurchases, checkOwnership) |
+| `src/types/commerce.ts` | 상거래 타입 정의 (CartItem, Order, Payment, Purchase) |
+| `src/config/site.ts` | 사이트 설정 (API 섹션 제거 → Supabase/env로 이관) |
+| `src/lib/supabase.ts` | **Supabase 클라이언트** (PKCE flow, 세션 자동 갱신) |
+| `src/lib/auth.ts` | **인증 헬퍼** (Google/Kakao/Email 로그인, 로그아웃, 프로필 조회) |
+| `src/lib/api/orders.ts` | 주문 API (**Supabase DB 직접 접근**) |
+| `src/lib/api/purchases.ts` | 구매 내역 API (**Supabase DB 직접 접근**) |
 | `src/lib/api/index.ts` | barrel export |
-| `src/contexts/auth-context.tsx` | 인증 상태 관리 (useAuth 훅) |
+| `src/contexts/auth-context.tsx` | 인증 상태 관리 (**Supabase onAuthStateChange**) |
 | `src/contexts/cart-context.tsx` | 장바구니 상태 관리 (useCart 훅, localStorage 영속화) |
 | `src/components/providers.tsx` | AuthProvider + CartProvider + ToastProvider 래퍼 |
 | `src/app/[locale]/layout.tsx` | Providers로 감싸기 |
+
+> **삭제된 파일**: `src/lib/api/client.ts` (커스텀 HTTP 클라이언트), `src/lib/api/auth.ts` (커스텀 인증 API) → Supabase로 대체
 
 ### Phase B: UI 컴포넌트
 
@@ -94,15 +96,15 @@ books.dreamitbiz.com에서 구매/결제를 사이트 내에서 직접 처리하
 도서 상세 → [장바구니 담기] → 헤더 뱃지 업데이트, 토스트 알림
          → [바로 구매] → 체크아웃 페이지 직행
                            ↓
-장바구니 페이지 → [결제 진행] → 로그인 필요 시 모달
+장바구니 페이지 → [결제 진행] → 로그인 필요 시 모달 (Google/Kakao/Email)
                                 ↓
-체크아웃 → 주문자 정보 입력 → [결제하기]
+체크아웃 → 주문자 정보 자동 채움 (Supabase 프로필) → [결제하기]
                                 ↓
-          www.dreamitbiz.com API로 주문 생성
+          Supabase DB에 주문 생성 (orders + order_items)
                                 ↓
-          PG 결제 팝업 (카드 결제)
+          PortOne V1 결제 팝업 (카드 결제)
                                 ↓
-          결제 검증 → 성공 페이지
+          Supabase Edge Function으로 결제 검증 → 성공 페이지
                                 ↓
           내 서재에서 구매 도서 확인/읽기
 ```
@@ -130,25 +132,48 @@ books.dreamitbiz.com에서 구매/결제를 사이트 내에서 직접 처리하
   - `Dialog`: `createPortal(…, document.body)` + `z-[9999]` — body 직접 렌더링으로 헤더 탈출
   - `UserMenu` 드롭다운: `createPortal` + `getBoundingClientRect()` — 버튼 위치 기반 fixed 포지셔닝, `z-[9998]`
 
+### 4. Supabase 인증 시스템으로 전환 (커스텀 API → Supabase)
+- **배경**: 기존 커스텀 HTTP API 인증 방식에서 www.dreamitbiz.com과 동일한 Supabase 인증으로 전환 요구
+- **참조**: `D:\www\react-source`의 기존 구현 (supabase.js, auth.js, AuthContext.jsx, Login.jsx)
+- **변경 내용**:
+  - `@supabase/supabase-js` 패키지 추가
+  - `src/lib/supabase.ts` 신규 — Supabase 클라이언트 (PKCE flow, 세션 자동 갱신)
+  - `src/lib/auth.ts` 신규 — Google/Kakao OAuth + Email/Password 인증 헬퍼
+  - `src/contexts/auth-context.tsx` 재작성 — `onAuthStateChange` 기반, `user_profiles` 테이블 조회, 관리자 이메일 확인
+  - `src/components/commerce/login-modal.tsx` 재작성 — 2단계 로그인 UI (방법 선택 → 이메일 폼)
+  - `src/components/commerce/user-menu.tsx` 재작성 — Supabase 프로필 기반 표시
+  - `src/lib/api/orders.ts` 재작성 — Supabase DB 직접 접근 (orders + order_items 테이블)
+  - `src/lib/api/purchases.ts` 재작성 — Supabase DB에서 구매 내역 조회
+  - `src/lib/payment/pg-bridge.ts` 수정 — 환경변수(`NEXT_PUBLIC_IMP_CODE`, `NEXT_PUBLIC_PG_PROVIDER`) 사용
+  - `src/config/site.ts` 정리 — api, payment 섹션 제거
+  - `src/types/commerce.ts` 정리 — Supabase 타입으로 대체된 타입 삭제
+  - `.github/workflows/deploy.yml` — GitHub Secrets에서 환경변수 주입
+  - **삭제**: `src/lib/api/client.ts`, `src/lib/api/auth.ts`
+- **환경변수** (`.env.local` + GitHub Secrets):
+  - `NEXT_PUBLIC_SUPABASE_URL` — Supabase 프로젝트 URL
+  - `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase 공개 키
+  - `NEXT_PUBLIC_IMP_CODE` — PortOne V1 가맹점 코드
+  - `NEXT_PUBLIC_PG_PROVIDER` — PG 제공자 식별자
+
 ## 파일 구조
 
 ```
 src/
 ├── types/
-│   └── commerce.ts          ← NEW
+│   └── commerce.ts          ← NEW (Supabase 전환으로 간소화)
 ├── config/
-│   └── site.ts              ← MODIFIED (api endpoints 추가)
+│   └── site.ts              ← MODIFIED (api/payment 섹션 제거)
 ├── lib/
+│   ├── supabase.ts          ← NEW (Supabase 클라이언트)
+│   ├── auth.ts              ← NEW (Google/Kakao/Email 인증 헬퍼)
 │   ├── api/
-│   │   ├── client.ts        ← NEW
-│   │   ├── auth.ts          ← NEW
-│   │   ├── orders.ts        ← NEW
-│   │   ├── purchases.ts     ← NEW
-│   │   └── index.ts         ← NEW
+│   │   ├── orders.ts        ← NEW (Supabase DB 주문)
+│   │   ├── purchases.ts     ← NEW (Supabase DB 구매 내역)
+│   │   └── index.ts         ← NEW (barrel export)
 │   └── payment/
-│       └── pg-bridge.ts     ← NEW
+│       └── pg-bridge.ts     ← NEW (PortOne V1)
 ├── contexts/
-│   ├── auth-context.tsx     ← NEW
+│   ├── auth-context.tsx     ← NEW (Supabase onAuthStateChange)
 │   └── cart-context.tsx     ← NEW
 ├── components/
 │   ├── providers.tsx        ← NEW
@@ -187,11 +212,22 @@ src/
     └── en.json              ← MODIFIED (동일 영어 번역)
 ```
 
+## 배포 환경변수 (GitHub Secrets 필요)
+
+| Secret 이름 | 용도 |
+|-------------|------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase 프로젝트 URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase 공개 Anon 키 |
+| `NEXT_PUBLIC_IMP_CODE` | PortOne V1 가맹점 코드 |
+| `NEXT_PUBLIC_PG_PROVIDER` | PG 제공자 (html5_inicis.MOIkorcom1) |
+
 ## 향후 작업
 
-- [ ] www.dreamitbiz.com 백엔드 API 구현 (auth, orders, purchases)
+- [ ] GitHub Repository Secrets 설정 (위 4개 환경변수)
+- [ ] Supabase에 `orders`, `order_items` 테이블 생성 (아직 미생성 시)
+- [ ] Supabase Edge Function `verify-payment` 배포
 - [ ] PortOne 실서비스 가맹점 ID 설정 (현재 테스트 MID)
-- [ ] CORS 설정 (books.dreamitbiz.com → www.dreamitbiz.com API)
+- [ ] OAuth redirect URL에 books.dreamitbiz.com 등록 (Google/Kakao)
 - [ ] 결제 수단 추가 (계좌이체, 가상계좌 등)
 - [ ] 주문 내역 상세 페이지
 - [ ] 환불 기능

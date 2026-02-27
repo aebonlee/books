@@ -1,8 +1,12 @@
-import { siteConfig } from '@/config/site';
+/**
+ * PortOne V1 (Iamport) PG 결제 브릿지
+ * www.dreamitbiz.com과 동일한 imp 코드 사용
+ */
+
+const IMP_CODE = process.env.NEXT_PUBLIC_IMP_CODE || 'imp61949262';
+const PG_PROVIDER = process.env.NEXT_PUBLIC_PG_PROVIDER || 'html5_inicis.MOIkorcom1';
 
 interface PGRequestData {
-  pg: string;
-  payMethod: string;
   merchantUid: string;
   amount: number;
   name: string;
@@ -21,7 +25,7 @@ interface PGResponse {
 declare global {
   interface Window {
     IMP?: {
-      init: (merchantId: string) => void;
+      init: (code: string) => void;
       request_pay: (
         data: Record<string, unknown>,
         callback: (response: PGResponse) => void,
@@ -34,14 +38,10 @@ let sdkLoaded = false;
 
 function loadIamportSDK(): Promise<void> {
   if (sdkLoaded && window.IMP) return Promise.resolve();
-
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
     script.src = 'https://cdn.iamport.kr/v1/iamport.js';
-    script.onload = () => {
-      sdkLoaded = true;
-      resolve();
-    };
+    script.onload = () => { sdkLoaded = true; resolve(); };
     script.onerror = () => reject(new Error('Failed to load payment SDK'));
     document.head.appendChild(script);
   });
@@ -49,18 +49,15 @@ function loadIamportSDK(): Promise<void> {
 
 export async function requestPayment(data: PGRequestData): Promise<PGResponse> {
   await loadIamportSDK();
+  if (!window.IMP) throw new Error('Payment SDK not available');
 
-  if (!window.IMP) {
-    throw new Error('Payment SDK not available');
-  }
-
-  window.IMP.init(siteConfig.payment.pgMid);
+  window.IMP.init(IMP_CODE);
 
   return new Promise((resolve, reject) => {
     window.IMP!.request_pay(
       {
-        pg: data.pg || siteConfig.payment.pg,
-        pay_method: data.payMethod || 'card',
+        pg: PG_PROVIDER,
+        pay_method: 'card',
         merchant_uid: data.merchantUid,
         amount: data.amount,
         name: data.name,
@@ -69,11 +66,8 @@ export async function requestPayment(data: PGRequestData): Promise<PGResponse> {
         buyer_tel: data.buyerTel,
       },
       (response: PGResponse) => {
-        if (response.success) {
-          resolve(response);
-        } else {
-          reject(new Error(response.error_msg || 'Payment failed'));
-        }
+        if (response.success) resolve(response);
+        else reject(new Error(response.error_msg || 'Payment failed'));
       },
     );
   });

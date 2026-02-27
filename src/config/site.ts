@@ -17,25 +17,9 @@ export const siteConfig = {
   ],
   links: {
     mainSite: 'https://www.dreamitbiz.com',
-    login: 'https://www.dreamitbiz.com/login',
     register: 'https://www.dreamitbiz.com/register',
     cart: '/cart',
     support: 'https://www.dreamitbiz.com/support',
-  },
-  api: {
-    baseUrl: 'https://www.dreamitbiz.com/api',
-    endpoints: {
-      authMe: '/auth/me',
-      authLogin: '/auth/login',
-      authLogout: '/auth/logout',
-      orders: '/orders',
-      ordersVerify: '/orders/verify',
-      purchases: '/purchases',
-    },
-  },
-  payment: {
-    pg: 'html5_inicis',
-    pgMid: 'INIpayTest',
   },
 };
 

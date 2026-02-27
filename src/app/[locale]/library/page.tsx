@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { useAuth } from '@/contexts/auth-context';
-import { getPurchases } from '@/lib/api';
+import { getPurchases } from '@/lib/api/purchases';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LoginModal } from '@/components/commerce/login-modal';
@@ -22,19 +22,19 @@ import {
 export default function LibraryPage() {
   const t = useTranslations('library');
   const locale = useLocale();
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { user, isLoggedIn, isLoading: authLoading } = useAuth();
   const [purchases, setPurchases] = useState<PurchaseRecord[]>([]);
   const [loading, setLoading] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isLoggedIn || !user) return;
     setLoading(true);
-    getPurchases()
-      .then((res) => setPurchases(res.purchases))
+    getPurchases(user.id)
+      .then((res) => setPurchases(res))
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [isAuthenticated]);
+  }, [isLoggedIn, user]);
 
   if (authLoading) {
     return (
@@ -44,7 +44,7 @@ export default function LibraryPage() {
     );
   }
 
-  if (!isAuthenticated) {
+  if (!isLoggedIn) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-center text-center">
