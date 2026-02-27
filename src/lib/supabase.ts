@@ -4,10 +4,15 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
 let supabase: SupabaseClient | null = null;
+let initFailed = false;
 
 export function getSupabase(): SupabaseClient | null {
   if (typeof window === 'undefined') return null;
-  if (!supabase && supabaseUrl && supabaseAnonKey) {
+  if (supabase) return supabase;
+  if (initFailed) return null;
+  if (!supabaseUrl || !supabaseAnonKey) return null;
+
+  try {
     supabase = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
         flowType: 'pkce',
@@ -16,6 +21,12 @@ export function getSupabase(): SupabaseClient | null {
         persistSession: true,
       },
     });
+    return supabase;
+  } catch (err) {
+    console.error('Supabase client init failed:', err);
+    initFailed = true;
+    return null;
   }
-  return supabase;
 }
+
+export type { SupabaseClient };

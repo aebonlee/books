@@ -36,7 +36,12 @@ function loadCart(): CartItem[] {
 }
 
 function saveCart(items: CartItem[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  } catch {
+    // localStorage 용량 초과 등 에러 무시
+  }
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {

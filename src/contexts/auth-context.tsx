@@ -43,38 +43,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    const client = getSupabase();
-    if (!client) {
+    let subscription: { unsubscribe: () => void } | null = null;
+    let fallbackTimer: ReturnType<typeof setTimeout> | null = null;
+
+    try {
+      const client = getSupabase();
+      if (!client) {
+        setIsLoading(false);
+        return;
+      }
+
+      const result = client.auth.onAuthStateChange((event, session) => {
+        const u = session?.user ?? null;
+        setUser(u);
+        if (u) {
+          loadProfile(u);
+        } else {
+          setProfile(null);
+        }
+        if (event === 'INITIAL_SESSION') {
+          setIsLoading(false);
+        }
+      });
+      subscription = result.data.subscription;
+
+      // 안전장치: INITIAL_SESSION이 5초 내 안 오면 loading 해제
+      fallbackTimer = setTimeout(() => {
+        setIsLoading((prev) => {
+          if (prev) console.warn('Auth: INITIAL_SESSION timeout, forcing loading=false');
+          return false;
+        });
+      }, 5000);
+    } catch (err) {
+      console.error('Auth initialization failed:', err);
       setIsLoading(false);
-      return;
     }
 
-    const {
-      data: { subscription },
-    } = client.auth.onAuthStateChange((event, session) => {
-      const u = session?.user ?? null;
-      setUser(u);
-      if (u) {
-        loadProfile(u);
-      } else {
-        setProfile(null);
-      }
-      if (event === 'INITIAL_SESSION') {
-        setIsLoading(false);
-      }
-    });
-
-    // 안전장치: INITIAL_SESSION이 5초 내 안 오면 loading 해제
-    const fallbackTimer = setTimeout(() => {
-      setIsLoading((prev) => {
-        if (prev) console.warn('Auth: INITIAL_SESSION timeout, forcing loading=false');
-        return false;
-      });
-    }, 5000);
-
     return () => {
-      clearTimeout(fallbackTimer);
-      subscription.unsubscribe();
+      if (fallbackTimer) clearTimeout(fallbackTimer);
+      if (subscription) subscription.unsubscribe();
     };
   }, [loadProfile]);
 
