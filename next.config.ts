@@ -14,13 +14,9 @@ if (!process.env.VELITE_STARTED && (isDev || isBuild)) {
 }
 
 const nextConfig: NextConfig = {
+  output: 'export',
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'www.dreamitbiz.com',
-      },
-    ],
+    unoptimized: true,
   },
 };
 
