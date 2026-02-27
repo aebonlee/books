@@ -12,7 +12,9 @@ import type { User } from '@supabase/supabase-js';
 import { getSupabase } from '@/lib/supabase';
 import { getProfile, signOut as authSignOut, type UserProfile } from '@/lib/auth';
 
-const ADMIN_EMAILS = ['aebon@kakao.com', 'aebon@kyonggi.ac.kr'];
+const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'aebon@kakao.com,aebon@kyonggi.ac.kr')
+  .split(',')
+  .map((e) => e.trim().toLowerCase());
 
 interface AuthContextValue {
   user: User | null;

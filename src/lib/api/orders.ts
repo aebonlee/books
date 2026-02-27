@@ -64,7 +64,7 @@ export async function createOrder(data: OrderRequest): Promise<OrderResponse> {
 
   // 주문 항목 저장
   if (data.items.length > 0) {
-    await client.from('order_items').insert(
+    const { error: itemsError } = await client.from('order_items').insert(
       data.items.map((item) => ({
         order_id: order.id,
         product_title: item.title,
@@ -73,6 +73,7 @@ export async function createOrder(data: OrderRequest): Promise<OrderResponse> {
         subtotal: item.price * item.quantity,
       })),
     );
+    if (itemsError) console.error('Failed to insert order items:', itemsError.message);
   }
 
   return {

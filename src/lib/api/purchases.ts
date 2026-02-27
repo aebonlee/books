@@ -27,7 +27,10 @@ export async function getPurchases(userId: string): Promise<PurchaseRecord[]> {
     .eq('payment_status', 'paid')
     .order('created_at', { ascending: false });
 
-  if (error) return [];
+  if (error) {
+    console.error('Failed to fetch purchases:', error.message);
+    return [];
+  }
   return (data || []).flatMap((order) =>
     (order.order_items || []).map((item: Record<string, unknown>) => ({
       id: `${order.id}-${item.id}`,

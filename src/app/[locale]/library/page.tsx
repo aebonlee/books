@@ -32,7 +32,7 @@ export default function LibraryPage() {
     setLoading(true);
     getPurchases(user.id)
       .then((res) => setPurchases(res))
-      .catch(() => {})
+      .catch((err) => console.error('Failed to load purchases:', err))
       .finally(() => setLoading(false));
   }, [isLoggedIn, user]);
 
