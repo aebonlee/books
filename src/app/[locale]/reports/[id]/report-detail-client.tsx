@@ -51,7 +51,10 @@ export function ReportDetailClient({ reportId, locale }: ReportDetailClientProps
   const { addItem, isInCart } = useCart();
 
   const loadReport = useCallback(async () => {
-    const id = parseInt(reportId);
+    // Static export에서 서버 params는 fallback '_'이므로 URL에서 실제 ID 추출
+    const pathParts = window.location.pathname.split('/');
+    const urlId = pathParts[pathParts.length - 1];
+    const id = parseInt(urlId || reportId);
     if (isNaN(id)) {
       setLoading(false);
       return;
