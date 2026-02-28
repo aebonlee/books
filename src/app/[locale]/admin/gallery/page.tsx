@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
-import { Plus, Pencil, Trash2, Loader2, X as XIcon, ImagePlus } from 'lucide-react';
+import { Plus, Pencil, Trash2, Loader2, X as XIcon } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
 import { useToast } from '@/components/ui/toast';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,6 @@ import {
   createGalleryItem,
   updateGalleryItem,
   deleteGalleryItem,
-  uploadCoverImage,
 } from '@/lib/api/gallery';
 import type { GalleryItem, GalleryCategory, CreateGalleryItemData } from '@/lib/api/gallery';
 import { useLocale } from 'next-intl';
@@ -83,8 +82,7 @@ export default function AdminGalleryPage() {
   const [editingItem, setEditingItem] = useState<GalleryItem | null>(null);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [subImageFiles, setSubImageFiles] = useState<File[]>([]);
+  const [newSubImageUrl, setNewSubImageUrl] = useState('');
 
   const loadItems = useCallback(async () => {
     setLoading(true);
@@ -130,8 +128,7 @@ export default function AdminGalleryPage() {
   const openCreateDialog = () => {
     setEditingItem(null);
     setForm(EMPTY_FORM);
-    setImageFile(null);
-    setSubImageFiles([]);
+    setNewSubImageUrl('');
     setDialogOpen(true);
   };
 
@@ -154,8 +151,7 @@ export default function AdminGalleryPage() {
       author_name: item.author_name || '',
       tags: (item.tags || []).join(', '),
     });
-    setImageFile(null);
-    setSubImageFiles([]);
+    setNewSubImageUrl('');
     setDialogOpen(true);
   };
 
@@ -167,21 +163,6 @@ export default function AdminGalleryPage() {
 
     setSaving(true);
     try {
-      let coverUrl = form.cover_image || '/images/covers/default.png';
-
-      // Upload image if file selected
-      if (imageFile) {
-        coverUrl = await uploadCoverImage(imageFile, form.slug);
-      }
-
-      // Upload sub images
-      const existingSubImages = [...form.sub_images];
-      for (const f of subImageFiles) {
-        if (existingSubImages.length >= 5) break;
-        const url = await uploadCoverImage(f, `${form.slug}-sub-${existingSubImages.length + 1}`);
-        existingSubImages.push(url);
-      }
-
       const payload: CreateGalleryItemData = {
         slug: form.slug,
         title: form.title,
@@ -189,8 +170,8 @@ export default function AdminGalleryPage() {
         description: form.description,
         description_en: form.description_en || undefined,
         category: form.category,
-        cover_image: coverUrl,
-        sub_images: existingSubImages,
+        cover_image: form.cover_image || '/images/covers/default.png',
+        sub_images: form.sub_images,
         price: parseInt(form.price) || 0,
         is_free: form.is_free,
         featured: form.featured,
@@ -467,37 +448,26 @@ export default function AdminGalleryPage() {
 
           {/* Cover Image */}
           <div>
-            <Label>{locale === 'ko' ? '커버 이미지 *' : 'Cover Image *'}</Label>
+            <Label>{locale === 'ko' ? '커버 이미지 URL *' : 'Cover Image URL *'}</Label>
             <Input
               value={form.cover_image}
               onChange={(e) => updateField('cover_image', e.target.value)}
-              placeholder={locale === 'ko' ? '이미지 URL 또는 아래에서 파일 업로드' : 'Image URL or upload below'}
+              placeholder="https://raw.githubusercontent.com/..."
             />
-            <input
-              type="file"
-              accept="image/*"
-              className="mt-2 text-sm text-gray-500"
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (f) setImageFile(f);
-              }}
-            />
-            {imageFile && (
-              <p className="mt-1 text-xs text-blue-600">
-                {locale === 'ko' ? '파일 선택됨:' : 'File selected:'} {imageFile.name}
-              </p>
-            )}
           </div>
 
           {/* Sub Images (max 5) */}
           <div>
-            <Label>{locale === 'ko' ? '서브 이미지 (최대 5장)' : 'Sub Images (max 5)'}</Label>
-            {/* Existing sub images */}
+            <Label>{locale === 'ko' ? '서브 이미지 URL (최대 5장)' : 'Sub Image URLs (max 5)'}</Label>
             {form.sub_images.length > 0 && (
-              <div className="mt-2 flex flex-wrap gap-2">
+              <div className="mt-2 space-y-1">
                 {form.sub_images.map((url, i) => (
-                  <div key={i} className="group relative h-16 w-16 overflow-hidden rounded border bg-gray-100">
-                    <Image src={url} alt={`sub ${i + 1}`} fill className="object-cover" sizes="64px" />
+                  <div key={i} className="flex items-center gap-2">
+                    <Input
+                      value={url}
+                      readOnly
+                      className="flex-1 text-xs"
+                    />
                     <button
                       type="button"
                       onClick={() => {
@@ -506,45 +476,44 @@ export default function AdminGalleryPage() {
                           sub_images: prev.sub_images.filter((_, idx) => idx !== i),
                         }));
                       }}
-                      className="absolute -right-1 -top-1 rounded-full bg-red-500 p-0.5 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                      className="shrink-0 rounded p-1 text-red-500 hover:bg-red-50"
                     >
-                      <XIcon className="h-3 w-3" />
+                      <XIcon className="h-4 w-4" />
                     </button>
                   </div>
                 ))}
               </div>
             )}
-            {/* Pending uploads */}
-            {subImageFiles.length > 0 && (
-              <div className="mt-1 flex flex-wrap gap-1">
-                {subImageFiles.map((f, i) => (
-                  <span key={i} className="inline-flex items-center gap-1 rounded bg-blue-50 px-2 py-0.5 text-xs text-blue-700">
-                    {f.name}
-                    <button type="button" onClick={() => setSubImageFiles((prev) => prev.filter((_, idx) => idx !== i))}>
-                      <XIcon className="h-3 w-3" />
-                    </button>
-                  </span>
-                ))}
+            {form.sub_images.length < 5 && (
+              <div className="mt-2 flex gap-2">
+                <Input
+                  value={newSubImageUrl}
+                  onChange={(e) => setNewSubImageUrl(e.target.value)}
+                  placeholder="https://raw.githubusercontent.com/..."
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={!newSubImageUrl.trim()}
+                  onClick={() => {
+                    if (newSubImageUrl.trim()) {
+                      setForm((prev) => ({
+                        ...prev,
+                        sub_images: [...prev.sub_images, newSubImageUrl.trim()],
+                      }));
+                      setNewSubImageUrl('');
+                    }
+                  }}
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
               </div>
             )}
-            {form.sub_images.length + subImageFiles.length < 5 && (
-              <label className="mt-2 flex cursor-pointer items-center gap-2 rounded-md border border-dashed border-gray-300 px-3 py-2 text-sm text-gray-500 hover:border-blue-400 hover:text-blue-600">
-                <ImagePlus className="h-4 w-4" />
-                {locale === 'ko' ? '이미지 추가' : 'Add image'}
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  className="hidden"
-                  onChange={(e) => {
-                    const files = Array.from(e.target.files || []);
-                    const remaining = 5 - form.sub_images.length - subImageFiles.length;
-                    setSubImageFiles((prev) => [...prev, ...files.slice(0, remaining)]);
-                    e.target.value = '';
-                  }}
-                />
-              </label>
-            )}
+            <p className="mt-1 text-xs text-gray-400">
+              {form.sub_images.length}/5
+            </p>
           </div>
 
           {/* Price */}
