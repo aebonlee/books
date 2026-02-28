@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useLocale } from 'next-intl';
+import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
-import { ExternalLink, FileText, Presentation, Loader2 } from 'lucide-react';
+import { ExternalLink, Presentation, Loader2 } from 'lucide-react';
 import { getPublishedReports } from '@/lib/api/reports';
 import type { ReportItem } from '@/lib/api/reports';
 
@@ -81,41 +82,55 @@ export default function ReportsPage() {
               href={report.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md hover:border-gray-300"
+              className="group overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md hover:border-gray-300"
             >
-              {/* Card Header with Icon */}
-              <div className="flex items-start gap-3 p-5 pb-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 group-hover:bg-blue-100">
-                  <FileText className="h-5 w-5" />
+              {/* Thumbnail Image */}
+              {report.cover_image ? (
+                <div className="relative aspect-[16/9] w-full overflow-hidden bg-gray-100">
+                  <Image
+                    src={report.cover_image}
+                    alt={report.title}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
                 </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">
-                    {locale === 'ko' ? report.title : (report.title_en || report.title)}
-                  </h3>
-                  <p className="mt-1 text-sm text-gray-500 line-clamp-2">
+              ) : (
+                <div className="flex aspect-[16/9] w-full items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+                  <Presentation className="h-12 w-12 text-blue-300" />
+                </div>
+              )}
+
+              {/* Card Body */}
+              <div className="p-5">
+                <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">
+                  {locale === 'ko' ? report.title : (report.title_en || report.title)}
+                </h3>
+                {report.description && (
+                  <p className="mt-1.5 text-sm text-gray-500 line-clamp-2">
                     {locale === 'ko' ? report.description : (report.description_en || report.description)}
                   </p>
-                </div>
-              </div>
+                )}
 
-              {/* Tags & Platform */}
-              <div className="flex flex-wrap items-center gap-2 px-5 pb-4">
-                <span
-                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getPlatformColor(report.platform)}`}
-                >
-                  {getPlatformLabel(report.platform, locale)}
-                </span>
-                {(report.tags || []).map((tag) => (
-                  <Badge key={tag} variant="secondary" className="text-xs">
-                    {tag}
-                  </Badge>
-                ))}
+                {/* Tags & Platform */}
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <span
+                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getPlatformColor(report.platform)}`}
+                  >
+                    {getPlatformLabel(report.platform, locale)}
+                  </span>
+                  {(report.tags || []).map((tag) => (
+                    <Badge key={tag} variant="secondary" className="text-xs">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
               </div>
 
               {/* Footer */}
               <div className="flex items-center justify-between border-t border-gray-100 px-5 py-3">
                 <span className="text-xs text-gray-400">
-                  {new Date(report.created_at).toLocaleDateString(
+                  {new Date(report.published_date).toLocaleDateString(
                     locale === 'ko' ? 'ko-KR' : 'en-US',
                   )}
                 </span>

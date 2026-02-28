@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import Image from 'next/image';
 import { Plus, Pencil, Trash2, Loader2, ExternalLink } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
 import { useToast } from '@/components/ui/toast';
@@ -36,6 +37,8 @@ interface FormState {
   description_en: string;
   platform: ReportPlatform;
   url: string;
+  cover_image: string;
+  published_date: string;
   tags: string;
   sort_order: string;
   is_published: boolean;
@@ -48,6 +51,8 @@ const EMPTY_FORM: FormState = {
   description_en: '',
   platform: 'miricanvas',
   url: '',
+  cover_image: '',
+  published_date: new Date().toISOString().split('T')[0],
   tags: '',
   sort_order: '0',
   is_published: true,
@@ -115,6 +120,8 @@ export default function AdminReportsPage() {
       description_en: item.description_en || '',
       platform: item.platform,
       url: item.url,
+      cover_image: item.cover_image || '',
+      published_date: item.published_date || '',
       tags: (item.tags || []).join(', '),
       sort_order: String(item.sort_order),
       is_published: item.is_published,
@@ -123,8 +130,11 @@ export default function AdminReportsPage() {
   };
 
   const handleSave = async () => {
-    if (!form.title || !form.url) {
-      toast(locale === 'ko' ? '제목과 URL을 입력해주세요' : 'Title and URL are required', 'error');
+    if (!form.title || !form.url || !form.published_date) {
+      toast(
+        locale === 'ko' ? '제목, URL, 발표일을 입력해주세요' : 'Title, URL, and date are required',
+        'error',
+      );
       return;
     }
 
@@ -137,6 +147,8 @@ export default function AdminReportsPage() {
         description_en: form.description_en || undefined,
         platform: form.platform,
         url: form.url,
+        cover_image: form.cover_image || undefined,
+        published_date: form.published_date,
         tags: form.tags ? form.tags.split(',').map((t) => t.trim()).filter(Boolean) : [],
         sort_order: parseInt(form.sort_order) || 0,
         is_published: form.is_published,
@@ -213,6 +225,9 @@ export default function AdminReportsPage() {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">
+                  {locale === 'ko' ? '미리보기' : 'Preview'}
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">
                   {locale === 'ko' ? '제목' : 'Title'}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">
@@ -222,7 +237,7 @@ export default function AdminReportsPage() {
                   {locale === 'ko' ? '상태' : 'Status'}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">
-                  {locale === 'ko' ? '등록일' : 'Date'}
+                  {locale === 'ko' ? '발표일' : 'Date'}
                 </th>
                 <th className="px-4 py-3 text-right text-xs font-medium uppercase text-gray-500">
                   {locale === 'ko' ? '작업' : 'Actions'}
@@ -232,6 +247,23 @@ export default function AdminReportsPage() {
             <tbody className="divide-y divide-gray-200 bg-white">
               {items.map((item) => (
                 <tr key={item.id} className="hover:bg-gray-50">
+                  <td className="px-4 py-3">
+                    {item.cover_image ? (
+                      <div className="relative h-12 w-20 overflow-hidden rounded bg-gray-100">
+                        <Image
+                          src={item.cover_image}
+                          alt={item.title}
+                          fill
+                          className="object-cover"
+                          sizes="80px"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex h-12 w-20 items-center justify-center rounded bg-gray-100 text-xs text-gray-400">
+                        No image
+                      </div>
+                    )}
+                  </td>
                   <td className="px-4 py-3">
                     <div className="text-sm font-medium text-gray-900">{item.title}</div>
                     {item.description && (
@@ -255,9 +287,7 @@ export default function AdminReportsPage() {
                     )}
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-500">
-                    {new Date(item.created_at).toLocaleDateString(
-                      locale === 'ko' ? 'ko-KR' : 'en-US',
-                    )}
+                    {item.published_date || '-'}
                   </td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex justify-end gap-1">
@@ -348,6 +378,37 @@ export default function AdminReportsPage() {
               value={form.url}
               onChange={(e) => updateField('url', e.target.value)}
               placeholder="https://www.miricanvas.com/..."
+            />
+          </div>
+
+          {/* Cover Image URL */}
+          <div>
+            <Label>{locale === 'ko' ? '미리보기 이미지 URL' : 'Preview Image URL'}</Label>
+            <Input
+              value={form.cover_image}
+              onChange={(e) => updateField('cover_image', e.target.value)}
+              placeholder="https://raw.githubusercontent.com/..."
+            />
+            {form.cover_image && (
+              <div className="mt-2 relative h-32 w-56 overflow-hidden rounded border border-gray-200 bg-gray-50">
+                <Image
+                  src={form.cover_image}
+                  alt="Preview"
+                  fill
+                  className="object-cover"
+                  sizes="224px"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Published Date */}
+          <div>
+            <Label>{locale === 'ko' ? '작성/발표일 *' : 'Published Date *'}</Label>
+            <Input
+              type="date"
+              value={form.published_date}
+              onChange={(e) => updateField('published_date', e.target.value)}
             />
           </div>
 

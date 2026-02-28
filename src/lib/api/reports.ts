@@ -10,6 +10,8 @@ export interface ReportItem {
   description_en: string | null;
   platform: ReportPlatform;
   url: string;
+  cover_image: string;
+  published_date: string;
   tags: string[];
   sort_order: number;
   is_published: boolean;
@@ -24,6 +26,8 @@ export interface CreateReportData {
   description_en?: string;
   platform: ReportPlatform;
   url: string;
+  cover_image?: string;
+  published_date: string;
   tags?: string[];
   sort_order?: number;
   is_published?: boolean;
