@@ -89,7 +89,18 @@ RETURNS INTEGER AS $$ ... $$ LANGUAGE plpgsql;
   4. 반환된 카운트 표시
 ```
 
-## 사전 요구사항
+## Supabase 자동 설정 (완료)
 
-- Supabase에서 `content_views` 테이블 및 `increment_view` RPC 함수 수동 생성 필요
-- RLS 정책: anonymous read/insert/update 허용
+Supabase Management API를 통해 아래 항목을 자동으로 생성 완료:
+
+| 항목 | 상태 |
+|------|------|
+| `content_views` 테이블 | 생성 완료 |
+| `idx_content_views_type` 인덱스 | 생성 완료 |
+| RLS 활성화 + anonymous read/insert/update 정책 | 적용 완료 |
+| `increment_view(p_type, p_slug)` RPC 함수 | 생성 완료 |
+
+검증 결과:
+- `increment_view('gallery', 'test-item')` → 1 반환 (최초 삽입)
+- 동일 호출 재실행 → 2 반환 (카운트 증가 정상)
+- `content_views` SELECT 조회 → 정상 동작
