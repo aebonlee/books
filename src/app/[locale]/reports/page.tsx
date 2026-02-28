@@ -101,20 +101,20 @@ function ReportCard({ report, locale }: { report: ReportItem; locale: string }) 
         <div className="mt-3 flex items-center gap-2">
           {report.is_free ? (
             <>
-              {report.price > 0 && (
+              {(report.price || 0) > 0 && (
                 <span className="text-sm text-gray-400 line-through">
-                  {formatPrice(report.price, locale)}
+                  {formatPrice(report.price || 0, locale)}
                 </span>
               )}
               <span className="text-sm font-bold text-green-600">
                 {locale === 'ko' ? '무료' : 'Free'}
               </span>
             </>
-          ) : (
+          ) : (report.price || 0) > 0 ? (
             <span className="text-sm font-bold text-gray-900">
-              {formatPrice(report.price, locale)}
+              {formatPrice(report.price || 0, locale)}
             </span>
-          )}
+          ) : null}
         </div>
 
         {/* Tags & Platform */}

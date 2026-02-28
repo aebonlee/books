@@ -294,15 +294,17 @@ export default function AdminReportsPage() {
                   <td className="px-4 py-3 text-sm text-gray-900">
                     {item.is_free ? (
                       <span className="text-green-600 font-medium">
-                        {item.price > 0 && (
+                        {(item.price || 0) > 0 && (
                           <span className="text-gray-400 line-through mr-1">
-                            {item.price.toLocaleString()}
+                            {(item.price || 0).toLocaleString()}
                           </span>
                         )}
                         {locale === 'ko' ? '무료' : 'Free'}
                       </span>
+                    ) : (item.price || 0) > 0 ? (
+                      <span>{(item.price || 0).toLocaleString()}{locale === 'ko' ? '원' : ' KRW'}</span>
                     ) : (
-                      <span>{item.price.toLocaleString()}{locale === 'ko' ? '원' : ' KRW'}</span>
+                      <span className="text-gray-400">-</span>
                     )}
                   </td>
                   <td className="px-4 py-3">
