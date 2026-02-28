@@ -51,19 +51,33 @@ export function ReportDetailClient({ reportId, locale }: ReportDetailClientProps
   const { addItem, isInCart } = useCart();
 
   const loadReport = useCallback(async () => {
-    // Static export에서 서버 params는 fallback '_'이므로 URL에서 실제 ID 추출
-    const pathParts = window.location.pathname.split('/');
-    const urlId = pathParts[pathParts.length - 1];
-    const id = parseInt(urlId || reportId);
-    if (isNaN(id)) {
+    // Static export: 서버 params는 항상 '_'이므로 query param 또는 URL path에서 ID 추출
+    const params = new URLSearchParams(window.location.search);
+    const qid = params.get('id');
+    let numId: number;
+
+    if (qid) {
+      // ?id=N 형태 (목록 페이지 Link 또는 404 redirect)
+      numId = parseInt(qid);
+      // URL을 깔끔하게 정리: /reports/_?id=5 → /reports/5
+      const cleanPath = window.location.pathname.replace(/\/_$/, `/${qid}`);
+      window.history.replaceState(null, '', cleanPath);
+    } else {
+      // 직접 URL 접근 시 path에서 추출 (fallback)
+      const pathParts = window.location.pathname.split('/');
+      const urlId = pathParts[pathParts.length - 1];
+      numId = parseInt(urlId);
+    }
+
+    if (isNaN(numId)) {
       setLoading(false);
       return;
     }
     setLoading(true);
-    const data = await getReportById(id);
+    const data = await getReportById(numId);
     setReport(data);
     setLoading(false);
-  }, [reportId]);
+  }, []);
 
   useEffect(() => {
     loadReport();

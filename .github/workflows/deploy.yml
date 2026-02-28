@@ -47,19 +47,15 @@ jobs:
           (function(){
             var p=location.pathname;
             var routes=[
-              {re:/^\/(ko|en)\/reports\/\d+/,t:'/$1/reports/_.html'},
-              {re:/^\/(ko|en)\/books\/[^\/]+/,t:'/$1/books/_.html'},
-              {re:/^\/(ko|en)\/reader\/[^\/]+/,t:'/$1/reader/_.html'}
+              {re:/^\/(ko|en)\/reports\/(\d+)\/?$/,fallback:'/$1/reports/_?id=$2'},
+              {re:/^\/(ko|en)\/books\/([^\/]+)\/?$/,fallback:'/$1/books/$2'},
+              {re:/^\/(ko|en)\/reader\/([^\/]+)\/?$/,fallback:'/$1/reader/$2'}
             ];
             for(var i=0;i<routes.length;i++){
               var m=p.match(routes[i].re);
               if(m){
-                var x=new XMLHttpRequest();
-                x.open('GET',routes[i].t.replace('$1',m[1]),true);
-                x.onload=function(){
-                  if(x.status===200){document.open();document.write(x.responseText);document.close();}
-                };
-                x.send();
+                var target=routes[i].fallback.replace('$1',m[1]).replace('$2',m[2]);
+                location.replace(target);
                 return;
               }
             }

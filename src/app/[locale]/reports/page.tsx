@@ -51,7 +51,7 @@ function ReportCard({ report, locale, viewCount }: { report: ReportItem; locale:
 
   return (
     <Link
-      href={`/reports/${report.id}`}
+      href={`/reports/_?id=${report.id}`}
       className="group overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md hover:border-gray-300"
     >
       {/* Thumbnail Image */}
