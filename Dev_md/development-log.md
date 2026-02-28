@@ -512,3 +512,83 @@ Cloudflare DNS 패널에서 다음 레코드를 확인/추가:
 - 로그인 시 현재 도메인(`window.location.hostname`)을 `visited_sites`에 자동 기록
 - 계정 상태가 `active`가 아닌 경우(차단/탈퇴 등) 자동 로그아웃 처리
 - RPC 호출 실패 시 경고만 출력하고 정상 진행 (서비스 중단 방지)
+
+---
+
+## 연구보고서 메뉴 추가 (Supabase CRUD + 외부 슬라이드 연동) ✅
+
+### 배경
+미리캔버스, 젠스파크 등 외부 슬라이드 공유 플랫폼의 미리보기 링크를 통해 연구보고서를 제공하는 메뉴 추가.
+보고서가 많아질 것을 대비하여 정적 배열이 아닌 Supabase DB 기반 동적 관리 시스템으로 구축.
+
+### 구현 내용
+
+#### 1. 네비게이션 메뉴 추가 — `src/config/navigation.ts`
+- `mainNav` 배열에 `연구보고서 (Research Reports)` 항목 추가 (`/reports`)
+- 헤더, 모바일 메뉴, 푸터에 자동 반영 (기존 `mainNav` 참조 구조)
+
+#### 2. Supabase 테이블 — `pub_reports`
+```sql
+CREATE TABLE pub_reports (
+  id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  title_en TEXT,
+  description TEXT NOT NULL DEFAULT '',
+  description_en TEXT,
+  platform TEXT NOT NULL DEFAULT 'miricanvas' CHECK (platform IN ('miricanvas', 'genspark')),
+  url TEXT NOT NULL,
+  tags TEXT[] DEFAULT '{}',
+  sort_order INTEGER DEFAULT 0,
+  is_published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- RLS 정책: 공개 읽기 + 관리자 CRUD (갤러리와 동일 패턴)
+-- 인덱스: (is_published, sort_order)
+-- updated_at 자동 갱신 트리거
+```
+
+#### 3. API 모듈 — `src/lib/api/reports.ts` (신규)
+갤러리 API와 동일한 패턴:
+
+| 함수 | 용도 |
+|------|------|
+| `getPublishedReports()` | 공개 보고서 조회 (사용자 페이지) |
+| `getReportsAdmin()` | 전체 보고서 조회 (관리자, 비공개 포함) |
+| `createReport(data)` | 보고서 생성 |
+| `updateReport(id, data)` | 보고서 수정 |
+| `deleteReport(id)` | 보고서 삭제 |
+
+`src/lib/api/index.ts`에 reports 관련 함수/타입 re-export 추가.
+
+#### 4. 연구보고서 페이지 — `src/app/[locale]/reports/page.tsx`
+- Supabase에서 공개 보고서 동적 로딩
+- 카드 그리드 (3열 반응형) — 제목, 설명, 플랫폼 뱃지, 태그, 날짜
+- 각 카드 클릭 시 외부 슬라이드 공유 URL 새 탭으로 열림
+- 플랫폼별 색상: 미리캔버스(보라색), 젠스파크(청록색)
+- 로딩 스피너 + 빈 상태 표시
+
+#### 5. 관리자 페이지 — `src/app/[locale]/admin/reports/page.tsx` (신규)
+- `useAuth().isAdmin` 접근 제어
+- 테이블 뷰: 제목, 플랫폼, 공개 상태, 등록일, 외부 링크/수정/삭제 버튼
+- 생성/수정 Dialog 폼: 제목(한/영), 플랫폼 선택, 슬라이드 공유 URL, 설명(한/영), 태그, 정렬 순서, 공개 여부
+
+#### 6. 관리자 메뉴 링크 추가 — `src/components/commerce/user-menu.tsx`
+- `isAdmin` 드롭다운 메뉴에 **보고서 관리** (FileText 아이콘 + `/admin/reports` 링크) 추가
+
+### 파일 변경 요약
+
+| 파일 | 작업 |
+|------|------|
+| `src/config/navigation.ts` | **수정** — 연구보고서 메뉴 항목 추가 |
+| `src/lib/api/reports.ts` | **신규** — Supabase CRUD API |
+| `src/lib/api/index.ts` | **수정** — reports re-export 추가 |
+| `src/app/[locale]/reports/page.tsx` | **신규** — 연구보고서 목록 페이지 |
+| `src/app/[locale]/admin/reports/page.tsx` | **신규** — 관리자 보고서 관리 페이지 |
+| `src/components/commerce/user-menu.tsx` | **수정** — 보고서 관리 메뉴 링크 추가 |
+
+### Supabase 설정 필요 사항
+1. SQL Editor에서 `pub_reports` 테이블 생성
+2. RLS 정책 설정 (공개 읽기 + 관리자 CRUD)
+3. `updated_at` 자동 갱신 트리거 설정

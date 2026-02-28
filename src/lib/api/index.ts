@@ -21,3 +21,16 @@ export type {
   CreateGalleryItemData,
   UpdateGalleryItemData,
 } from './gallery';
+export {
+  getPublishedReports,
+  getReportsAdmin,
+  createReport,
+  updateReport,
+  deleteReport,
+} from './reports';
+export type {
+  ReportItem,
+  ReportPlatform,
+  CreateReportData,
+  UpdateReportData,
+} from './reports';

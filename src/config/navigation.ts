@@ -10,6 +10,7 @@ export const mainNav: NavItem[] = [
   { titleKo: '전자출판', titleEn: 'E-Publishing', href: '/category/digital' },
   { titleKo: '도서 & 교육교재', titleEn: 'Books & Textbooks', href: '/category/textbooks' },
   { titleKo: '강의안 및 실습자료', titleEn: 'Lectures & Labs', href: '/category/lectures' },
+  { titleKo: '연구보고서', titleEn: 'Research Reports', href: '/reports' },
   { titleKo: '맞춤 제작의뢰', titleEn: 'Custom Request', href: '/custom-order' },
 ];
 

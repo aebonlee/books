@@ -7,7 +7,7 @@ import { Link, usePathname } from '@/i18n/navigation';
 import { useAuth } from '@/contexts/auth-context';
 import { useToast } from '@/components/ui/toast';
 import { Button } from '@/components/ui/button';
-import { User, BookOpen, LogOut, Settings } from 'lucide-react';
+import { User, BookOpen, LogOut, Settings, FileText } from 'lucide-react';
 
 export function UserMenu() {
   const locale = useLocale();
@@ -101,14 +101,24 @@ export function UserMenu() {
         {locale === 'ko' ? '내 서재' : 'My Library'}
       </Link>
       {isAdmin && (
-        <Link
-          href="/admin/gallery"
-          className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-          onClick={() => setMenuOpen(false)}
-        >
-          <Settings className="h-4 w-4" />
-          {locale === 'ko' ? '갤러리 관리' : 'Gallery Admin'}
-        </Link>
+        <>
+          <Link
+            href="/admin/gallery"
+            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            onClick={() => setMenuOpen(false)}
+          >
+            <Settings className="h-4 w-4" />
+            {locale === 'ko' ? '갤러리 관리' : 'Gallery Admin'}
+          </Link>
+          <Link
+            href="/admin/reports"
+            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            onClick={() => setMenuOpen(false)}
+          >
+            <FileText className="h-4 w-4" />
+            {locale === 'ko' ? '보고서 관리' : 'Reports Admin'}
+          </Link>
+        </>
       )}
       <button
         onClick={async () => {
