@@ -5,7 +5,7 @@ import { Eye } from 'lucide-react';
 import { incrementView, getViewCount } from '@/lib/api/views';
 
 interface ViewCounterProps {
-  type: 'gallery' | 'book';
+  type: 'gallery' | 'book' | 'report';
   slug: string;
   increment?: boolean;
   initialCount?: number;

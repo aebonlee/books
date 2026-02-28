@@ -8,6 +8,8 @@ export interface ReportItem {
   title_en: string | null;
   description: string;
   description_en: string | null;
+  body: string | null;
+  body_en: string | null;
   platform: ReportPlatform;
   url: string;
   cover_image: string;
@@ -27,6 +29,8 @@ export interface CreateReportData {
   title_en?: string;
   description: string;
   description_en?: string;
+  body?: string;
+  body_en?: string;
   platform: ReportPlatform;
   url: string;
   cover_image?: string;
@@ -59,6 +63,25 @@ export async function getPublishedReports(): Promise<ReportItem[]> {
   }
 
   return (data as ReportItem[]) || [];
+}
+
+/** 단일 연구보고서 조회 */
+export async function getReportById(id: number): Promise<ReportItem | null> {
+  const client = getSupabase();
+  if (!client) return null;
+
+  const { data, error } = await client
+    .from('pub_reports')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    console.error('Failed to fetch report:', error.message);
+    return null;
+  }
+
+  return data as ReportItem;
 }
 
 /** 전체 연구보고서 조회 (관리자용) */

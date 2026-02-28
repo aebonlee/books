@@ -1,7 +1,7 @@
 import { getSupabase } from '@/lib/supabase';
 
 export async function incrementView(
-  type: 'gallery' | 'book',
+  type: 'gallery' | 'book' | 'report',
   slug: string
 ): Promise<number> {
   const supabase = getSupabase();
@@ -21,7 +21,7 @@ export async function incrementView(
 }
 
 export async function getViewCounts(
-  type: 'gallery' | 'book',
+  type: 'gallery' | 'book' | 'report',
   slugs: string[]
 ): Promise<Record<string, number>> {
   const supabase = getSupabase();
@@ -46,7 +46,7 @@ export async function getViewCounts(
 }
 
 export async function getViewCount(
-  type: 'gallery' | 'book',
+  type: 'gallery' | 'book' | 'report',
   slug: string
 ): Promise<number> {
   const supabase = getSupabase();

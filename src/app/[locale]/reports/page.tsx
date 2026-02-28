@@ -3,10 +3,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useLocale } from 'next-intl';
 import Image from 'next/image';
+import { Link } from '@/i18n/navigation';
 import { Badge } from '@/components/ui/badge';
-import { ExternalLink, Presentation, Loader2, ShoppingCart, Check } from 'lucide-react';
+import { Eye, Presentation, Loader2, ShoppingCart, Check } from 'lucide-react';
 import { getPublishedReports } from '@/lib/api/reports';
 import type { ReportItem } from '@/lib/api/reports';
+import { getViewCounts } from '@/lib/api/views';
 import { useCart } from '@/contexts/cart-context';
 import { formatPrice, resolveImageUrl } from '@/lib/utils';
 
@@ -29,7 +31,7 @@ function getPlatformColor(platform: string) {
   }
 }
 
-function ReportCard({ report, locale }: { report: ReportItem; locale: string }) {
+function ReportCard({ report, locale, viewCount }: { report: ReportItem; locale: string; viewCount?: number }) {
   const { addItem, isInCart } = useCart();
   const cartSlug = `report-${report.id}`;
   const inCart = isInCart(cartSlug);
@@ -48,10 +50,8 @@ function ReportCard({ report, locale }: { report: ReportItem; locale: string }) 
   };
 
   return (
-    <a
-      href={report.url}
-      target="_blank"
-      rel="noopener noreferrer"
+    <Link
+      href={`/reports/${report.id}`}
       className="group overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md hover:border-gray-300"
     >
       {/* Thumbnail Image */}
@@ -134,11 +134,19 @@ function ReportCard({ report, locale }: { report: ReportItem; locale: string }) 
 
       {/* Footer */}
       <div className="flex items-center justify-between border-t border-gray-100 px-5 py-3">
-        <span className="text-xs text-gray-400">
-          {new Date(report.published_date).toLocaleDateString(
-            locale === 'ko' ? 'ko-KR' : 'en-US',
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-gray-400">
+            {new Date(report.published_date).toLocaleDateString(
+              locale === 'ko' ? 'ko-KR' : 'en-US',
+            )}
+          </span>
+          {(viewCount ?? 0) > 0 && (
+            <span className="inline-flex items-center gap-1 text-gray-500">
+              <Eye className="h-3.5 w-3.5" />
+              <span className="text-xs">{(viewCount ?? 0).toLocaleString()}</span>
+            </span>
           )}
-        </span>
+        </div>
         <div className="flex items-center gap-2">
           {/* Cart Button */}
           {!report.is_free && (
@@ -159,24 +167,31 @@ function ReportCard({ report, locale }: { report: ReportItem; locale: string }) 
             </button>
           )}
           <span className="flex items-center gap-1 text-xs font-medium text-blue-600 group-hover:text-blue-700">
-            {locale === 'ko' ? '슬라이드 보기' : 'View Slides'}
-            <ExternalLink className="h-3 w-3" />
+            {locale === 'ko' ? '자세히 보기' : 'View Details'}
           </span>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }
 
 export default function ReportsPage() {
   const locale = useLocale();
   const [reports, setReports] = useState<ReportItem[]>([]);
+  const [viewCountMap, setViewCountMap] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
 
   const loadReports = useCallback(async () => {
     setLoading(true);
     const data = await getPublishedReports();
     setReports(data);
+
+    if (data.length > 0) {
+      const slugs = data.map((r) => `report-${r.id}`);
+      const counts = await getViewCounts('report', slugs);
+      setViewCountMap(counts);
+    }
+
     setLoading(false);
   }, []);
 
@@ -218,7 +233,7 @@ export default function ReportsPage() {
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {reports.map((report) => (
-            <ReportCard key={report.id} report={report} locale={locale} />
+            <ReportCard key={report.id} report={report} locale={locale} viewCount={viewCountMap[`report-${report.id}`]} />
           ))}
         </div>
       )}

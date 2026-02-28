@@ -36,6 +36,8 @@ interface FormState {
   title_en: string;
   description: string;
   description_en: string;
+  body: string;
+  body_en: string;
   platform: ReportPlatform;
   url: string;
   cover_image: string;
@@ -53,6 +55,8 @@ const EMPTY_FORM: FormState = {
   title_en: '',
   description: '',
   description_en: '',
+  body: '',
+  body_en: '',
   platform: 'miricanvas',
   url: '',
   cover_image: '',
@@ -125,6 +129,8 @@ export default function AdminReportsPage() {
       title_en: item.title_en || '',
       description: item.description,
       description_en: item.description_en || '',
+      body: item.body || '',
+      body_en: item.body_en || '',
       platform: item.platform,
       url: item.url,
       cover_image: item.cover_image || '',
@@ -155,6 +161,8 @@ export default function AdminReportsPage() {
         title_en: form.title_en || undefined,
         description: form.description,
         description_en: form.description_en || undefined,
+        body: form.body || undefined,
+        body_en: form.body_en || undefined,
         platform: form.platform,
         url: form.url,
         cover_image: form.cover_image || undefined,
@@ -486,6 +494,28 @@ export default function AdminReportsPage() {
               value={form.description_en}
               onChange={(e) => updateField('description_en', e.target.value)}
               placeholder="English description"
+            />
+          </div>
+
+          {/* Body KO */}
+          <div>
+            <Label>{locale === 'ko' ? '상세 해설 (한국어)' : 'Detailed Analysis (Korean)'}</Label>
+            <textarea
+              className="flex min-h-[120px] w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+              value={form.body}
+              onChange={(e) => updateField('body', e.target.value)}
+              placeholder={locale === 'ko' ? '상세 페이지에 표시될 긴 해설 (선택사항)' : 'Long-form analysis for detail page (optional)'}
+            />
+          </div>
+
+          {/* Body EN */}
+          <div>
+            <Label>{locale === 'ko' ? '상세 해설 (영어)' : 'Detailed Analysis (English)'}</Label>
+            <textarea
+              className="flex min-h-[120px] w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+              value={form.body_en}
+              onChange={(e) => updateField('body_en', e.target.value)}
+              placeholder="English detailed analysis (optional)"
             />
           </div>
 
