@@ -24,7 +24,7 @@ import {
 } from '@/lib/api/reports';
 import type { ReportItem, ReportPlatform, CreateReportData } from '@/lib/api/reports';
 import { useLocale } from 'next-intl';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, resolveImageUrl } from '@/lib/utils';
 
 const PLATFORM_OPTIONS: { value: ReportPlatform; labelKo: string; labelEn: string }[] = [
   { value: 'miricanvas', labelKo: '미리캔버스', labelEn: 'MiriCanvas' },
@@ -267,7 +267,7 @@ export default function AdminReportsPage() {
                     {item.cover_image ? (
                       <div className="relative h-12 w-20 overflow-hidden rounded bg-gray-100">
                         <Image
-                          src={item.cover_image}
+                          src={resolveImageUrl(item.cover_image)}
                           alt={item.title}
                           fill
                           className="object-cover"
@@ -431,12 +431,12 @@ export default function AdminReportsPage() {
             <Input
               value={form.cover_image}
               onChange={(e) => updateField('cover_image', e.target.value)}
-              placeholder="https://raw.githubusercontent.com/..."
+              placeholder="images/202603/파일명.png 또는 https://..."
             />
             {form.cover_image && (
               <div className="mt-2 relative h-32 w-56 overflow-hidden rounded border border-gray-200 bg-gray-50">
                 <Image
-                  src={form.cover_image}
+                  src={resolveImageUrl(form.cover_image)}
                   alt="Preview"
                   fill
                   className="object-cover"

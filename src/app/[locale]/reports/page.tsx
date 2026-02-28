@@ -8,7 +8,7 @@ import { ExternalLink, Presentation, Loader2, ShoppingCart, Check } from 'lucide
 import { getPublishedReports } from '@/lib/api/reports';
 import type { ReportItem } from '@/lib/api/reports';
 import { useCart } from '@/contexts/cart-context';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, resolveImageUrl } from '@/lib/utils';
 
 function getPlatformLabel(platform: string, locale: string) {
   const labels: Record<string, Record<string, string>> = {
@@ -42,7 +42,7 @@ function ReportCard({ report, locale }: { report: ReportItem; locale: string }) 
       slug: cartSlug,
       title: report.title,
       titleEn: report.title_en || undefined,
-      coverImage: report.cover_image || '',
+      coverImage: resolveImageUrl(report.cover_image || ''),
       price: report.price,
     });
   };
@@ -59,7 +59,7 @@ function ReportCard({ report, locale }: { report: ReportItem; locale: string }) 
         {report.cover_image ? (
           <div className="relative aspect-[16/9] w-full overflow-hidden bg-gray-100">
             <Image
-              src={report.cover_image}
+              src={resolveImageUrl(report.cover_image)}
               alt={report.title}
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-105"

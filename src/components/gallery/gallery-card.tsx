@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { ShoppingCart, Check, ChevronLeft, ChevronRight, X, Images } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, resolveImageUrl } from '@/lib/utils';
 import { useCart } from '@/contexts/cart-context';
 import type { GalleryItem } from '@/lib/api/gallery';
 import { GalleryLightbox } from './gallery-lightbox';
@@ -21,7 +21,7 @@ interface GalleryCardProps {
 export function GalleryCard({ item, locale = 'ko', layout = 'portrait' }: GalleryCardProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
-  const allImages = [item.cover_image, ...(item.sub_images || [])];
+  const allImages = [item.cover_image, ...(item.sub_images || [])].map(resolveImageUrl);
   const hasMultiple = allImages.length > 1;
 
   if (layout === 'landscape') {
@@ -68,7 +68,7 @@ function PortraitGalleryCard({ item, locale, hasMultiple, onOpenLightbox }: { it
       slug: item.slug,
       title: item.title,
       titleEn: item.title_en || undefined,
-      coverImage: item.cover_image,
+      coverImage: resolveImageUrl(item.cover_image),
       price: item.price,
     });
   };
@@ -77,7 +77,7 @@ function PortraitGalleryCard({ item, locale, hasMultiple, onOpenLightbox }: { it
     <Card className="group h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
       <div className="relative aspect-[3/4] cursor-pointer overflow-hidden bg-gray-100" onClick={onOpenLightbox}>
         <Image
-          src={item.cover_image}
+          src={resolveImageUrl(item.cover_image)}
           alt={title}
           fill
           className="object-cover transition-transform group-hover:scale-105"
@@ -146,7 +146,7 @@ function LandscapeGalleryCard({ item, locale, hasMultiple, onOpenLightbox }: { i
       slug: item.slug,
       title: item.title,
       titleEn: item.title_en || undefined,
-      coverImage: item.cover_image,
+      coverImage: resolveImageUrl(item.cover_image),
       price: item.price,
     });
   };
@@ -155,7 +155,7 @@ function LandscapeGalleryCard({ item, locale, hasMultiple, onOpenLightbox }: { i
     <Card className="group h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
       <div className="relative aspect-[4/3] cursor-pointer overflow-hidden bg-gray-100" onClick={onOpenLightbox}>
         <Image
-          src={item.cover_image}
+          src={resolveImageUrl(item.cover_image)}
           alt={title}
           fill
           className="object-cover transition-transform group-hover:scale-105"

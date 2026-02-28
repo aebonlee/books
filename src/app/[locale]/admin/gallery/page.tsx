@@ -24,7 +24,7 @@ import {
 } from '@/lib/api/gallery';
 import type { GalleryItem, GalleryCategory, CreateGalleryItemData } from '@/lib/api/gallery';
 import { useLocale } from 'next-intl';
-import { slugify, formatPrice } from '@/lib/utils';
+import { slugify, formatPrice, resolveImageUrl } from '@/lib/utils';
 
 const CATEGORY_OPTIONS: { value: GalleryCategory; labelKo: string; labelEn: string }[] = [
   { value: 'digital', labelKo: '전자출판', labelEn: 'E-Publishing' },
@@ -298,7 +298,7 @@ export default function AdminGalleryPage() {
                   <td className="px-4 py-3">
                     <div className="relative h-12 w-10 overflow-hidden rounded bg-gray-100">
                       <Image
-                        src={item.cover_image}
+                        src={resolveImageUrl(item.cover_image)}
                         alt={item.title}
                         fill
                         className="object-cover"
@@ -452,7 +452,7 @@ export default function AdminGalleryPage() {
             <Input
               value={form.cover_image}
               onChange={(e) => updateField('cover_image', e.target.value)}
-              placeholder="https://raw.githubusercontent.com/..."
+              placeholder="images/202603/파일명.png 또는 https://..."
             />
           </div>
 
@@ -489,7 +489,7 @@ export default function AdminGalleryPage() {
                 <Input
                   value={newSubImageUrl}
                   onChange={(e) => setNewSubImageUrl(e.target.value)}
-                  placeholder="https://raw.githubusercontent.com/..."
+                  placeholder="images/202603/파일명.png 또는 https://..."
                   className="flex-1"
                 />
                 <Button

@@ -34,3 +34,14 @@ export function truncate(text: string, length: number): string {
   if (text.length <= length) return text;
   return text.slice(0, length) + '...';
 }
+
+const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/aebonlee/books/main/';
+
+/** 상대 경로를 GitHub raw URL로 변환. 이미 절대 URL이면 그대로 반환. */
+export function resolveImageUrl(path: string): string {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) {
+    return path;
+  }
+  return GITHUB_RAW_BASE + path;
+}
