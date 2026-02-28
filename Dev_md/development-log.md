@@ -501,3 +501,14 @@ Cloudflare DNS 패널에서 다음 레코드를 확인/추가:
   - 하단 썸네일 스트립 + 카운터
   - 제목/설명 표시
 - **관리자 폼**: 서브 이미지 파일 업로드(최대 5장), 개별 삭제, 미리보기 썸네일 UI
+
+#### 이미지 등록 방식 URL 링크로 변경
+- 파일 업로드 제거 → 커버 이미지 + 서브 이미지 모두 URL 입력 방식으로 전환
+- GitHub에 이미지를 올리고 raw URL을 등록하는 워크플로우
+- 관리자 폼: 커버 이미지 URL 입력 + 서브 이미지 URL 개별 추가/삭제 UI
+
+#### check_user_status RPC 연동
+- `src/contexts/auth-context.tsx`의 `loadProfile()` 함수에 `check_user_status` RPC 호출 추가
+- 로그인 시 현재 도메인(`window.location.hostname`)을 `visited_sites`에 자동 기록
+- 계정 상태가 `active`가 아닌 경우(차단/탈퇴 등) 자동 로그아웃 처리
+- RPC 호출 실패 시 경고만 출력하고 정상 진행 (서비스 중단 방지)
