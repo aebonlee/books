@@ -99,6 +99,38 @@ ALTER TABLE pub_reports ADD COLUMN IF NOT EXISTS body_en TEXT;
   5. description + body 해설 표시
 ```
 
+## GitHub Pages 동적 라우트 대응
+
+정적 export(`output: 'export'`)에서 동적 라우트(`/reports/[id]`)는
+`generateStaticParams()`에서 반환한 `[{ id: '_' }]`만 빌드되므로,
+`/reports/1` 같은 URL 직접 접근 시 404 발생.
+
+### 해결 방식: 404.html SPA fallback
+
+GitHub Actions 워크플로우의 post-build 단계에서 `out/404.html`을
+커스텀 SPA fallback으로 교체:
+
+1. 404 발생 시 URL 패턴 매칭 (`/ko|en/reports/\d+` 등)
+2. 매칭되면 XHR로 fallback 페이지(`_.html`) fetch
+3. `document.write()`로 현재 문서 교체
+4. URL은 유지되고 Next.js 클라이언트 사이드 렌더링 정상 동작
+5. 매칭 안 되면 일반 404 UI 표시
+
+### 적용 대상 동적 라우트
+
+| 경로 패턴 | fallback 페이지 |
+|-----------|----------------|
+| `/(ko\|en)/reports/[id]` | `/(ko\|en)/reports/_.html` |
+| `/(ko\|en)/books/[slug]` | `/(ko\|en)/books/_.html` |
+| `/(ko\|en)/reader/[id]` | `/(ko\|en)/reader/_.html` |
+
+### 수정 파일
+
+| 파일 | 변경 내용 |
+|------|-----------|
+| `.github/workflows/deploy.yml` | post-build 단계에 404.html SPA fallback 생성 추가 |
+| `vercel.json` | 삭제 (GitHub Pages 사용, Vercel 미사용) |
+
 ## Supabase 자동 설정 (완료)
 
 | 항목 | 상태 |
