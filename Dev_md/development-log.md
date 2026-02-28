@@ -476,3 +476,28 @@ Cloudflare DNS 패널에서 다음 레코드를 확인/추가:
 1. SQL Editor에서 테이블/RLS/트리거 생성 (Phase 1 SQL)
 2. Storage에 `public-assets` 버킷 생성 (이미지 업로드용)
 3. Storage 정책: 인증 사용자 업로드, 공개 읽기
+
+### 추가 변경 사항
+
+#### 테이블명 변경: `gallery_items` → `pub_gallery_items`
+기존 메인 사이트의 `gallery_items` 테이블과 충돌 방지를 위해 출판 전용 테이블명 `pub_gallery_items`로 변경.
+- `src/lib/api/gallery.ts`의 모든 `.from()` 호출 수정
+
+#### 샘플 MDX 데이터 삭제
+- `content/books/` 디렉토리의 6개 샘플 MDX 파일 전부 삭제
+- `output: 'export'`에서 빈 `generateStaticParams()` 에러 방지를 위해 `books/[slug]`, `reader/[id]` 페이지에 플레이스홀더 파라미터(`{ slug: '_' }`) 반환 처리
+
+#### 관리자 메뉴 링크 추가
+- `src/components/commerce/user-menu.tsx` 수정
+- `isAdmin`일 때 풍선 드롭다운 메뉴에 **갤러리 관리** (Settings 아이콘 + `/admin/gallery` 링크) 표시
+
+#### 서브 이미지 지원 (커버 1장 + 서브 최대 5장)
+- **DB**: `pub_gallery_items` 테이블에 `sub_images text[] DEFAULT '{}'` 컬럼 추가
+- **API**: `GalleryItem` 인터페이스에 `sub_images: string[]` 필드 추가
+- **갤러리 카드**: 이미지 개수 뱃지 표시 (📷 N), 카드 클릭 시 라이트박스 오픈
+- **라이트박스** (`gallery-lightbox.tsx` 신규):
+  - 전체 이미지 슬라이드 뷰어
+  - 좌우 화살표 + 키보드(←→, Esc) 네비게이션
+  - 하단 썸네일 스트립 + 카운터
+  - 제목/설명 표시
+- **관리자 폼**: 서브 이미지 파일 업로드(최대 5장), 개별 삭제, 미리보기 썸네일 UI
