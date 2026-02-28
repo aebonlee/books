@@ -592,3 +592,54 @@ CREATE TABLE pub_reports (
 1. SQL Editor에서 `pub_reports` 테이블 생성
 2. RLS 정책 설정 (공개 읽기 + 관리자 CRUD)
 3. `updated_at` 자동 갱신 트리거 설정
+
+### 추가 변경 사항
+
+#### 미리보기 이미지(cover_image) + 작성/발표일(published_date) 추가
+- DB: `cover_image TEXT DEFAULT ''`, `published_date DATE NOT NULL DEFAULT CURRENT_DATE` 컬럼 추가
+- 사용자 페이지: 카드 상단에 16:9 비율 썸네일 이미지 표시, 하단에 발표일 표시
+- 관리자 폼: GitHub 이미지 URL 입력 + 실시간 미리보기, 날짜 선택(date picker)
+- 관리자 테이블: 미리보기 썸네일 컬럼, 발표일 컬럼 추가
+
+#### 무료(is_free), 추천(featured) 구분 추가
+- DB: `is_free BOOLEAN DEFAULT false`, `featured BOOLEAN DEFAULT false` 컬럼 추가
+- 관리자 폼: 무료/추천/공개 체크박스 3개 (갤러리와 동일 패턴)
+- 관리자 테이블: 상태 컬럼에 공개/비공개 + 추천 + 무료 뱃지 표시
+- 사용자 페이지: 카드 썸네일 좌상단에 추천(노란색), 무료(초록색) 뱃지 오버레이
+
+#### 가격(price) + 장바구니 연동
+- DB: `price INTEGER DEFAULT 0` 컬럼 추가
+- 사용자 페이지: 유료 → 금액 표시, 무료 → ~~원가~~ + **무료** (취소선)
+- 장바구니 버튼: 유료 보고서 카드 하단에 장바구니 아이콘 (담으면 체크 표시로 전환)
+- 장바구니 slug: `report-{id}` 형식으로 기존 결제 시스템(`/cart` → `/checkout`)과 연동
+- price null 방어 처리 (`price || 0`)
+
+#### 이미지 상대경로 지원 (`resolveImageUrl`)
+- `src/lib/utils.ts`에 `resolveImageUrl()` 유틸리티 함수 추가
+- 상대 경로(`images/202603/20260228_01.png`) 입력 시 GitHub raw URL로 자동 변환
+- 절대 URL(`https://...`)이면 그대로 사용
+- 적용 범위: 갤러리 카드/라이트박스, 갤러리 관리자, 연구보고서, 연구보고서 관리자
+- `images/` 폴더 구조: `images/YYYYMM/` 패턴으로 월별 이미지 관리
+
+#### 최종 `pub_reports` 테이블 스키마
+```sql
+CREATE TABLE pub_reports (
+  id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  title_en TEXT,
+  description TEXT NOT NULL DEFAULT '',
+  description_en TEXT,
+  platform TEXT NOT NULL DEFAULT 'miricanvas' CHECK (platform IN ('miricanvas', 'genspark')),
+  url TEXT NOT NULL,
+  cover_image TEXT DEFAULT '',
+  published_date DATE NOT NULL DEFAULT CURRENT_DATE,
+  price INTEGER DEFAULT 0,
+  tags TEXT[] DEFAULT '{}',
+  sort_order INTEGER DEFAULT 0,
+  is_free BOOLEAN DEFAULT false,
+  featured BOOLEAN DEFAULT false,
+  is_published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+```
