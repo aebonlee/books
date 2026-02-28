@@ -17,6 +17,7 @@ export interface GalleryItem {
   sort_order: number;
   is_published: boolean;
   author_name: string | null;
+  sub_images: string[];
   tags: string[];
   created_at: string;
   updated_at: string;
@@ -36,6 +37,7 @@ export interface CreateGalleryItemData {
   sort_order?: number;
   is_published?: boolean;
   author_name?: string;
+  sub_images?: string[];
   tags?: string[];
 }
 
