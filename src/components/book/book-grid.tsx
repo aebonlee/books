@@ -7,9 +7,10 @@ interface BookGridProps {
   books: Book[];
   locale?: string;
   layout?: BookGridLayout;
+  viewCounts?: Record<string, number>;
 }
 
-export function BookGrid({ books, locale = 'ko', layout = 'portrait' }: BookGridProps) {
+export function BookGrid({ books, locale = 'ko', layout = 'portrait', viewCounts }: BookGridProps) {
   if (books.length === 0) {
     return (
       <div className="py-12 text-center text-gray-500">
@@ -25,7 +26,7 @@ export function BookGrid({ books, locale = 'ko', layout = 'portrait' }: BookGrid
   return (
     <div className={gridClass}>
       {books.map((book) => (
-        <BookCard key={book.slug} book={book} locale={locale} layout={layout} />
+        <BookCard key={book.slug} book={book} locale={locale} layout={layout} viewCount={viewCounts?.[book.slug]} />
       ))}
     </div>
   );

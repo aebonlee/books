@@ -34,3 +34,4 @@ export type {
   CreateReportData,
   UpdateReportData,
 } from './reports';
+export { incrementView, getViewCounts, getViewCount } from './views';

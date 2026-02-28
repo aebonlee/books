@@ -5,6 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { GalleryCard, type GalleryLayout } from '@/components/gallery/gallery-card';
 import { getGalleryItemsByCategory } from '@/lib/api/gallery';
 import type { GalleryItem, GalleryCategory } from '@/lib/api/gallery';
+import { getViewCounts } from '@/lib/api/views';
 
 interface GalleryGridClientProps {
   category: GalleryCategory;
@@ -14,15 +15,20 @@ interface GalleryGridClientProps {
 
 export function GalleryGridClient({ category, locale, layout = 'portrait' }: GalleryGridClientProps) {
   const [items, setItems] = useState<GalleryItem[]>([]);
+  const [viewCounts, setViewCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
 
-    getGalleryItemsByCategory(category).then((data) => {
+    getGalleryItemsByCategory(category).then(async (data) => {
+      if (cancelled) return;
+      setItems(data);
+      const slugs = data.map((d) => d.slug);
+      const counts = await getViewCounts('gallery', slugs);
       if (!cancelled) {
-        setItems(data);
+        setViewCounts(counts);
         setLoading(false);
       }
     });
@@ -65,7 +71,7 @@ export function GalleryGridClient({ category, locale, layout = 'portrait' }: Gal
   return (
     <div className={gridCls}>
       {items.map((item) => (
-        <GalleryCard key={item.id} item={item} locale={locale} layout={layout} />
+        <GalleryCard key={item.id} item={item} locale={locale} layout={layout} viewCount={viewCounts[item.slug] ?? 0} />
       ))}
     </div>
   );

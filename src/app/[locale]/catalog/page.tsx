@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { BookGrid } from '@/components/book/book-grid';
 import { Input } from '@/components/ui/input';
@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { categories } from '@/config/categories';
 import { getAllBooks } from '@/lib/content';
+import { getViewCounts } from '@/lib/api/views';
 import { Search, X } from 'lucide-react';
 
 export default function CatalogPage() {
@@ -21,7 +22,13 @@ export default function CatalogPage() {
   const [sortBy, setSortBy] = useState<string>('newest');
   const [freeOnly, setFreeOnly] = useState(false);
   const [page, setPage] = useState(1);
+  const [viewCounts, setViewCounts] = useState<Record<string, number>>({});
   const perPage = 12;
+
+  useEffect(() => {
+    const slugs = allBooks.map((b) => b.slug);
+    getViewCounts('book', slugs).then(setViewCounts);
+  }, [allBooks]);
 
   const filteredBooks = useMemo(() => {
     let books = [...allBooks];
@@ -173,7 +180,7 @@ export default function CatalogPage() {
       </p>
 
       {/* Book Grid */}
-      <BookGrid books={paginatedBooks} locale={locale} />
+      <BookGrid books={paginatedBooks} locale={locale} viewCounts={viewCounts} />
 
       {/* Pagination */}
       {totalPages > 1 && (

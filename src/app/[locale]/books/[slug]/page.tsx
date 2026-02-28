@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { getCategoryName } from '@/config/categories';
 import { formatDate } from '@/lib/utils';
 import { BookCTA } from './book-cta';
+import { ViewCounter } from '@/components/view-counter';
 import {
   BookOpen,
   Calendar,
@@ -114,6 +115,7 @@ export default async function BookDetailPage({
                 <span>{book.isbn}</span>
               </div>
             )}
+            <ViewCounter type="book" slug={slug} increment className="text-sm" />
           </div>
 
           {/* Tags */}

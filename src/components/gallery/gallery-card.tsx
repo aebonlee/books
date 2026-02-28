@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { ShoppingCart, Check, ChevronLeft, ChevronRight, X, Images } from 'lucide-react';
+import { ShoppingCart, Check, ChevronLeft, ChevronRight, X, Images, Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { formatPrice, resolveImageUrl } from '@/lib/utils';
 import { useCart } from '@/contexts/cart-context';
 import type { GalleryItem } from '@/lib/api/gallery';
+import { incrementView } from '@/lib/api/views';
 import { GalleryLightbox } from './gallery-lightbox';
 
 export type GalleryLayout = 'portrait' | 'landscape';
@@ -16,18 +17,27 @@ interface GalleryCardProps {
   item: GalleryItem;
   locale?: string;
   layout?: GalleryLayout;
+  viewCount?: number;
 }
 
-export function GalleryCard({ item, locale = 'ko', layout = 'portrait' }: GalleryCardProps) {
+export function GalleryCard({ item, locale = 'ko', layout = 'portrait', viewCount }: GalleryCardProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [views, setViews] = useState(viewCount ?? 0);
 
   const allImages = [item.cover_image, ...(item.sub_images || [])].map(resolveImageUrl);
   const hasMultiple = allImages.length > 1;
 
+  const handleOpenLightbox = () => {
+    setLightboxOpen(true);
+    incrementView('gallery', item.slug).then((n) => {
+      if (n > 0) setViews(n);
+    });
+  };
+
   if (layout === 'landscape') {
     return (
       <>
-        <LandscapeGalleryCard item={item} locale={locale} hasMultiple={hasMultiple} onOpenLightbox={() => setLightboxOpen(true)} />
+        <LandscapeGalleryCard item={item} locale={locale} hasMultiple={hasMultiple} onOpenLightbox={handleOpenLightbox} views={views} />
         {lightboxOpen && (
           <GalleryLightbox
             images={allImages}
@@ -42,7 +52,7 @@ export function GalleryCard({ item, locale = 'ko', layout = 'portrait' }: Galler
 
   return (
     <>
-      <PortraitGalleryCard item={item} locale={locale} hasMultiple={hasMultiple} onOpenLightbox={() => setLightboxOpen(true)} />
+      <PortraitGalleryCard item={item} locale={locale} hasMultiple={hasMultiple} onOpenLightbox={handleOpenLightbox} views={views} />
       {lightboxOpen && (
         <GalleryLightbox
           images={allImages}
@@ -55,7 +65,7 @@ export function GalleryCard({ item, locale = 'ko', layout = 'portrait' }: Galler
   );
 }
 
-function PortraitGalleryCard({ item, locale, hasMultiple, onOpenLightbox }: { item: GalleryItem; locale: string; hasMultiple: boolean; onOpenLightbox: () => void }) {
+function PortraitGalleryCard({ item, locale, hasMultiple, onOpenLightbox, views }: { item: GalleryItem; locale: string; hasMultiple: boolean; onOpenLightbox: () => void; views: number }) {
   const { addItem, isInCart } = useCart();
   const inCart = isInCart(item.slug);
   const title = locale === 'ko' ? item.title : (item.title_en || item.title);
@@ -109,12 +119,16 @@ function PortraitGalleryCard({ item, locale, hasMultiple, onOpenLightbox }: { it
           <p className="mt-1 text-xs text-gray-500">{item.author_name}</p>
         )}
         <div className="mt-2 flex items-center justify-between">
-          <div>
+          <div className="flex items-center gap-2">
             {item.is_free ? (
               <span className="text-sm font-bold text-green-600">{locale === 'ko' ? '무료' : 'Free'}</span>
             ) : item.price > 0 ? (
               <span className="text-sm font-bold text-gray-900">{formatPrice(item.price, locale)}</span>
             ) : null}
+            <span className="inline-flex items-center gap-0.5 text-gray-400">
+              <Eye className="h-3 w-3" />
+              <span className="text-xs">{views}</span>
+            </span>
           </div>
           {!item.is_free && item.price > 0 && (
             <button
@@ -133,7 +147,7 @@ function PortraitGalleryCard({ item, locale, hasMultiple, onOpenLightbox }: { it
   );
 }
 
-function LandscapeGalleryCard({ item, locale, hasMultiple, onOpenLightbox }: { item: GalleryItem; locale: string; hasMultiple: boolean; onOpenLightbox: () => void }) {
+function LandscapeGalleryCard({ item, locale, hasMultiple, onOpenLightbox, views }: { item: GalleryItem; locale: string; hasMultiple: boolean; onOpenLightbox: () => void; views: number }) {
   const { addItem, isInCart } = useCart();
   const inCart = isInCart(item.slug);
   const title = locale === 'ko' ? item.title : (item.title_en || item.title);
@@ -187,6 +201,10 @@ function LandscapeGalleryCard({ item, locale, hasMultiple, onOpenLightbox }: { i
             ) : item.price > 0 ? (
               <span className="shrink-0 text-xs font-bold text-gray-900">{formatPrice(item.price, locale)}</span>
             ) : null}
+            <span className="inline-flex shrink-0 items-center gap-0.5 text-gray-400">
+              <Eye className="h-3 w-3" />
+              <span className="text-xs">{views}</span>
+            </span>
           </div>
           {!item.is_free && item.price > 0 && (
             <button

@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
+import { Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { formatPrice } from '@/lib/utils';
@@ -10,11 +11,12 @@ interface BookCardProps {
   book: Book;
   locale?: string;
   layout?: BookGridLayout;
+  viewCount?: number;
 }
 
-export function BookCard({ book, locale = 'ko', layout = 'portrait' }: BookCardProps) {
+export function BookCard({ book, locale = 'ko', layout = 'portrait', viewCount }: BookCardProps) {
   if (layout === 'landscape') {
-    return <LandscapeBookCard book={book} locale={locale} />;
+    return <LandscapeBookCard book={book} locale={locale} viewCount={viewCount} />;
   }
 
   return (
@@ -60,17 +62,25 @@ export function BookCard({ book, locale = 'ko', layout = 'portrait' }: BookCardP
             {book.authors.map((a) => a.name).join(', ')}
           </p>
 
-          {/* Price */}
-          <div className="mt-2">
-            {book.isFree ? (
-              <span className="text-sm font-bold text-green-600">
-                {locale === 'ko' ? '무료' : 'Free'}
+          {/* Price & Views */}
+          <div className="mt-2 flex items-center justify-between">
+            <div>
+              {book.isFree ? (
+                <span className="text-sm font-bold text-green-600">
+                  {locale === 'ko' ? '무료' : 'Free'}
+                </span>
+              ) : book.price ? (
+                <span className="text-sm font-bold text-gray-900">
+                  {formatPrice(book.price, locale)}
+                </span>
+              ) : null}
+            </div>
+            {viewCount !== undefined && (
+              <span className="inline-flex items-center gap-0.5 text-gray-400">
+                <Eye className="h-3 w-3" />
+                <span className="text-xs">{viewCount}</span>
               </span>
-            ) : book.price ? (
-              <span className="text-sm font-bold text-gray-900">
-                {formatPrice(book.price, locale)}
-              </span>
-            ) : null}
+            )}
           </div>
         </CardContent>
       </Card>
@@ -79,7 +89,7 @@ export function BookCard({ book, locale = 'ko', layout = 'portrait' }: BookCardP
 }
 
 /** PT/슬라이드 스타일 가로형 카드 (4:3 비율) */
-function LandscapeBookCard({ book, locale = 'ko' }: { book: Book; locale?: string }) {
+function LandscapeBookCard({ book, locale = 'ko', viewCount }: { book: Book; locale?: string; viewCount?: number }) {
   return (
     <Link href={`/books/${book.slug}`}>
       <Card className="group h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
@@ -113,20 +123,28 @@ function LandscapeBookCard({ book, locale = 'ko' }: { book: Book; locale?: strin
             {locale === 'ko' ? book.title : (book.titleEn || book.title)}
           </h3>
 
-          {/* Authors + Price */}
+          {/* Authors + Price + Views */}
           <div className="mt-1.5 flex items-center justify-between">
-            <p className="truncate text-xs text-gray-500">
-              {book.authors.map((a) => a.name).join(', ')}
-            </p>
-            {book.isFree ? (
-              <span className="shrink-0 text-xs font-bold text-green-600">
-                {locale === 'ko' ? '무료' : 'Free'}
+            <div className="flex items-center gap-2 truncate">
+              <p className="truncate text-xs text-gray-500">
+                {book.authors.map((a) => a.name).join(', ')}
+              </p>
+              {book.isFree ? (
+                <span className="shrink-0 text-xs font-bold text-green-600">
+                  {locale === 'ko' ? '무료' : 'Free'}
+                </span>
+              ) : book.price ? (
+                <span className="shrink-0 text-xs font-bold text-gray-900">
+                  {formatPrice(book.price, locale)}
+                </span>
+              ) : null}
+            </div>
+            {viewCount !== undefined && (
+              <span className="inline-flex shrink-0 items-center gap-0.5 text-gray-400">
+                <Eye className="h-3 w-3" />
+                <span className="text-xs">{viewCount}</span>
               </span>
-            ) : book.price ? (
-              <span className="shrink-0 text-xs font-bold text-gray-900">
-                {formatPrice(book.price, locale)}
-              </span>
-            ) : null}
+            )}
           </div>
         </CardContent>
       </Card>
