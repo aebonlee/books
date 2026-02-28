@@ -24,6 +24,7 @@ import {
 } from '@/lib/api/reports';
 import type { ReportItem, ReportPlatform, CreateReportData } from '@/lib/api/reports';
 import { useLocale } from 'next-intl';
+import { formatPrice } from '@/lib/utils';
 
 const PLATFORM_OPTIONS: { value: ReportPlatform; labelKo: string; labelEn: string }[] = [
   { value: 'miricanvas', labelKo: '미리캔버스', labelEn: 'MiriCanvas' },
@@ -39,6 +40,7 @@ interface FormState {
   url: string;
   cover_image: string;
   published_date: string;
+  price: string;
   tags: string;
   sort_order: string;
   is_free: boolean;
@@ -55,6 +57,7 @@ const EMPTY_FORM: FormState = {
   url: '',
   cover_image: '',
   published_date: new Date().toISOString().split('T')[0],
+  price: '0',
   tags: '',
   sort_order: '0',
   is_free: false,
@@ -126,6 +129,7 @@ export default function AdminReportsPage() {
       url: item.url,
       cover_image: item.cover_image || '',
       published_date: item.published_date || '',
+      price: String(item.price),
       tags: (item.tags || []).join(', '),
       sort_order: String(item.sort_order),
       is_free: item.is_free,
@@ -155,6 +159,7 @@ export default function AdminReportsPage() {
         url: form.url,
         cover_image: form.cover_image || undefined,
         published_date: form.published_date,
+        price: parseInt(form.price) || 0,
         tags: form.tags ? form.tags.split(',').map((t) => t.trim()).filter(Boolean) : [],
         sort_order: parseInt(form.sort_order) || 0,
         is_free: form.is_free,
@@ -242,6 +247,9 @@ export default function AdminReportsPage() {
                   {locale === 'ko' ? '플랫폼' : 'Platform'}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">
+                  {locale === 'ko' ? '가격' : 'Price'}
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">
                   {locale === 'ko' ? '상태' : 'Status'}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">
@@ -282,6 +290,20 @@ export default function AdminReportsPage() {
                     <Badge variant="outline" className="text-xs">
                       {getPlatformLabel(item.platform)}
                     </Badge>
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-900">
+                    {item.is_free ? (
+                      <span className="text-green-600 font-medium">
+                        {item.price > 0 && (
+                          <span className="text-gray-400 line-through mr-1">
+                            {item.price.toLocaleString()}
+                          </span>
+                        )}
+                        {locale === 'ko' ? '무료' : 'Free'}
+                      </span>
+                    ) : (
+                      <span>{item.price.toLocaleString()}{locale === 'ko' ? '원' : ' KRW'}</span>
+                    )}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-1">
@@ -422,14 +444,25 @@ export default function AdminReportsPage() {
             )}
           </div>
 
-          {/* Published Date */}
-          <div>
-            <Label>{locale === 'ko' ? '작성/발표일 *' : 'Published Date *'}</Label>
-            <Input
-              type="date"
-              value={form.published_date}
-              onChange={(e) => updateField('published_date', e.target.value)}
-            />
+          {/* Published Date + Price */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>{locale === 'ko' ? '작성/발표일 *' : 'Published Date *'}</Label>
+              <Input
+                type="date"
+                value={form.published_date}
+                onChange={(e) => updateField('published_date', e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>{locale === 'ko' ? '가격 (원)' : 'Price (KRW)'}</Label>
+              <Input
+                type="number"
+                value={form.price}
+                onChange={(e) => updateField('price', e.target.value)}
+                min="0"
+              />
+            </div>
           </div>
 
           {/* Description KO */}

@@ -12,6 +12,7 @@ export interface ReportItem {
   url: string;
   cover_image: string;
   published_date: string;
+  price: number;
   tags: string[];
   sort_order: number;
   is_free: boolean;
@@ -30,6 +31,7 @@ export interface CreateReportData {
   url: string;
   cover_image?: string;
   published_date: string;
+  price?: number;
   tags?: string[];
   sort_order?: number;
   is_free?: boolean;
