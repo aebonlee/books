@@ -14,6 +14,8 @@ export interface ReportItem {
   published_date: string;
   tags: string[];
   sort_order: number;
+  is_free: boolean;
+  featured: boolean;
   is_published: boolean;
   created_at: string;
   updated_at: string;
@@ -30,6 +32,8 @@ export interface CreateReportData {
   published_date: string;
   tags?: string[];
   sort_order?: number;
+  is_free?: boolean;
+  featured?: boolean;
   is_published?: boolean;
 }
 

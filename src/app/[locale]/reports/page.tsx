@@ -85,21 +85,36 @@ export default function ReportsPage() {
               className="group overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md hover:border-gray-300"
             >
               {/* Thumbnail Image */}
-              {report.cover_image ? (
-                <div className="relative aspect-[16/9] w-full overflow-hidden bg-gray-100">
-                  <Image
-                    src={report.cover_image}
-                    alt={report.title}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
+              <div className="relative">
+                {report.cover_image ? (
+                  <div className="relative aspect-[16/9] w-full overflow-hidden bg-gray-100">
+                    <Image
+                      src={report.cover_image}
+                      alt={report.title}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex aspect-[16/9] w-full items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+                    <Presentation className="h-12 w-12 text-blue-300" />
+                  </div>
+                )}
+                {/* Badges */}
+                <div className="absolute top-2 left-2 flex gap-1.5">
+                  {report.featured && (
+                    <span className="rounded bg-yellow-400 px-2 py-0.5 text-xs font-bold text-yellow-900 shadow-sm">
+                      {locale === 'ko' ? '추천' : 'Featured'}
+                    </span>
+                  )}
+                  {report.is_free && (
+                    <span className="rounded bg-green-500 px-2 py-0.5 text-xs font-bold text-white shadow-sm">
+                      {locale === 'ko' ? '무료' : 'Free'}
+                    </span>
+                  )}
                 </div>
-              ) : (
-                <div className="flex aspect-[16/9] w-full items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-                  <Presentation className="h-12 w-12 text-blue-300" />
-                </div>
-              )}
+              </div>
 
               {/* Card Body */}
               <div className="p-5">

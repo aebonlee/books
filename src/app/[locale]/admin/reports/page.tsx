@@ -41,6 +41,8 @@ interface FormState {
   published_date: string;
   tags: string;
   sort_order: string;
+  is_free: boolean;
+  featured: boolean;
   is_published: boolean;
 }
 
@@ -55,6 +57,8 @@ const EMPTY_FORM: FormState = {
   published_date: new Date().toISOString().split('T')[0],
   tags: '',
   sort_order: '0',
+  is_free: false,
+  featured: false,
   is_published: true,
 };
 
@@ -124,6 +128,8 @@ export default function AdminReportsPage() {
       published_date: item.published_date || '',
       tags: (item.tags || []).join(', '),
       sort_order: String(item.sort_order),
+      is_free: item.is_free,
+      featured: item.featured,
       is_published: item.is_published,
     });
     setDialogOpen(true);
@@ -151,6 +157,8 @@ export default function AdminReportsPage() {
         published_date: form.published_date,
         tags: form.tags ? form.tags.split(',').map((t) => t.trim()).filter(Boolean) : [],
         sort_order: parseInt(form.sort_order) || 0,
+        is_free: form.is_free,
+        featured: form.featured,
         is_published: form.is_published,
       };
 
@@ -276,15 +284,27 @@ export default function AdminReportsPage() {
                     </Badge>
                   </td>
                   <td className="px-4 py-3">
-                    {item.is_published ? (
-                      <Badge variant="success" className="text-xs">
-                        {locale === 'ko' ? '공개' : 'Published'}
-                      </Badge>
-                    ) : (
-                      <Badge variant="secondary" className="text-xs">
-                        {locale === 'ko' ? '비공개' : 'Draft'}
-                      </Badge>
-                    )}
+                    <div className="flex flex-wrap gap-1">
+                      {item.is_published ? (
+                        <Badge variant="success" className="text-xs">
+                          {locale === 'ko' ? '공개' : 'Published'}
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary" className="text-xs">
+                          {locale === 'ko' ? '비공개' : 'Draft'}
+                        </Badge>
+                      )}
+                      {item.featured && (
+                        <Badge variant="default" className="text-xs">
+                          {locale === 'ko' ? '추천' : 'Featured'}
+                        </Badge>
+                      )}
+                      {item.is_free && (
+                        <Badge variant="warning" className="text-xs">
+                          {locale === 'ko' ? '무료' : 'Free'}
+                        </Badge>
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-500">
                     {item.published_date || '-'}
@@ -444,18 +464,38 @@ export default function AdminReportsPage() {
             />
           </div>
 
-          {/* Sort Order + Published */}
-          <div className="flex items-end gap-4">
-            <div className="flex-1">
-              <Label>{locale === 'ko' ? '정렬 순서' : 'Sort Order'}</Label>
-              <Input
-                type="number"
-                value={form.sort_order}
-                onChange={(e) => updateField('sort_order', e.target.value)}
-                min="0"
+          {/* Sort Order */}
+          <div>
+            <Label>{locale === 'ko' ? '정렬 순서' : 'Sort Order'}</Label>
+            <Input
+              type="number"
+              value={form.sort_order}
+              onChange={(e) => updateField('sort_order', e.target.value)}
+              min="0"
+            />
+          </div>
+
+          {/* Checkboxes */}
+          <div className="flex flex-wrap gap-6">
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={form.is_free}
+                onChange={(e) => updateField('is_free', e.target.checked)}
+                className="rounded border-gray-300"
               />
-            </div>
-            <label className="flex items-center gap-2 pb-2 text-sm">
+              {locale === 'ko' ? '무료' : 'Free'}
+            </label>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={form.featured}
+                onChange={(e) => updateField('featured', e.target.checked)}
+                className="rounded border-gray-300"
+              />
+              {locale === 'ko' ? '추천' : 'Featured'}
+            </label>
+            <label className="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"
                 checked={form.is_published}
