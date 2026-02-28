@@ -40,6 +40,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     const p = await getProfile(authUser.id);
     setProfile(p as UserProfile | null);
+
+    // ─── 가입 사이트 자동 추적 (visited_sites) ───
+    try {
+      const client = getSupabase();
+      if (client) {
+        const { data: statusData } = await client.rpc('check_user_status', {
+          target_user_id: authUser.id,
+          current_domain: window.location.hostname,
+        });
+
+        if (statusData && statusData.status && statusData.status !== 'active') {
+          console.warn('계정 상태:', statusData.status, statusData.reason);
+          await client.auth.signOut();
+          setProfile(null);
+          return;
+        }
+      }
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      console.warn('check_user_status 호출 실패:', msg);
+    }
   }, []);
 
   useEffect(() => {
