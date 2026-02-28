@@ -36,6 +36,47 @@ jobs:
           export NEXT_PUBLIC_PG_PROVIDER="html5_inicis.MOIkorcom1"
           npm run build
 
+      - name: Setup SPA fallback for dynamic routes
+        run: |
+          cat > out/404.html << 'GHPAGES404'
+          <!DOCTYPE html>
+          <html>
+          <head>
+          <meta charset="utf-8">
+          <script>
+          (function(){
+            var p=location.pathname;
+            var routes=[
+              {re:/^\/(ko|en)\/reports\/\d+/,t:'/$1/reports/_.html'},
+              {re:/^\/(ko|en)\/books\/[^\/]+/,t:'/$1/books/_.html'},
+              {re:/^\/(ko|en)\/reader\/[^\/]+/,t:'/$1/reader/_.html'}
+            ];
+            for(var i=0;i<routes.length;i++){
+              var m=p.match(routes[i].re);
+              if(m){
+                var x=new XMLHttpRequest();
+                x.open('GET',routes[i].t.replace('$1',m[1]),true);
+                x.onload=function(){
+                  if(x.status===200){document.open();document.write(x.responseText);document.close();}
+                };
+                x.send();
+                return;
+              }
+            }
+          })();
+          </script>
+          </head>
+          <body>
+          <div style="display:flex;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:system-ui,sans-serif">
+          <h1 style="font-size:3.75rem;font-weight:bold;color:#111827">404</h1>
+          <p style="margin-top:1rem;font-size:1.25rem;color:#4B5563">페이지를 찾을 수 없습니다</p>
+          <p style="margin-top:0.5rem;color:#6B7280">Page not found</p>
+          <a href="/" style="margin-top:2rem;display:inline-flex;border-radius:0.375rem;background:#2563EB;padding:0.75rem 1.5rem;font-size:0.875rem;font-weight:500;color:white;text-decoration:none">홈으로 돌아가기 / Back to Home</a>
+          </div>
+          </body>
+          </html>
+          GHPAGES404
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
