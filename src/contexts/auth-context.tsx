@@ -56,6 +56,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setProfile(null);
           return;
         }
+
+        // signup_domain이 미설정이면 현재 도메인으로 설정
+        if (p && !p.signup_domain) {
+          await client.from('user_profiles')
+            .update({ signup_domain: window.location.hostname })
+            .eq('id', authUser.id);
+          await client.auth.updateUser({
+            data: { signup_domain: window.location.hostname },
+          });
+        }
       }
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
