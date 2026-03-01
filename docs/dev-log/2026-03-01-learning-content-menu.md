@@ -61,6 +61,13 @@ CREATE TABLE pub_learning_contents (
 | `src/app/[locale]/page.tsx` | 카탈로그 배너 추가 |
 | `src/i18n/messages/ko.json` | `learning` 네임스페이스 추가 |
 | `src/i18n/messages/en.json` | `learning` 네임스페이스 추가 |
+| `src/components/commerce/user-menu.tsx` | 관리자 드롭다운에 학습 콘텐츠 관리 링크 추가 |
+
+### 6. 관리자 메뉴 구조
+로그인 후 사용자 드롭다운 (관리자 전용):
+- 갤러리 관리 → `/admin/gallery`
+- 보고서 관리 → `/admin/reports`
+- **학습 콘텐츠 관리** → `/admin/learning-content` (신규)
 
 ## 데이터 흐름
 
