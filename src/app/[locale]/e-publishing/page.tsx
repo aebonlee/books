@@ -123,8 +123,12 @@ export default async function EPublishingPage({
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
           {ko
-            ? '디지털 시대에 맞는 전문적인 전자출판 서비스를 제공합니다. PDF, EPUB, 인터랙티브 콘텐츠까지 — 아이디어를 현실로 만들어 드립니다.'
-            : 'We provide professional e-publishing services for the digital era. From PDF and EPUB to interactive content — we bring your ideas to life.'}
+            ? '디지털 시대에 맞는 전문적인 전자출판 서비스를 제공합니다.'
+            : 'We provide professional e-publishing services for the digital era.'}
+          <br />
+          {ko
+            ? 'PDF, EPUB, 인터랙티브 콘텐츠까지 — 아이디어를 현실로 만들어 드립니다.'
+            : 'From PDF and EPUB to interactive content — we bring your ideas to life.'}
         </p>
       </section>
 

@@ -114,3 +114,10 @@ getAllPublishedGalleryItems() → GalleryItem[]
 - `npm run build` ✅ 성공 (40페이지 정적 생성)
 - `/e-publishing` 라우트 정상 생성 확인
 - 기존 `/category/digital` 라우트 유지 (갤러리 직접 접근 가능)
+
+---
+
+## 후속 수정 (같은 날)
+
+- 히어로 서브타이틀 2줄 줄바꿈 (`<br />`) 적용
+- 내비게이션 메뉴명 "전자출판" → "전자출판 안내" / "E-Publishing" → "E-Publishing Guide" 변경
