@@ -187,7 +187,7 @@ export function ReportDetailClient({ reportId, locale }: ReportDetailClientProps
       </div>
 
       {/* iframe embed */}
-      <div className="mb-8">
+      <div className="mx-auto mb-8 max-w-4xl">
         {/* Help tooltip trigger */}
         <div className="mb-2 flex items-center justify-end">
           <div className="relative">
@@ -229,7 +229,7 @@ export function ReportDetailClient({ reportId, locale }: ReportDetailClientProps
             )}
           </div>
         </div>
-        <div className="relative w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-50" style={{ paddingBottom: '45%' }}>
+        <div className="relative w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-50" style={{ aspectRatio: '16/9' }}>
           {iframeLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
               <div className="flex flex-col items-center gap-3">
