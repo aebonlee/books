@@ -43,6 +43,8 @@
   body {
     color: theme(--color-gray-900);
     background: white;
+    word-break: keep-all;
+    overflow-wrap: break-word;
   }
 }
 
