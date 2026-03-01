@@ -121,3 +121,4 @@ getAllPublishedGalleryItems() → GalleryItem[]
 
 - 히어로 서브타이틀 2줄 줄바꿈 (`<br />`) 적용
 - 내비게이션 메뉴명 "전자출판" → "전자출판 안내" / "E-Publishing" → "E-Publishing Guide" 변경
+- "전자출판이란?" 설명 텍스트 마침표 기준 줄바꿈 적용

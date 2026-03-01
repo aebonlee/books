@@ -140,8 +140,12 @@ export default async function EPublishingPage({
         <div className="rounded-xl bg-blue-50 p-6 sm:p-8">
           <p className="text-gray-700 leading-relaxed">
             {ko
-              ? '전자출판(E-Publishing)은 기존의 종이 인쇄물을 디지털 형태로 변환하거나, 처음부터 디지털 환경에 최적화된 콘텐츠를 기획·제작하는 것을 말합니다. PDF, EPUB, 웹 기반 인터랙티브 콘텐츠 등 다양한 형태로 제작할 수 있으며, 온라인 배포와 열람이 용이하여 접근성과 활용도가 높습니다.'
-              : 'E-Publishing refers to converting traditional print materials into digital formats, or creating content optimized for digital environments from the start. It encompasses various formats including PDF, EPUB, and web-based interactive content, offering greater accessibility and usability through easy online distribution and viewing.'}
+              ? '전자출판(E-Publishing)은 기존의 종이 인쇄물을 디지털 형태로 변환하거나, 처음부터 디지털 환경에 최적화된 콘텐츠를 기획·제작하는 것을 말합니다.'
+              : 'E-Publishing refers to converting traditional print materials into digital formats, or creating content optimized for digital environments from the start.'}
+            <br />
+            {ko
+              ? 'PDF, EPUB, 웹 기반 인터랙티브 콘텐츠 등 다양한 형태로 제작할 수 있으며, 온라인 배포와 열람이 용이하여 접근성과 활용도가 높습니다.'
+              : 'It encompasses various formats including PDF, EPUB, and web-based interactive content, offering greater accessibility and usability through easy online distribution and viewing.'}
           </p>
         </div>
       </section>
