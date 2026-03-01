@@ -5,7 +5,7 @@ import { BookGrid } from '@/components/book/book-grid';
 import { CategoryCard } from '@/components/book/category-card';
 import { categories } from '@/config/categories';
 import { getFeaturedBooks, getRecentBooks, getBooksByCategory } from '@/lib/content';
-import { ArrowRight, BookOpen, Layers, Sparkles } from 'lucide-react';
+import { ArrowRight, BookOpen, Layers, Sparkles, Library } from 'lucide-react';
 
 export default async function HomePage({
   params,
@@ -105,6 +105,28 @@ export default async function HomePage({
             ))}
           </div>
         </div>
+      </section>
+
+      {/* Catalog Banner */}
+      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <Link href="/catalog">
+          <div className="group flex items-center justify-between rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 transition-all hover:border-blue-300 hover:shadow-md sm:p-8">
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600 group-hover:bg-blue-200">
+                <Library className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 sm:text-xl">
+                  {ko ? '전체 카탈로그' : 'Full Catalog'}
+                </h3>
+                <p className="mt-0.5 text-sm text-gray-500">
+                  {ko ? '모든 도서와 콘텐츠를 한눈에 둘러보세요' : 'Browse all books and content in one place'}
+                </p>
+              </div>
+            </div>
+            <ArrowRight className="h-5 w-5 shrink-0 text-blue-400 transition-transform group-hover:translate-x-1 group-hover:text-blue-600" />
+          </div>
+        </Link>
       </section>
 
       {/* New Releases */}

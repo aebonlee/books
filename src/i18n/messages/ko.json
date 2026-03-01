@@ -248,6 +248,20 @@
       "noItems": "등록된 항목이 없습니다"
     }
   },
+  "learning": {
+    "title": "온라인 학습 콘텐츠",
+    "description": "HTML, 프로그래밍, 대학 시험 준비 등 다양한 온라인 학습 자료를 만나보세요",
+    "filterAll": "전체",
+    "filterWebsite": "웹사이트",
+    "filterExam": "시험",
+    "filterInteractive": "인터랙티브",
+    "filterTool": "도구",
+    "noItems": "등록된 학습 콘텐츠가 없습니다",
+    "noItemsDescription": "학습 콘텐츠가 곧 추가될 예정입니다",
+    "visit": "바로가기",
+    "customCta": "나만의 학습 사이트가 필요하신가요?",
+    "customCtaDescription": "온라인 학습 사이트, 시험 플랫폼, 인터랙티브 교재 등 맞춤 개발을 의뢰하세요."
+  },
   "footer": {
     "copyright": "© {year} 드림아이티비즈. All rights reserved.",
     "about": "회사 소개",

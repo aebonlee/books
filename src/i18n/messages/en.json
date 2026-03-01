@@ -248,6 +248,20 @@
       "noItems": "No items found"
     }
   },
+  "learning": {
+    "title": "Online Learning Content",
+    "description": "Explore online learning resources for HTML, programming, exam prep, and more",
+    "filterAll": "All",
+    "filterWebsite": "Website",
+    "filterExam": "Exam",
+    "filterInteractive": "Interactive",
+    "filterTool": "Tool",
+    "noItems": "No learning content yet",
+    "noItemsDescription": "Learning content will be added soon",
+    "visit": "Visit",
+    "customCta": "Need a custom learning site?",
+    "customCtaDescription": "Request custom development for online learning sites, exam platforms, interactive textbooks, and more."
+  },
   "footer": {
     "copyright": "© {year} DreamIT Biz. All rights reserved.",
     "about": "About Us",
