@@ -45,7 +45,12 @@
     "results": "{count} results",
     "allCategories": "All Categories",
     "priceRange": "Price Range",
-    "freeOnly": "Free Only"
+    "freeOnly": "Free Only",
+    "tabBooks": "Books",
+    "tabGallery": "Gallery",
+    "tabReports": "Reports",
+    "noGalleryItems": "No gallery items available",
+    "noReports": "No reports available"
   },
   "book": {
     "authors": "Authors",

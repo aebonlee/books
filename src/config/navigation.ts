@@ -7,7 +7,7 @@ export interface NavItem {
 
 export const mainNav: NavItem[] = [
   { titleKo: '전체 카탈로그', titleEn: 'Catalog', href: '/catalog' },
-  { titleKo: '전자출판', titleEn: 'E-Publishing', href: '/category/digital' },
+  { titleKo: '전자출판', titleEn: 'E-Publishing', href: '/e-publishing' },
   { titleKo: '도서 & 교육교재', titleEn: 'Books & Textbooks', href: '/category/textbooks' },
   { titleKo: '강의안 및 실습자료', titleEn: 'Lectures & Labs', href: '/category/lectures' },
   { titleKo: '연구보고서', titleEn: 'Research Reports', href: '/reports' },

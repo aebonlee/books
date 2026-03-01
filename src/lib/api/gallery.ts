@@ -66,6 +66,26 @@ export async function getGalleryItemsByCategory(
   return (data as GalleryItem[]) || [];
 }
 
+/** 공개 항목 전체 조회 (카탈로그용, 카테고리 무관) */
+export async function getAllPublishedGalleryItems(): Promise<GalleryItem[]> {
+  const client = getSupabase();
+  if (!client) return [];
+
+  const { data, error } = await client
+    .from('pub_gallery_items')
+    .select('*')
+    .eq('is_published', true)
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Failed to fetch all gallery items:', error.message);
+    return [];
+  }
+
+  return (data as GalleryItem[]) || [];
+}
+
 /** 전체 항목 조회 (관리자용, 비공개 포함) */
 export async function getGalleryItemsAdmin(
   category?: GalleryCategory,
