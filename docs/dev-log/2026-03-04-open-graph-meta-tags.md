@@ -14,7 +14,14 @@
 | `twitter` 카드 | 전혀 없음 |
 | 페이지별 메타데이터 | 14개 주요 페이지 중 11개에 없음 (`'use client'` 제약) |
 
+| 루트 `layout.tsx` | `src/app/layout.tsx`에 OG 메타데이터 없음 → 카카오 스크래퍼가 `/` 접근 시 빈 값 |
+
 ## 수정 내역
+
+### 0. 루트 레이아웃 OG 메타데이터 추가
+**`src/app/layout.tsx`**: 카카오톡 스크래퍼는 `https://books.dreamitbiz.com` (루트 `/`)을 읽는데,
+기존에는 `[locale]/layout.tsx`에만 메타데이터가 있어 루트 HTML에 OG 태그가 없었음.
+루트 레이아웃에도 동일한 OG + Twitter 메타데이터 추가.
 
 ### 1. OG 기본 이미지 생성
 - **파일**: `public/images/og-default.png` (1200x630px)
@@ -82,11 +89,12 @@ twitter: {
 | 맞춤 제작 | 맞춤 제작의뢰 \| 드림아이티비즈 출판 |
 | 내 서재 | 내 서재 \| 드림아이티비즈 출판 |
 
-## 수정 파일 목록 (11개)
+## 수정 파일 목록 (12개)
 
 | 작업 | 파일 |
 |------|------|
 | 생성 | `public/images/og-default.png` |
+| 수정 | `src/app/layout.tsx` |
 | 수정 | `src/app/[locale]/layout.tsx` |
 | 수정 | `src/app/[locale]/books/[slug]/page.tsx` |
 | 수정 | `src/app/[locale]/reports/[id]/page.tsx` |
