@@ -31,12 +31,21 @@ export async function generateMetadata({
   const book = getBookBySlug(slug);
   if (!book) return {};
 
+  const title = locale === 'ko' ? book.title : (book.titleEn || book.title);
+  const description = locale === 'ko' ? book.description : (book.descriptionEn || book.description);
+
   return {
-    title: locale === 'ko' ? book.title : (book.titleEn || book.title),
-    description: locale === 'ko' ? book.description : (book.descriptionEn || book.description),
+    title,
+    description,
     openGraph: {
-      title: book.title,
-      description: book.description,
+      title,
+      description,
+      images: [book.coverImage],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
       images: [book.coverImage],
     },
   };
