@@ -35,3 +35,5 @@ export type {
   UpdateReportData,
 } from './reports';
 export { incrementView, getViewCounts, getViewCount } from './views';
+export { getBooksSiteMembers } from './members';
+export type { MemberProfile } from './members';
