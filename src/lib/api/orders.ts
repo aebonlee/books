@@ -1,4 +1,5 @@
 import { getSupabase } from '@/lib/supabase';
+import { fallbackOrders } from '@/lib/api/fallback-store';
 import type { OrderRequest, OrderResponse } from '@/types/commerce';
 
 /** 마지막 주문의 전화번호 조회 (자동 채우기용) */
@@ -23,7 +24,7 @@ export async function createOrder(data: OrderRequest): Promise<OrderResponse> {
   const totalAmount = data.items.reduce((s, i) => s + i.price * i.quantity, 0);
 
   if (!client) {
-    // Fallback: localStorage 저장 (개발/데모)
+    // Fallback: 인메모리 저장 (개발/데모)
     const order = {
       id: crypto.randomUUID(),
       order_number: orderNumber,
@@ -35,9 +36,7 @@ export async function createOrder(data: OrderRequest): Promise<OrderResponse> {
       payment_status: 'pending' as const,
       created_at: new Date().toISOString(),
     };
-    const orders = JSON.parse(localStorage.getItem('dreamitbiz_orders') || '[]');
-    orders.push(order);
-    localStorage.setItem('dreamitbiz_orders', JSON.stringify(orders));
+    fallbackOrders.push(order);
 
     return {
       orderId: order.id,
@@ -112,12 +111,10 @@ export async function verifyPayment(paymentId: string, orderId: string) {
 
   if (!client) {
     // Fallback: 자동 승인 (개발)
-    const orders = JSON.parse(localStorage.getItem('dreamitbiz_orders') || '[]');
-    const idx = orders.findIndex((o: { id: string }) => o.id === orderId);
+    const idx = fallbackOrders.findIndex((o) => o.id === orderId);
     if (idx >= 0) {
-      orders[idx].payment_status = 'paid';
-      orders[idx].paid_at = new Date().toISOString();
-      localStorage.setItem('dreamitbiz_orders', JSON.stringify(orders));
+      fallbackOrders[idx].payment_status = 'paid';
+      fallbackOrders[idx].paid_at = new Date().toISOString();
     }
     return { verified: true };
   }

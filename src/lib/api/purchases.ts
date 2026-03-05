@@ -1,21 +1,23 @@
 import { getSupabase } from '@/lib/supabase';
+import { fallbackOrders } from '@/lib/api/fallback-store';
 import type { PurchaseRecord } from '@/types/commerce';
 
 export async function getPurchases(userId: string): Promise<PurchaseRecord[]> {
   const client = getSupabase();
 
   if (!client) {
-    // Fallback: localStorage (개발)
-    const orders = JSON.parse(localStorage.getItem('dreamitbiz_orders') || '[]');
-    return orders
-      .filter((o: Record<string, unknown>) => o.payment_status === 'paid')
-      .map((o: Record<string, string>) => ({
+    // Fallback: 인메모리 (개발)
+    return fallbackOrders
+      .filter((o) => o.payment_status === 'paid')
+      .map((o) => ({
         id: o.id,
         orderId: o.id,
         orderNumber: o.order_number,
+        slug: '',
         title: o.user_name,
+        coverImage: '',
         purchasedAt: o.paid_at || o.created_at,
-        price: Number(o.total_amount),
+        price: o.total_amount,
         status: 'active' as const,
       }));
   }

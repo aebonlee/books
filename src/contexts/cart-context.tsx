@@ -28,7 +28,7 @@ const CartContext = createContext<CartContextValue | null>(null);
 function loadCart(): CartItem[] {
   if (typeof window === 'undefined') return [];
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = sessionStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
@@ -38,9 +38,9 @@ function loadCart(): CartItem[] {
 function saveCart(items: CartItem[]) {
   if (typeof window === 'undefined') return;
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   } catch {
-    // localStorage 용량 초과 등 에러 무시
+    // sessionStorage 용량 초과 등 에러 무시
   }
 }
 
