@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { useLocale } from 'next-intl';
 
 export default function NotFound() {
@@ -17,7 +17,7 @@ export default function NotFound() {
           : 'The page you are looking for does not exist or has been moved.'}
       </p>
       <Link
-        href={`/${locale}`}
+        href="/"
         className="mt-8 inline-flex items-center rounded-md bg-blue-600 px-6 py-3 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
       >
         {isKo ? '홈으로 돌아가기' : 'Back to Home'}

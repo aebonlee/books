@@ -3,8 +3,8 @@
  * www.dreamitbiz.com과 동일한 imp 코드 사용
  */
 
-const IMP_CODE = process.env.NEXT_PUBLIC_IMP_CODE || 'imp61949262';
-const PG_PROVIDER = process.env.NEXT_PUBLIC_PG_PROVIDER || 'html5_inicis.MOIkorcom1';
+const IMP_CODE = process.env.NEXT_PUBLIC_IMP_CODE ?? '';
+const PG_PROVIDER = process.env.NEXT_PUBLIC_PG_PROVIDER ?? '';
 
 interface PGRequestData {
   merchantUid: string;

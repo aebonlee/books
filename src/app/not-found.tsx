@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 export default function NotFound() {
   return (
     <html lang="ko">
@@ -12,12 +10,12 @@ export default function NotFound() {
           <p className="mt-2 text-gray-500">
             Page not found
           </p>
-          <Link
-            href="/"
+          <a
+            href="/ko"
             className="mt-8 inline-flex items-center rounded-md bg-blue-600 px-6 py-3 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
           >
             홈으로 돌아가기 / Back to Home
-          </Link>
+          </a>
         </div>
       </body>
     </html>
