@@ -1,5 +1,7 @@
 {
   "name": "dreamitbiz-books",
+  "description": "DreamIT 출판 서브사이트",
+  "homepage": "https://books.dreamitbiz.com",
   "version": "0.1.0",
   "private": true,
   "scripts": {
