@@ -12,6 +12,10 @@ export async function generateMetadata({
       locale === 'ko'
         ? '드림아이티비즈 장바구니'
         : 'DreamIT Biz Shopping Cart',
+    robots: {
+      index: false,
+      follow: false,
+    },
   };
 }
 

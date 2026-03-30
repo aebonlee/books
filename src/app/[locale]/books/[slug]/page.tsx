@@ -6,6 +6,7 @@ import { BookGrid } from '@/components/book/book-grid';
 import { Badge } from '@/components/ui/badge';
 import { getCategoryName } from '@/config/categories';
 import { formatDate } from '@/lib/utils';
+import { siteConfig } from '@/config/site';
 import { BookCTA } from './book-cta';
 import { ViewCounter } from '@/components/view-counter';
 import {
@@ -37,10 +38,20 @@ export async function generateMetadata({
   return {
     title,
     description,
+    alternates: {
+      canonical: `${siteConfig.url}/${locale}/books/${slug}`,
+      languages: {
+        'ko': `${siteConfig.url}/ko/books/${slug}`,
+        'en': `${siteConfig.url}/en/books/${slug}`,
+      },
+    },
     openGraph: {
       title,
       description,
+      url: `${siteConfig.url}/${locale}/books/${slug}`,
+      siteName: siteConfig.nameKo,
       images: [book.coverImage],
+      type: 'article',
     },
     twitter: {
       card: 'summary_large_image',

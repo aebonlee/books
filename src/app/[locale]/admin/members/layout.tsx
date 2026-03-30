@@ -12,6 +12,10 @@ export async function generateMetadata({
       locale === 'ko'
         ? '드림아이티비즈 회원 관리'
         : 'DreamIT Biz Member Management',
+    robots: {
+      index: false,
+      follow: false,
+    },
   };
 }
 

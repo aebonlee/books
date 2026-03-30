@@ -1,6 +1,7 @@
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { categories, getCategoryBySlug } from '@/config/categories';
+import { siteConfig } from '@/config/site';
 import { GalleryGridClient } from './gallery-grid-client';
 import type { GalleryCategory } from '@/lib/api/gallery';
 
@@ -20,7 +21,23 @@ export async function generateMetadata({
   const title = locale === 'ko' ? category.nameKo : category.nameEn;
   const description = locale === 'ko' ? category.descriptionKo : category.descriptionEn;
 
-  return { title, description };
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `${siteConfig.url}/${locale}/category/${categorySlug}`,
+      languages: {
+        'ko': `${siteConfig.url}/ko/category/${categorySlug}`,
+        'en': `${siteConfig.url}/en/category/${categorySlug}`,
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url: `${siteConfig.url}/${locale}/category/${categorySlug}`,
+      siteName: siteConfig.nameKo,
+    },
+  };
 }
 
 export default async function CategoryPage({

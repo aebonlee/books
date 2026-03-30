@@ -16,9 +16,28 @@ export const metadata: Metadata = {
   },
   description: siteConfig.descriptionKo,
   metadataBase: new URL(siteConfig.url),
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: siteConfig.url,
+    languages: {
+      'ko': `${siteConfig.url}/ko`,
+      'en': `${siteConfig.url}/en`,
+    },
+  },
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
+    alternateLocale: 'en_US',
     url: siteConfig.url,
     title: siteConfig.nameKo,
     description: siteConfig.descriptionKo,

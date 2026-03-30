@@ -1,5 +1,6 @@
 import { setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
+import { siteConfig } from '@/config/site';
 import {
   FileText,
   BookOpen,
@@ -20,12 +21,26 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const title = locale === 'ko' ? '전자출판 안내' : 'E-Publishing Guide';
+  const description = locale === 'ko'
+    ? '전자출판 제작 절차, 이용 가능 기능, 신청 방법을 안내합니다.'
+    : 'Learn about our e-publishing process, features, and how to request.';
   return {
-    title: locale === 'ko' ? '전자출판 안내' : 'E-Publishing Guide',
-    description:
-      locale === 'ko'
-        ? '전자출판 제작 절차, 이용 가능 기능, 신청 방법을 안내합니다.'
-        : 'Learn about our e-publishing process, features, and how to request.',
+    title,
+    description,
+    alternates: {
+      canonical: `${siteConfig.url}/${locale}/e-publishing`,
+      languages: {
+        'ko': `${siteConfig.url}/ko/e-publishing`,
+        'en': `${siteConfig.url}/en/e-publishing`,
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url: `${siteConfig.url}/${locale}/e-publishing`,
+      siteName: siteConfig.nameKo,
+    },
   };
 }
 
