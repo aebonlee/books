@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400">
+  <rect width="300" height="400" rx="4" fill="#F3F4F6"/>
+  <rect x="0" y="0" width="300" height="4" fill="#2563EB"/>
+  <rect x="0" y="396" width="300" height="4" fill="#2563EB"/>
+  <!-- Book icon -->
+  <g transform="translate(110, 120)">
+    <path d="M4 4C4 2.89543 4.89543 2 6 2H34C35.1046 2 36 2.89543 36 4V68C36 69.1046 35.1046 70 34 70H6C4.89543 70 4 69.1046 4 68V4Z" fill="white" stroke="#2563EB" stroke-width="2"/>
+    <path d="M44 4C44 2.89543 44.8954 2 46 2H74C75.1046 2 76 2.89543 76 4V68C76 69.1046 75.1046 70 74 70H46C44.8954 70 44 69.1046 44 68V4Z" fill="white" stroke="#2563EB" stroke-width="2"/>
+    <path d="M36 4H44V70H36V4Z" fill="#2563EB" opacity="0.15"/>
+    <line x1="36" y1="2" x2="44" y2="2" stroke="#2563EB" stroke-width="2"/>
+    <line x1="36" y1="70" x2="44" y2="70" stroke="#2563EB" stroke-width="2"/>
+    <!-- Page lines left -->
+    <line x1="12" y1="16" x2="28" y2="16" stroke="#D1D5DB" stroke-width="2" stroke-linecap="round"/>
+    <line x1="12" y1="24" x2="28" y2="24" stroke="#D1D5DB" stroke-width="2" stroke-linecap="round"/>
+    <line x1="12" y1="32" x2="24" y2="32" stroke="#D1D5DB" stroke-width="2" stroke-linecap="round"/>
+    <!-- Page lines right -->
+    <line x1="52" y1="16" x2="68" y2="16" stroke="#D1D5DB" stroke-width="2" stroke-linecap="round"/>
+    <line x1="52" y1="24" x2="68" y2="24" stroke="#D1D5DB" stroke-width="2" stroke-linecap="round"/>
+    <line x1="52" y1="32" x2="64" y2="32" stroke="#D1D5DB" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <!-- DreamIT Biz text -->
+  <text x="150" y="260" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="600" fill="#2563EB">DreamIT Biz</text>
+  <!-- Subtitle -->
+  <text x="150" y="285" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#9CA3AF">Book Cover</text>
+</svg>
