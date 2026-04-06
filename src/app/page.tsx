@@ -1,14 +1,18 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 export default function RootPage() {
-  const router = useRouter();
-
   useEffect(() => {
-    router.replace('/ko');
-  }, [router]);
+    window.location.replace('/ko');
+  }, []);
 
-  return null;
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <meta httpEquiv="refresh" content="0; url=/ko/" />
+      <p>
+        Redirecting... <a href="/ko/">Click here</a>
+      </p>
+    </div>
+  );
 }
