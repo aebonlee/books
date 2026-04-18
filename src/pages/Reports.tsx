@@ -54,10 +54,10 @@ export default function Reports() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
               {ko ? '연구보고서' : 'Research Reports'}
             </h1>
-            <p className="mt-2 text-gray-600">
+            <p className="mt-2 text-gray-600 dark:text-gray-400">
               {ko
                 ? '최신 IT 교육 연구보고서 및 프레젠테이션 자료를 확인하세요'
                 : 'Browse the latest IT education research reports and presentations'}
@@ -73,7 +73,7 @@ export default function Reports() {
               className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
                 filterPlatform === 'all'
                   ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
               }`}
             >
               {ko ? '전체' : 'All'}
@@ -85,7 +85,7 @@ export default function Reports() {
                 className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
                   filterPlatform === platform
                     ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
                 }`}
               >
                 {platform === 'miricanvas' ? (ko ? '미리캔버스' : 'MiriCanvas') : platform === 'genspark' ? (ko ? '젠스파크' : 'Genspark') : platform}

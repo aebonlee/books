@@ -83,7 +83,7 @@ export default function ReportDetail() {
   if (!report) {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           {ko ? '보고서를 찾을 수 없습니다' : 'Report not found'}
         </h1>
         <Link to="/reports" className="mt-4 inline-flex items-center gap-1 text-blue-600 hover:underline">
@@ -106,7 +106,7 @@ export default function ReportDetail() {
         {/* Back */}
         <Link
           to="/reports"
-          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-blue-600"
+          className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600"
         >
           <ArrowLeft className="h-4 w-4" />
           {ko ? '연구보고서' : 'Reports'}
@@ -148,7 +148,7 @@ export default function ReportDetail() {
             </div>
 
             {/* Title */}
-            <h1 className="mt-4 text-3xl font-bold text-gray-900">{title}</h1>
+            <h1 className="mt-4 text-3xl font-bold text-gray-900 dark:text-white">{title}</h1>
 
             {/* View Counter */}
             <div className="mt-3">
@@ -156,7 +156,7 @@ export default function ReportDetail() {
             </div>
 
             {/* Date */}
-            <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
+            <div className="mt-4 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
               <Calendar className="h-4 w-4" />
               <span>{formatDate(report.published_date, language)}</span>
             </div>
@@ -167,7 +167,7 @@ export default function ReportDetail() {
                 {report.is_free ? (
                   <span className="text-green-600">{ko ? '무료' : 'Free'}</span>
                 ) : report.price > 0 ? (
-                  <span className="text-gray-900">{formatPrice(report.price, language)}</span>
+                  <span className="text-gray-900 dark:text-white">{formatPrice(report.price, language)}</span>
                 ) : null}
               </div>
               {!report.is_free && report.price > 0 && (
@@ -198,8 +198,8 @@ export default function ReportDetail() {
             {/* Description */}
             {description && (
               <div>
-                <h2 className="text-xl font-semibold text-gray-900">{ko ? '설명' : 'Description'}</h2>
-                <p className="mt-4 whitespace-pre-wrap text-gray-600 leading-relaxed">{description}</p>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{ko ? '설명' : 'Description'}</h2>
+                <p className="mt-4 whitespace-pre-wrap text-gray-600 dark:text-gray-400 leading-relaxed">{description}</p>
               </div>
             )}
 
@@ -207,7 +207,7 @@ export default function ReportDetail() {
             {body && (
               <div className="mt-8">
                 <div
-                  className="prose prose-sm max-w-none text-gray-600"
+                  className="prose prose-sm max-w-none text-gray-600 dark:text-gray-400"
                   dangerouslySetInnerHTML={{ __html: body }}
                 />
               </div>

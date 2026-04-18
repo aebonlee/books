@@ -42,8 +42,8 @@ export default function Library() {
       <SEOHead title={t('library.title')} description={t('library.description')} />
 
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-900">{t('library.title')}</h1>
-        <p className="mt-2 text-gray-600">{t('library.description')}</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('library.title')}</h1>
+        <p className="mt-2 text-gray-600 dark:text-gray-400">{t('library.description')}</p>
 
         <div className="mt-8">
           {loading ? (
@@ -53,7 +53,7 @@ export default function Library() {
           ) : purchases.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <ShoppingBag className="h-16 w-16 text-gray-300" />
-              <h2 className="mt-4 text-lg font-semibold text-gray-900">
+              <h2 className="mt-4 text-lg font-semibold text-gray-900 dark:text-white">
                 {t('library.empty')}
               </h2>
               <Link
@@ -69,7 +69,7 @@ export default function Library() {
               {purchases.map((purchase) => (
                 <div
                   key={purchase.id}
-                  className="flex items-center gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+                  className="flex items-center gap-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 shadow-sm"
                 >
                   {purchase.coverImage ? (
                     <div className="relative h-20 w-14 shrink-0 overflow-hidden rounded bg-gray-100">
@@ -86,11 +86,11 @@ export default function Library() {
                   )}
 
                   <div className="flex-1 min-w-0">
-                    <h3 className="truncate font-medium text-gray-900">{purchase.title}</h3>
-                    <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-gray-500">
+                    <h3 className="truncate font-medium text-gray-900 dark:text-white">{purchase.title}</h3>
+                    <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
                       <span>{formatPrice(purchase.price, language)}</span>
                       <span>{formatDate(purchase.purchasedAt, language)}</span>
-                      <span className="text-xs text-gray-400">#{purchase.orderNumber}</span>
+                      <span className="text-xs text-gray-400 dark:text-gray-500">#{purchase.orderNumber}</span>
                     </div>
                   </div>
 

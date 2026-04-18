@@ -59,12 +59,12 @@ export function LearningCard({
       href={item.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md hover:border-gray-300"
+      className="group overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm transition-all hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600"
     >
       {/* Thumbnail */}
       <div className="relative">
         {item.cover_image ? (
-          <div className="relative aspect-[16/9] w-full overflow-hidden bg-gray-100">
+          <div className="relative aspect-[16/9] w-full overflow-hidden bg-gray-100 dark:bg-gray-700">
             <img
               src={resolveImageUrl(item.cover_image)}
               alt={item.title}
@@ -99,11 +99,11 @@ export function LearningCard({
 
       {/* Card Body */}
       <div className="p-5">
-        <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">
+        <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors line-clamp-2">
           {locale === 'ko' ? item.title : (item.title_en || item.title)}
         </h3>
         {item.description && (
-          <p className="mt-1.5 text-sm text-gray-500 line-clamp-2">
+          <p className="mt-1.5 text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
             {locale === 'ko' ? item.description : (item.description_en || item.description)}
           </p>
         )}
@@ -125,7 +125,7 @@ export function LearningCard({
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-between border-t border-gray-100 px-5 py-3">
+      <div className="flex items-center justify-between border-t border-gray-100 dark:border-gray-700 px-5 py-3">
         <div className="flex items-center gap-3">
           <span className="text-xs text-gray-400">
             {new Date(item.published_date).toLocaleDateString(
@@ -133,7 +133,7 @@ export function LearningCard({
             )}
           </span>
           {(viewCount ?? 0) > 0 && (
-            <span className="inline-flex items-center gap-1 text-gray-500">
+            <span className="inline-flex items-center gap-1 text-gray-500 dark:text-gray-400">
               <Eye className="h-3.5 w-3.5" />
               <span className="text-xs">{(viewCount ?? 0).toLocaleString()}</span>
             </span>

@@ -59,7 +59,7 @@ function getStatusBadge(status: string, locale: string): ReactNode {
     },
     cancelled: {
       label: { ko: '취소', en: 'Cancelled' },
-      color: 'bg-gray-100 text-gray-600',
+      color: 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400',
       icon: <XCircle className="h-3 w-3" />,
     },
   };
@@ -213,7 +213,7 @@ export default function CustomOrderPage() {
       ) : requests.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <FileText className="h-16 w-16 text-gray-300" />
-          <h2 className="mt-4 text-xl font-semibold text-gray-600">
+          <h2 className="mt-4 text-xl font-semibold text-gray-600 dark:text-gray-400">
             {ko ? '등록된 제작 의뢰가 없습니다' : 'No requests yet'}
           </h2>
           <p className="mt-2 text-gray-400">
@@ -228,7 +228,7 @@ export default function CustomOrderPage() {
             return (
               <div
                 key={req.id}
-                className="rounded-lg border border-gray-200 bg-white dark:bg-gray-800 transition-shadow hover:shadow-sm"
+                className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-shadow hover:shadow-sm"
               >
                 <button
                   className="flex w-full items-center gap-3 p-4 text-left"
@@ -239,7 +239,7 @@ export default function CustomOrderPage() {
                       <span className="truncate font-medium text-gray-900 dark:text-white">{req.title}</span>
                       {getStatusBadge(req.status, language)}
                     </div>
-                    <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-gray-500">
+                    <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
                       <span className="inline-flex items-center gap-1">
                         <User className="h-3 w-3" />
                         {req.author_name}
@@ -254,7 +254,7 @@ export default function CustomOrderPage() {
                 </button>
 
                 {isExpanded && (
-                  <div className="border-t border-gray-100 p-4">
+                  <div className="border-t border-gray-100 dark:border-gray-700 p-4">
                     <div className="space-y-3 text-sm">
                       <div>
                         <span className="font-medium text-gray-700 dark:text-gray-300">
@@ -263,7 +263,7 @@ export default function CustomOrderPage() {
                         <p className="mt-1 whitespace-pre-wrap text-gray-600 dark:text-gray-400">{req.content}</p>
                       </div>
 
-                      <div className="flex flex-wrap gap-4 text-gray-500">
+                      <div className="flex flex-wrap gap-4 text-gray-500 dark:text-gray-400">
                         {req.quantity > 1 && (
                           <span>{ko ? '수량' : 'Qty'}: {req.quantity}</span>
                         )}
@@ -305,7 +305,7 @@ export default function CustomOrderPage() {
 
       <Dialog open={showForm} onClose={() => setShowForm(false)} className="max-w-lg !p-0">
         <form onSubmit={handleSubmit}>
-          <DialogHeader className="border-b border-gray-100 px-6 pt-6 pb-4 !mb-0">
+          <DialogHeader className="border-b border-gray-100 dark:border-gray-700 px-6 pt-6 pb-4 !mb-0">
             <DialogTitle>
               {ko ? '제작 의뢰하기' : 'Submit Request'}
             </DialogTitle>
@@ -313,7 +313,7 @@ export default function CustomOrderPage() {
 
           <div className="max-h-[60vh] space-y-4 overflow-y-auto px-6 py-4">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
+              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 {ko ? '제목' : 'Title'} <span className="text-red-500">*</span>
               </label>
               <input
@@ -321,12 +321,12 @@ export default function CustomOrderPage() {
                 required
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-gray-100 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
+              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 {ko ? '의뢰 유형' : 'Request Type'}
               </label>
               <select
@@ -334,7 +334,7 @@ export default function CustomOrderPage() {
                 onChange={(e) =>
                   setForm({ ...form, request_type: e.target.value as CreateCustomRequestData['request_type'] })
                 }
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-gray-100 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
                 {REQUEST_TYPES.map((type) => (
                   <option key={type} value={type}>{getTypeLabel(type, language)}</option>
@@ -343,7 +343,7 @@ export default function CustomOrderPage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
+              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 {ko ? '상세 내용' : 'Details'} <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -356,13 +356,13 @@ export default function CustomOrderPage() {
                     ? '제작하고 싶은 콘텐츠의 주제, 분량, 특이사항 등을 상세히 적어주세요'
                     : 'Please describe the topic, scope, and any special requirements'
                 }
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-gray-100 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                   {ko ? '수량' : 'Quantity'}
                 </label>
                 <input
@@ -370,25 +370,25 @@ export default function CustomOrderPage() {
                   min={1}
                   value={form.quantity}
                   onChange={(e) => setForm({ ...form, quantity: parseInt(e.target.value) || 1 })}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-gray-100 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                   {ko ? '희망 납기일' : 'Desired Deadline'}
                 </label>
                 <input
                   type="date"
                   value={form.deadline}
                   onChange={(e) => setForm({ ...form, deadline: e.target.value })}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-gray-100 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                   {ko ? '이름' : 'Name'} <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -396,24 +396,24 @@ export default function CustomOrderPage() {
                   required
                   value={form.author_name}
                   onChange={(e) => setForm({ ...form, author_name: e.target.value })}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-gray-100 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                   {ko ? '연락처' : 'Phone'}
                 </label>
                 <input
                   type="tel"
                   value={form.author_phone}
                   onChange={(e) => setForm({ ...form, author_phone: e.target.value })}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-gray-100 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
+              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 {ko ? '이메일' : 'Email'} <span className="text-red-500">*</span>
               </label>
               <input
@@ -421,12 +421,12 @@ export default function CustomOrderPage() {
                 required
                 value={form.author_email}
                 onChange={(e) => setForm({ ...form, author_email: e.target.value })}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-gray-100 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 border-t border-gray-100 px-6 py-4">
+          <div className="flex justify-end gap-3 border-t border-gray-100 dark:border-gray-700 px-6 py-4">
             <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
               {ko ? '취소' : 'Cancel'}
             </Button>

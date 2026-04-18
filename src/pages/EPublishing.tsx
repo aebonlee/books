@@ -84,7 +84,7 @@ export default function EPublishing() {
 
       {/* Services */}
       <section className="container mx-auto px-4 py-16">
-        <h2 className="text-center text-2xl font-bold text-gray-900">
+        <h2 className="text-center text-2xl font-bold text-gray-900 dark:text-white">
           {ko ? '서비스 안내' : 'Our Services'}
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -93,15 +93,15 @@ export default function EPublishing() {
             return (
               <div
                 key={i}
-                className="rounded-xl border border-gray-200 bg-white p-6 text-center shadow-sm transition-all hover:shadow-md hover:-translate-y-1"
+                className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 text-center shadow-sm transition-all hover:shadow-md hover:-translate-y-1"
               >
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-indigo-100">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900/50">
                   <Icon className="h-7 w-7 text-indigo-600" />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-gray-900">
+                <h3 className="mt-4 text-lg font-semibold text-gray-900 dark:text-white">
                   {ko ? svc.titleKo : svc.titleEn}
                 </h3>
-                <p className="mt-2 text-sm text-gray-500">
+                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
                   {ko ? svc.descriptionKo : svc.descriptionEn}
                 </p>
               </div>
@@ -111,16 +111,16 @@ export default function EPublishing() {
       </section>
 
       {/* Features */}
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gray-50 dark:bg-gray-900 py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-center text-2xl font-bold text-gray-900">
+          <h2 className="text-center text-2xl font-bold text-gray-900 dark:text-white">
             {ko ? '왜 드림아이티비즈인가?' : 'Why DreamIT Biz?'}
           </h2>
           <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((feat, i) => (
-              <div key={i} className="flex items-center gap-3 rounded-lg bg-white p-4 shadow-sm">
+              <div key={i} className="flex items-center gap-3 rounded-lg bg-white dark:bg-gray-800 p-4 shadow-sm">
                 <CheckCircle className="h-5 w-5 shrink-0 text-green-500" />
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {ko ? feat.ko : feat.en}
                 </span>
               </div>
@@ -131,10 +131,10 @@ export default function EPublishing() {
 
       {/* CTA */}
       <section className="container mx-auto px-4 py-16 text-center">
-        <h2 className="text-2xl font-bold text-gray-900">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
           {ko ? '맞춤 제작이 필요하신가요?' : 'Need custom content?'}
         </h2>
-        <p className="mx-auto mt-4 max-w-xl text-gray-600">
+        <p className="mx-auto mt-4 max-w-xl text-gray-600 dark:text-gray-400">
           {ko
             ? '교재, 전자출판, 교육 자료의 맞춤 제작을 의뢰하세요. 빠르고 전문적인 서비스를 제공합니다.'
             : 'Request custom-made textbooks, e-publications, and educational materials. We provide fast and professional services.'}
@@ -149,7 +149,7 @@ export default function EPublishing() {
           </Link>
           <Link
             to="/catalog"
-            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-8 py-3 text-sm font-semibold text-gray-700 transition-all hover:bg-gray-50"
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 dark:border-gray-600 px-8 py-3 text-sm font-semibold text-gray-700 dark:text-gray-300 transition-all hover:bg-gray-50 dark:hover:bg-gray-700"
           >
             {ko ? '카탈로그 보기' : 'View Catalog'}
           </Link>

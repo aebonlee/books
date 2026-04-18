@@ -22,7 +22,7 @@ export function BookCard({ book, locale = 'ko', layout = 'portrait', viewCount }
     <Link to={`/books/${book.slug}`}>
       <Card className="group h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
         {/* Cover Image */}
-        <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
+        <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 dark:bg-gray-700">
           <img
             src={book.coverImage}
             alt={book.title}
@@ -50,12 +50,12 @@ export function BookCard({ book, locale = 'ko', layout = 'portrait', viewCount }
           </Badge>
 
           {/* Title */}
-          <h3 className="line-clamp-2 text-sm font-semibold text-gray-900 group-hover:text-blue-600">
+          <h3 className="line-clamp-2 text-sm font-semibold text-gray-900 dark:text-white group-hover:text-blue-600">
             {locale === 'ko' ? book.title : (book.titleEn || book.title)}
           </h3>
 
           {/* Authors */}
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
             {book.authors.map((a) => a.name).join(', ')}
           </p>
 
@@ -67,7 +67,7 @@ export function BookCard({ book, locale = 'ko', layout = 'portrait', viewCount }
                   {locale === 'ko' ? '무료' : 'Free'}
                 </span>
               ) : book.price ? (
-                <span className="text-sm font-bold text-gray-900">
+                <span className="text-sm font-bold text-gray-900 dark:text-white">
                   {formatPrice(book.price, locale)}
                 </span>
               ) : null}
@@ -91,7 +91,7 @@ function LandscapeBookCard({ book, locale = 'ko', viewCount }: { book: Book; loc
     <Link to={`/books/${book.slug}`}>
       <Card className="group h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
         {/* 가로형 커버 (4:3 슬라이드 비율) */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
+        <div className="relative aspect-[4/3] overflow-hidden bg-gray-100 dark:bg-gray-700">
           <img
             src={book.coverImage}
             alt={book.title}
@@ -114,14 +114,14 @@ function LandscapeBookCard({ book, locale = 'ko', viewCount }: { book: Book; loc
 
         <CardContent className="p-3">
           {/* Title */}
-          <h3 className="line-clamp-2 text-sm font-semibold text-gray-900 group-hover:text-blue-600">
+          <h3 className="line-clamp-2 text-sm font-semibold text-gray-900 dark:text-white group-hover:text-blue-600">
             {locale === 'ko' ? book.title : (book.titleEn || book.title)}
           </h3>
 
           {/* Authors + Price + Views */}
           <div className="mt-1.5 flex items-center justify-between">
             <div className="flex items-center gap-2 truncate">
-              <p className="truncate text-xs text-gray-500">
+              <p className="truncate text-xs text-gray-500 dark:text-gray-400">
                 {book.authors.map((a) => a.name).join(', ')}
               </p>
               {book.isFree ? (
@@ -129,7 +129,7 @@ function LandscapeBookCard({ book, locale = 'ko', viewCount }: { book: Book; loc
                   {locale === 'ko' ? '무료' : 'Free'}
                 </span>
               ) : book.price ? (
-                <span className="shrink-0 text-xs font-bold text-gray-900">
+                <span className="shrink-0 text-xs font-bold text-gray-900 dark:text-white">
                   {formatPrice(book.price, locale)}
                 </span>
               ) : null}

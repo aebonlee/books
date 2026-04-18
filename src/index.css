@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 @theme {
   --color-brand-50: #eff6ff;
   --color-brand-100: #dbeafe;
@@ -699,3 +701,149 @@
 [data-theme="dark"] .auth-method-btn { background: #1f2937; border-color: #374151; color: #f9fafb; }
 [data-theme="dark"] .auth-method-btn:hover { background: #374151; }
 [data-theme="dark"] .auth-input-group input { background: #1f2937; border-color: #374151; color: #f9fafb; }
+[data-theme="dark"] .auth-bottom-link { border-top-color: #374151; color: #9ca3af; }
+[data-theme="dark"] .auth-error { background: #451a1a; border-color: #991b1b; color: #fca5a5; }
+[data-theme="dark"] .auth-logo-area .brand-biz { color: #e2e8f0; }
+
+/* Dark mode — Scrollbar */
+[data-theme="dark"] ::-webkit-scrollbar-thumb { background: #4b5563; }
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+
+/* Dark mode — Logo */
+[data-theme="dark"] .dit-logo .brand-it { color: #f9fafb; }
+[data-theme="dark"] .dit-logo .brand-biz { color: var(--dit-blue-light); }
+
+/* Dark mode — Search input */
+[data-theme="dark"] .dit-lang-btn:hover { background: #1f2937; }
+
+/* Dark mode — Theme toggle / Color picker */
+.dit-theme-btn,
+.dit-color-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--dit-text-secondary);
+  transition: var(--dit-transition);
+  position: relative;
+}
+
+.dit-theme-btn:hover,
+.dit-color-btn:hover {
+  background: #f3f4f6;
+  color: var(--dit-blue);
+}
+
+[data-theme="dark"] .dit-theme-btn:hover,
+[data-theme="dark"] .dit-color-btn:hover {
+  background: #374151;
+  color: #93c5fd;
+}
+
+/* Color picker dropdown */
+.dit-color-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  display: flex;
+  gap: 6px;
+  padding: 8px 10px;
+  background: white;
+  border: 1px solid var(--dit-border);
+  border-radius: 12px;
+  box-shadow: var(--dit-shadow-lg);
+  z-index: 100;
+}
+
+[data-theme="dark"] .dit-color-dropdown {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+.dit-color-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dit-color-dot:hover {
+  transform: scale(1.15);
+}
+
+.dit-color-dot.active {
+  border-color: white;
+  box-shadow: 0 0 0 2px var(--dit-blue);
+}
+
+/* ── Color Themes ── */
+html[data-color="red"] { --dit-blue: #C8102E; --dit-blue-dark: #A00D24; --dit-blue-light: #E74A5A; }
+html[data-color="green"] { --dit-blue: #00855A; --dit-blue-dark: #006B48; --dit-blue-light: #2AAA7A; }
+html[data-color="purple"] { --dit-blue: #8B1AC8; --dit-blue-dark: #6E15A0; --dit-blue-light: #B44DE0; }
+html[data-color="orange"] { --dit-blue: #C87200; --dit-blue-dark: #A05B00; --dit-blue-light: #E89530; }
+
+/* Dark mode + color brightness adjustments */
+[data-theme="dark"][data-color="red"] { --dit-blue: #E74A5A; --dit-blue-light: #FD9393; }
+[data-theme="dark"][data-color="green"] { --dit-blue: #2AAA7A; --dit-blue-light: #5FCFA0; }
+[data-theme="dark"][data-color="purple"] { --dit-blue: #B44DE0; --dit-blue-light: #D48CF0; }
+[data-theme="dark"][data-color="orange"] { --dit-blue: #E89530; --dit-blue-light: #FFB86B; }
+
+/* ── Mobile theme row ── */
+.dit-mobile-theme-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 24px;
+}
+
+.dit-mobile-theme-row .dit-mobile-colors {
+  display: flex;
+  gap: 6px;
+}
+
+.dit-mobile-theme-row .dit-mobile-color-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dit-mobile-theme-row .dit-mobile-color-dot.active {
+  border-color: white;
+  box-shadow: 0 0 0 2px var(--dit-blue);
+}
+
+.dit-mobile-theme-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--dit-border);
+  background: transparent;
+  color: var(--dit-text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--dit-transition);
+}
+
+.dit-mobile-theme-btn:hover {
+  background: #f3f4f6;
+  color: var(--dit-blue);
+}
+
+[data-theme="dark"] .dit-mobile-theme-btn:hover {
+  background: #374151;
+  color: #93c5fd;
+}

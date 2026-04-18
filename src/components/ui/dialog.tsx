@@ -45,13 +45,13 @@ export function Dialog({ open, onClose, children, className }: DialogProps) {
     >
       <div
         className={cn(
-          'relative w-full max-w-md rounded-lg bg-white p-6 shadow-xl',
+          'relative w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800 dark:text-gray-100',
           className,
         )}
       >
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-sm text-gray-400 hover:text-gray-600"
+          className="absolute right-4 top-4 rounded-sm text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
           aria-label="Close"
         >
           <X className="h-4 w-4" />
@@ -68,11 +68,11 @@ export function DialogHeader({ children, className }: { children: ReactNode; cla
 }
 
 export function DialogTitle({ children, className }: { children: ReactNode; className?: string }) {
-  return <h2 className={cn('text-lg font-semibold text-gray-900', className)}>{children}</h2>;
+  return <h2 className={cn('text-lg font-semibold text-gray-900 dark:text-white', className)}>{children}</h2>;
 }
 
 export function DialogDescription({ children, className }: { children: ReactNode; className?: string }) {
-  return <p className={cn('mt-1 text-sm text-gray-500', className)}>{children}</p>;
+  return <p className={cn('mt-1 text-sm text-gray-500 dark:text-gray-400', className)}>{children}</p>;
 }
 
 export function DialogFooter({ children, className }: { children: ReactNode; className?: string }) {

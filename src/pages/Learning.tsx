@@ -61,8 +61,8 @@ export default function Learning() {
       />
 
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-900">{t('learning.title')}</h1>
-        <p className="mt-2 text-gray-600">{t('learning.description')}</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('learning.title')}</h1>
+        <p className="mt-2 text-gray-600 dark:text-gray-400">{t('learning.description')}</p>
 
         {/* Filter */}
         <div className="mt-6 flex flex-wrap gap-2">
@@ -73,7 +73,7 @@ export default function Learning() {
               className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
                 filter === btn.key
                   ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
               }`}
             >
               {btn.label}
@@ -101,10 +101,10 @@ export default function Learning() {
           ) : (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <GraduationCap className="h-16 w-16 text-gray-300" />
-              <p className="mt-4 text-lg font-medium text-gray-900">
+              <p className="mt-4 text-lg font-medium text-gray-900 dark:text-white">
                 {t('learning.noItems')}
               </p>
-              <p className="mt-2 text-gray-500">
+              <p className="mt-2 text-gray-500 dark:text-gray-400">
                 {t('learning.noItemsDescription')}
               </p>
             </div>
@@ -112,11 +112,11 @@ export default function Learning() {
         </div>
 
         {/* CTA */}
-        <div className="mt-16 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 p-8 text-center">
-          <h2 className="text-xl font-bold text-gray-900">
+        <div className="mt-16 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-800 p-8 text-center">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             {t('learning.customCta')}
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-sm text-gray-600">
+          <p className="mx-auto mt-3 max-w-xl text-sm text-gray-600 dark:text-gray-400">
             {t('learning.customCtaDescription')}
           </p>
           <Link

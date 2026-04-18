@@ -136,11 +136,11 @@ export default function Catalog() {
       <SEOHead title={t('catalog.title')} description={t('catalog.description')} />
 
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-900">{t('catalog.title')}</h1>
-        <p className="mt-2 text-gray-600">{t('catalog.description')}</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('catalog.title')}</h1>
+        <p className="mt-2 text-gray-600 dark:text-gray-400">{t('catalog.description')}</p>
 
         {/* Tabs */}
-        <div className="mt-8 flex gap-1 border-b border-gray-200">
+        <div className="mt-8 flex gap-1 border-b border-gray-200 dark:border-gray-700">
           {tabs.map((item) => (
             <button
               key={item.key}
@@ -148,7 +148,7 @@ export default function Catalog() {
               className={`px-4 py-2.5 text-sm font-medium transition-colors ${
                 tab === item.key
                   ? 'border-b-2 border-blue-600 text-blue-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
               }`}
             >
               {item.label}
@@ -166,14 +166,14 @@ export default function Catalog() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t('common.searchPlaceholder')}
-                className="w-full rounded-lg border border-gray-300 py-2 pl-10 pr-4 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 py-2 pl-10 pr-4 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                className="rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
               >
                 <option value="all">{t('catalog.allCategories')}</option>
                 {categories.map((cat) => (
@@ -185,7 +185,7 @@ export default function Catalog() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortKey)}
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                className="rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
               >
                 <option value="newest">{t('catalog.sortNewest')}</option>
                 <option value="oldest">{t('catalog.sortOldest')}</option>
@@ -193,12 +193,12 @@ export default function Catalog() {
                 <option value="priceDesc">{t('catalog.sortPriceDesc')}</option>
                 <option value="title">{t('catalog.sortTitle')}</option>
               </select>
-              <label className="flex items-center gap-2 text-sm text-gray-600">
+              <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                 <input
                   type="checkbox"
                   checked={freeOnly}
                   onChange={(e) => setFreeOnly(e.target.checked)}
-                  className="h-4 w-4 rounded border-gray-300"
+                  className="h-4 w-4 rounded border-gray-300 dark:border-gray-600"
                 />
                 {t('catalog.freeOnly')}
               </label>

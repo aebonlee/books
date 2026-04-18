@@ -38,15 +38,15 @@ export function CategoryCard({ category, locale = 'ko', bookCount }: CategoryCar
             <Icon className="h-6 w-6" />
           </div>
           <div className="sm:flex sm:flex-col sm:items-center">
-            <h3 className="text-sm font-semibold text-gray-900 group-hover:text-blue-600">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-blue-600">
               {locale === 'ko' ? category.nameKo : category.nameEn}
             </h3>
-            <p className="mt-1 text-xs leading-relaxed text-gray-500">
+            <p className="mt-1 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
               {locale === 'ko' ? category.descriptionKo : category.descriptionEn}
             </p>
           </div>
           {bookCount !== undefined && (
-            <span className="mt-2 text-xs text-gray-400">
+            <span className="mt-2 text-xs text-gray-400 dark:text-gray-500">
               {bookCount} {locale === 'ko' ? '권' : 'books'}
             </span>
           )}

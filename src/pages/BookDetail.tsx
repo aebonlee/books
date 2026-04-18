@@ -135,7 +135,7 @@ export default function BookDetail() {
   if (notFound || !book) {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           {ko ? '도서를 찾을 수 없습니다' : 'Book not found'}
         </h1>
         <Link to="/catalog" className="mt-4 inline-flex items-center gap-1 text-blue-600 hover:underline">
@@ -166,7 +166,7 @@ export default function BookDetail() {
         <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Cover Image */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24 overflow-hidden rounded-xl bg-gray-100 shadow-lg">
+            <div className="sticky top-24 overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-700 shadow-lg">
               <div className="relative aspect-[3/4]">
                 <img
                   src={resolveImageUrl(book.coverImage)}
@@ -191,11 +191,11 @@ export default function BookDetail() {
             </div>
 
             {/* Title */}
-            <h1 className="mt-4 text-3xl font-bold text-gray-900">{title}</h1>
+            <h1 className="mt-4 text-3xl font-bold text-gray-900 dark:text-white">{title}</h1>
 
             {/* Authors */}
             {book.authors.length > 0 && (
-              <p className="mt-2 text-lg text-gray-600">
+              <p className="mt-2 text-lg text-gray-600 dark:text-gray-400">
                 {book.authors.map((a) => a.name).join(', ')}
               </p>
             )}
@@ -211,7 +211,7 @@ export default function BookDetail() {
                 {book.isFree ? (
                   <span className="text-green-600">{ko ? '무료' : 'Free'}</span>
                 ) : book.price ? (
-                  <span className="text-gray-900">{formatPrice(book.price, language)}</span>
+                  <span className="text-gray-900 dark:text-white">{formatPrice(book.price, language)}</span>
                 ) : null}
               </div>
               {!book.isFree && book.price && book.price > 0 && (
@@ -236,7 +236,7 @@ export default function BookDetail() {
                     href={resolveImageUrl(asset.url)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                    className="inline-flex items-center gap-2 rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700"
                   >
                     {asset.type === 'pdf' && <FileText className="h-4 w-4" />}
                     {asset.type === 'epub' && <BookOpen className="h-4 w-4" />}
@@ -268,15 +268,15 @@ export default function BookDetail() {
 
             {/* Description */}
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                 {ko ? '도서 소개' : 'Description'}
               </h2>
-              <div className="mt-4 whitespace-pre-wrap text-gray-600 leading-relaxed">
+              <div className="mt-4 whitespace-pre-wrap text-gray-600 dark:text-gray-400 leading-relaxed">
                 {description}
               </div>
               {book.body && (
                 <div
-                  className="prose prose-sm mt-4 max-w-none text-gray-600"
+                  className="prose prose-sm mt-4 max-w-none text-gray-600 dark:text-gray-400"
                   dangerouslySetInnerHTML={{ __html: book.body }}
                 />
               )}
@@ -285,14 +285,14 @@ export default function BookDetail() {
             {/* TOC */}
             {book.toc && book.toc.length > 0 && (
               <div className="mt-8">
-                <h2 className="text-xl font-semibold text-gray-900">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                   {ko ? '목차' : 'Table of Contents'}
                 </h2>
                 <ul className="mt-4 space-y-2">
                   {book.toc.map((item, i) => (
                     <li
                       key={i}
-                      className="text-sm text-gray-600"
+                      className="text-sm text-gray-600 dark:text-gray-400"
                       style={{ paddingLeft: `${item.level * 16}px` }}
                     >
                       {item.title}
@@ -306,19 +306,19 @@ export default function BookDetail() {
             <Separator className="my-8" />
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
               {book.publishedAt && (
-                <div className="flex items-center gap-2 text-sm text-gray-500">
+                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                   <Calendar className="h-4 w-4" />
                   <span>{ko ? '출간일' : 'Published'}: {formatDate(book.publishedAt, language)}</span>
                 </div>
               )}
               {book.pages && (
-                <div className="flex items-center gap-2 text-sm text-gray-500">
+                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                   <FileText className="h-4 w-4" />
                   <span>{book.pages} {ko ? '페이지' : 'pages'}</span>
                 </div>
               )}
               {book.isbn && (
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-gray-500 dark:text-gray-400">
                   ISBN: {book.isbn}
                 </div>
               )}

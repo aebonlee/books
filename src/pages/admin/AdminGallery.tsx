@@ -244,29 +244,29 @@ export default function AdminGalleryPage() {
           {ko ? '등록된 항목이 없습니다' : 'No items found'}
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-gray-200">
-          <table className="min-w-full divide-y divide-gray-200">
+        <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">{ko ? '이미지' : 'Image'}</th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">{ko ? '제목' : 'Title'}</th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">{ko ? '카테고리' : 'Category'}</th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">{ko ? '가격' : 'Price'}</th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">{ko ? '상태' : 'Status'}</th>
-                <th className="px-4 py-3 text-right text-xs font-medium uppercase text-gray-500">{ko ? '작업' : 'Actions'}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-300">{ko ? '이미지' : 'Image'}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-300">{ko ? '제목' : 'Title'}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-300">{ko ? '카테고리' : 'Category'}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-300">{ko ? '가격' : 'Price'}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-300">{ko ? '상태' : 'Status'}</th>
+                <th className="px-4 py-3 text-right text-xs font-medium uppercase text-gray-500 dark:text-gray-300">{ko ? '작업' : 'Actions'}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white dark:bg-gray-800">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
               {items.map((item) => (
                 <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="px-4 py-3">
-                    <div className="h-12 w-10 overflow-hidden rounded bg-gray-100">
+                    <div className="h-12 w-10 overflow-hidden rounded bg-gray-100 dark:bg-gray-700">
                       <img src={resolveImageUrl(item.cover_image)} alt={item.title} className="h-full w-full object-cover" />
                     </div>
                   </td>
                   <td className="px-4 py-3">
                     <div className="text-sm font-medium text-gray-900 dark:text-white">{item.title}</div>
-                    {item.author_name && <div className="text-xs text-gray-500">{item.author_name}</div>}
+                    {item.author_name && <div className="text-xs text-gray-500 dark:text-gray-400">{item.author_name}</div>}
                   </td>
                   <td className="px-4 py-3">
                     <Badge variant="outline" className="text-xs">{getCategoryLabel(item.category)}</Badge>
@@ -329,11 +329,11 @@ export default function AdminGalleryPage() {
           </div>
           <div>
             <Label>{ko ? '설명 (한국어)' : 'Description (Korean)'}</Label>
-            <textarea className="flex min-h-[80px] w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm" value={form.description} onChange={(e) => updateField('description', e.target.value)} />
+            <textarea className="flex min-h-[80px] w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-gray-100 px-3 py-2 text-sm" value={form.description} onChange={(e) => updateField('description', e.target.value)} />
           </div>
           <div>
             <Label>{ko ? '설명 (영어)' : 'Description (English)'}</Label>
-            <textarea className="flex min-h-[80px] w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm" value={form.description_en} onChange={(e) => updateField('description_en', e.target.value)} />
+            <textarea className="flex min-h-[80px] w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-gray-100 px-3 py-2 text-sm" value={form.description_en} onChange={(e) => updateField('description_en', e.target.value)} />
           </div>
           <div>
             <Label>{ko ? '커버 이미지 URL *' : 'Cover Image URL *'}</Label>

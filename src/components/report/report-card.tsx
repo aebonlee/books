@@ -45,12 +45,12 @@ export function ReportCard({ report, locale, viewCount }: { report: ReportItem; 
   return (
     <Link
       to={`/reports/_?id=${report.id}`}
-      className="group overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md hover:border-gray-300"
+      className="group overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm transition-all hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600"
     >
       {/* Thumbnail Image */}
       <div className="relative">
         {report.cover_image ? (
-          <div className="relative aspect-[16/9] w-full overflow-hidden bg-gray-100">
+          <div className="relative aspect-[16/9] w-full overflow-hidden bg-gray-100 dark:bg-gray-700">
             <img
               src={resolveImageUrl(report.cover_image)}
               alt={report.title}
@@ -79,11 +79,11 @@ export function ReportCard({ report, locale, viewCount }: { report: ReportItem; 
 
       {/* Card Body */}
       <div className="p-5">
-        <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">
+        <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors line-clamp-2">
           {locale === 'ko' ? report.title : (report.title_en || report.title)}
         </h3>
         {report.description && (
-          <p className="mt-1.5 text-sm text-gray-500 line-clamp-2">
+          <p className="mt-1.5 text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
             {locale === 'ko' ? report.description : (report.description_en || report.description)}
           </p>
         )}
@@ -102,7 +102,7 @@ export function ReportCard({ report, locale, viewCount }: { report: ReportItem; 
               </span>
             </>
           ) : (report.price || 0) > 0 ? (
-            <span className="text-sm font-bold text-gray-900">
+            <span className="text-sm font-bold text-gray-900 dark:text-white">
               {formatPrice(report.price || 0, locale)}
             </span>
           ) : null}
@@ -124,7 +124,7 @@ export function ReportCard({ report, locale, viewCount }: { report: ReportItem; 
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-between border-t border-gray-100 px-5 py-3">
+      <div className="flex items-center justify-between border-t border-gray-100 dark:border-gray-700 px-5 py-3">
         <div className="flex items-center gap-3">
           <span className="text-xs text-gray-400">
             {new Date(report.published_date).toLocaleDateString(
@@ -132,7 +132,7 @@ export function ReportCard({ report, locale, viewCount }: { report: ReportItem; 
             )}
           </span>
           {(viewCount ?? 0) > 0 && (
-            <span className="inline-flex items-center gap-1 text-gray-500">
+            <span className="inline-flex items-center gap-1 text-gray-500 dark:text-gray-400">
               <Eye className="h-3.5 w-3.5" />
               <span className="text-xs">{(viewCount ?? 0).toLocaleString()}</span>
             </span>
@@ -146,7 +146,7 @@ export function ReportCard({ report, locale, viewCount }: { report: ReportItem; 
               className={`inline-flex h-7 w-7 items-center justify-center rounded-full transition-colors ${
                 inCart
                   ? 'bg-green-100 text-green-600'
-                  : 'bg-gray-100 text-gray-500 hover:bg-blue-100 hover:text-blue-600'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-blue-100 hover:text-blue-600'
               }`}
               title={
                 inCart

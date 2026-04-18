@@ -102,7 +102,7 @@ export default function Reader() {
       <div className="container mx-auto px-4 py-4">
         <Link
           to={`/books/${id}`}
-          className="mb-4 inline-flex items-center gap-1 text-sm text-gray-500 hover:text-blue-600"
+          className="mb-4 inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600"
         >
           <ArrowLeft className="h-4 w-4" />
           {ko ? '도서 정보' : 'Book Details'}

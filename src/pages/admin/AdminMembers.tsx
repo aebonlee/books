@@ -112,8 +112,8 @@ export default function AdminMembersPage() {
           {ko ? '회원이 없습니다' : 'No members found'}
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-gray-200">
-          <table className="min-w-full divide-y divide-gray-200">
+        <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-300">
@@ -133,7 +133,7 @@ export default function AdminMembersPage() {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white dark:bg-gray-800">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
               {filtered.map((member) => (
                 <tr key={member.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="px-4 py-3">
@@ -162,7 +162,7 @@ export default function AdminMembersPage() {
                       {member.role || 'user'}
                     </Badge>
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-500">
+                  <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
                     {member.created_at ? formatDate(member.created_at, language) : '-'}
                   </td>
                 </tr>

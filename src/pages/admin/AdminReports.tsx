@@ -157,33 +157,33 @@ export default function AdminReportsPage() {
       ) : items.length === 0 ? (
         <div className="py-16 text-center text-gray-500">{ko ? '등록된 보고서가 없습니다' : 'No reports found'}</div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-gray-200">
-          <table className="min-w-full divide-y divide-gray-200">
+        <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">{ko ? '미리보기' : 'Preview'}</th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">{ko ? '제목' : 'Title'}</th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">{ko ? '플랫폼' : 'Platform'}</th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">{ko ? '상태' : 'Status'}</th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">{ko ? '발표일' : 'Date'}</th>
-                <th className="px-4 py-3 text-right text-xs font-medium uppercase text-gray-500">{ko ? '작업' : 'Actions'}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-300">{ko ? '미리보기' : 'Preview'}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-300">{ko ? '제목' : 'Title'}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-300">{ko ? '플랫폼' : 'Platform'}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-300">{ko ? '상태' : 'Status'}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-300">{ko ? '발표일' : 'Date'}</th>
+                <th className="px-4 py-3 text-right text-xs font-medium uppercase text-gray-500 dark:text-gray-300">{ko ? '작업' : 'Actions'}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white dark:bg-gray-800">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
               {items.map((item) => (
                 <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="px-4 py-3">
                     {item.cover_image ? (
-                      <div className="h-12 w-20 overflow-hidden rounded bg-gray-100">
+                      <div className="h-12 w-20 overflow-hidden rounded bg-gray-100 dark:bg-gray-700">
                         <img src={resolveImageUrl(item.cover_image)} alt={item.title} className="h-full w-full object-cover" />
                       </div>
                     ) : (
-                      <div className="flex h-12 w-20 items-center justify-center rounded bg-gray-100 text-xs text-gray-400">No image</div>
+                      <div className="flex h-12 w-20 items-center justify-center rounded bg-gray-100 dark:bg-gray-700 text-xs text-gray-400">No image</div>
                     )}
                   </td>
                   <td className="px-4 py-3">
                     <div className="text-sm font-medium text-gray-900 dark:text-white">{item.title}</div>
-                    {item.description && <div className="mt-0.5 text-xs text-gray-500 line-clamp-1">{item.description}</div>}
+                    {item.description && <div className="mt-0.5 text-xs text-gray-500 dark:text-gray-400 line-clamp-1">{item.description}</div>}
                   </td>
                   <td className="px-4 py-3"><Badge variant="outline" className="text-xs">{getPlatformLabel(item.platform)}</Badge></td>
                   <td className="px-4 py-3">
@@ -194,10 +194,10 @@ export default function AdminReportsPage() {
                       {item.featured && <Badge variant="default" className="text-xs">{ko ? '추천' : 'Featured'}</Badge>}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-500">{item.published_date || '-'}</td>
+                  <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{item.published_date || '-'}</td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex justify-end gap-1">
-                      <a href={item.url} target="_blank" rel="noopener noreferrer" className="inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100">
+                      <a href={item.url} target="_blank" rel="noopener noreferrer" className="inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
                         <ExternalLink className="h-4 w-4" />
                       </a>
                       <Button variant="ghost" size="icon" onClick={() => openEditDialog(item)}><Pencil className="h-4 w-4" /></Button>
@@ -227,10 +227,10 @@ export default function AdminReportsPage() {
             <div><Label>{ko ? '발표일 *' : 'Published Date *'}</Label><Input type="date" value={form.published_date} onChange={(e) => updateField('published_date', e.target.value)} /></div>
             <div><Label>{ko ? '가격 (원)' : 'Price (KRW)'}</Label><Input type="number" value={form.price} onChange={(e) => updateField('price', e.target.value)} min="0" /></div>
           </div>
-          <div><Label>{ko ? '설명 (한국어)' : 'Description (Korean)'}</Label><textarea className="flex min-h-[80px] w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm" value={form.description} onChange={(e) => updateField('description', e.target.value)} /></div>
-          <div><Label>{ko ? '설명 (영어)' : 'Description (English)'}</Label><textarea className="flex min-h-[80px] w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm" value={form.description_en} onChange={(e) => updateField('description_en', e.target.value)} /></div>
-          <div><Label>{ko ? '상세 해설 (한국어)' : 'Detailed Analysis (Korean)'}</Label><textarea className="flex min-h-[120px] w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm" value={form.body} onChange={(e) => updateField('body', e.target.value)} /></div>
-          <div><Label>{ko ? '상세 해설 (영어)' : 'Detailed Analysis (English)'}</Label><textarea className="flex min-h-[120px] w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm" value={form.body_en} onChange={(e) => updateField('body_en', e.target.value)} /></div>
+          <div><Label>{ko ? '설명 (한국어)' : 'Description (Korean)'}</Label><textarea className="flex min-h-[80px] w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-gray-100 px-3 py-2 text-sm" value={form.description} onChange={(e) => updateField('description', e.target.value)} /></div>
+          <div><Label>{ko ? '설명 (영어)' : 'Description (English)'}</Label><textarea className="flex min-h-[80px] w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-gray-100 px-3 py-2 text-sm" value={form.description_en} onChange={(e) => updateField('description_en', e.target.value)} /></div>
+          <div><Label>{ko ? '상세 해설 (한국어)' : 'Detailed Analysis (Korean)'}</Label><textarea className="flex min-h-[120px] w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-gray-100 px-3 py-2 text-sm" value={form.body} onChange={(e) => updateField('body', e.target.value)} /></div>
+          <div><Label>{ko ? '상세 해설 (영어)' : 'Detailed Analysis (English)'}</Label><textarea className="flex min-h-[120px] w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-gray-100 px-3 py-2 text-sm" value={form.body_en} onChange={(e) => updateField('body_en', e.target.value)} /></div>
           <div><Label>{ko ? '태그 (쉼표 구분)' : 'Tags (comma-separated)'}</Label><Input value={form.tags} onChange={(e) => updateField('tags', e.target.value)} /></div>
           <div><Label>{ko ? '정렬 순서' : 'Sort Order'}</Label><Input type="number" value={form.sort_order} onChange={(e) => updateField('sort_order', e.target.value)} min="0" /></div>
           <div className="flex flex-wrap gap-6">

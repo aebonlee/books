@@ -82,7 +82,7 @@ function PortraitGalleryCard({ item, locale, hasMultiple, onOpenLightbox, views 
 
   return (
     <Card className="group h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
-      <div className="relative aspect-[3/4] cursor-pointer overflow-hidden bg-gray-100" onClick={onOpenLightbox}>
+      <div className="relative aspect-[3/4] cursor-pointer overflow-hidden bg-gray-100 dark:bg-gray-700" onClick={onOpenLightbox}>
         <img
           src={resolveImageUrl(item.cover_image)}
           alt={title}
@@ -109,16 +109,16 @@ function PortraitGalleryCard({ item, locale, hasMultiple, onOpenLightbox, views 
       </div>
 
       <CardContent className="p-4">
-        <h3 className="line-clamp-2 text-sm font-semibold text-gray-900">{title}</h3>
+        <h3 className="line-clamp-2 text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>
         {item.author_name && (
-          <p className="mt-1 text-xs text-gray-500">{item.author_name}</p>
+          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{item.author_name}</p>
         )}
         <div className="mt-2 flex items-center justify-between">
           <div className="flex items-center gap-2">
             {item.is_free ? (
               <span className="text-sm font-bold text-green-600">{locale === 'ko' ? '무료' : 'Free'}</span>
             ) : item.price > 0 ? (
-              <span className="text-sm font-bold text-gray-900">{formatPrice(item.price, locale)}</span>
+              <span className="text-sm font-bold text-gray-900 dark:text-white">{formatPrice(item.price, locale)}</span>
             ) : null}
             <span className="inline-flex items-center gap-0.5 text-gray-400">
               <Eye className="h-3 w-3" />
@@ -129,7 +129,7 @@ function PortraitGalleryCard({ item, locale, hasMultiple, onOpenLightbox, views 
             <button
               onClick={handleAddToCart}
               className={`rounded-full p-1.5 transition-colors ${
-                inCart ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-600'
+                inCart ? 'bg-green-100 text-green-600' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-blue-100 hover:text-blue-600'
               }`}
               title={inCart ? (locale === 'ko' ? '장바구니에 있음' : 'In cart') : (locale === 'ko' ? '장바구니 담기' : 'Add to cart')}
             >
@@ -162,7 +162,7 @@ function LandscapeGalleryCard({ item, locale, hasMultiple, onOpenLightbox, views
 
   return (
     <Card className="group h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
-      <div className="relative aspect-[4/3] cursor-pointer overflow-hidden bg-gray-100" onClick={onOpenLightbox}>
+      <div className="relative aspect-[4/3] cursor-pointer overflow-hidden bg-gray-100 dark:bg-gray-700" onClick={onOpenLightbox}>
         <img
           src={resolveImageUrl(item.cover_image)}
           alt={title}
@@ -185,14 +185,14 @@ function LandscapeGalleryCard({ item, locale, hasMultiple, onOpenLightbox, views
       </div>
 
       <CardContent className="p-3">
-        <h3 className="line-clamp-2 text-sm font-semibold text-gray-900">{title}</h3>
+        <h3 className="line-clamp-2 text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>
         <div className="mt-1.5 flex items-center justify-between">
           <div className="flex items-center gap-2 truncate">
-            {item.author_name && <p className="truncate text-xs text-gray-500">{item.author_name}</p>}
+            {item.author_name && <p className="truncate text-xs text-gray-500 dark:text-gray-400">{item.author_name}</p>}
             {item.is_free ? (
               <span className="shrink-0 text-xs font-bold text-green-600">{locale === 'ko' ? '무료' : 'Free'}</span>
             ) : item.price > 0 ? (
-              <span className="shrink-0 text-xs font-bold text-gray-900">{formatPrice(item.price, locale)}</span>
+              <span className="shrink-0 text-xs font-bold text-gray-900 dark:text-white">{formatPrice(item.price, locale)}</span>
             ) : null}
             <span className="inline-flex shrink-0 items-center gap-0.5 text-gray-400">
               <Eye className="h-3 w-3" />
@@ -203,7 +203,7 @@ function LandscapeGalleryCard({ item, locale, hasMultiple, onOpenLightbox, views
             <button
               onClick={handleAddToCart}
               className={`shrink-0 rounded-full p-1 transition-colors ${
-                inCart ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-600'
+                inCart ? 'bg-green-100 text-green-600' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-blue-100 hover:text-blue-600'
               }`}
               title={inCart ? (locale === 'ko' ? '장바구니에 있음' : 'In cart') : (locale === 'ko' ? '장바구니 담기' : 'Add to cart')}
             >

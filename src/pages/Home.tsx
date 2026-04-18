@@ -116,7 +116,7 @@ export default function Home() {
 
       {/* Categories */}
       <section className="container mx-auto px-4 py-16">
-        <h2 className="text-2xl font-bold text-gray-900">{t('home.categories')}</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('home.categories')}</h2>
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((cat) => (
             <CategoryCard key={cat.slug} category={cat} locale={language} />
@@ -125,11 +125,11 @@ export default function Home() {
       </section>
 
       {/* Featured Books */}
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gray-50 dark:bg-gray-900 py-16">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">{t('home.featuredBooks')}</h2>
-            <Link to="/catalog" className="text-sm font-medium text-blue-600 hover:text-blue-700">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('home.featuredBooks')}</h2>
+            <Link to="/catalog" className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700">
               {t('common.viewAll')}
             </Link>
           </div>
@@ -141,7 +141,7 @@ export default function Home() {
             ) : featuredBooks.length > 0 ? (
               <BookGrid books={featuredBooks} locale={language} viewCounts={viewCounts} />
             ) : (
-              <p className="py-12 text-center text-gray-500">
+              <p className="py-12 text-center text-gray-500 dark:text-gray-400">
                 {ko ? '추천 도서가 곧 추가됩니다' : 'Featured books coming soon'}
               </p>
             )}
@@ -152,8 +152,8 @@ export default function Home() {
       {/* New Releases */}
       <section className="container mx-auto px-4 py-16">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-900">{t('home.newReleases')}</h2>
-          <Link to="/catalog" className="text-sm font-medium text-blue-600 hover:text-blue-700">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('home.newReleases')}</h2>
+          <Link to="/catalog" className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700">
             {t('common.viewAll')}
           </Link>
         </div>
@@ -165,7 +165,7 @@ export default function Home() {
           ) : newBooks.length > 0 ? (
             <BookGrid books={newBooks} locale={language} viewCounts={viewCounts} />
           ) : (
-            <p className="py-12 text-center text-gray-500">
+            <p className="py-12 text-center text-gray-500 dark:text-gray-400">
               {ko ? '신간 도서가 곧 추가됩니다' : 'New releases coming soon'}
             </p>
           )}
