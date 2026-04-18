@@ -1,1 +1,0 @@
-import{r as n}from"./index-DOk1M4Pa.js";function c({title:e,description:t}){return n.useEffect(()=>{const o="드림아이티비즈 출판";if(document.title=e?`${e} | ${o}`:`DreamIT Books | ${o}`,t){const r=document.querySelector('meta[name="description"]');r&&r.setAttribute("content",t)}},[e,t]),null}export{c as S};
