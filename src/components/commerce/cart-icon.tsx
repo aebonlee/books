@@ -1,7 +1,5 @@
-'use client';
-
-import { Link } from '@/i18n/navigation';
-import { useCart } from '@/contexts/cart-context';
+import { Link } from 'react-router-dom';
+import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart } from 'lucide-react';
 
@@ -9,7 +7,7 @@ export function CartIcon() {
   const { totalItems } = useCart();
 
   return (
-    <Link href="/cart">
+    <Link to="/cart">
       <Button variant="ghost" size="icon" aria-label="Cart" className="relative">
         <ShoppingCart className="h-4 w-4" />
         {totalItems > 0 && (

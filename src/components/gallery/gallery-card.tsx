@@ -1,12 +1,9 @@
-'use client';
-
 import { useState } from 'react';
-import Image from 'next/image';
 import { ShoppingCart, Check, ChevronLeft, ChevronRight, X, Images, Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { formatPrice, resolveImageUrl } from '@/lib/utils';
-import { useCart } from '@/contexts/cart-context';
+import { useCart } from '@/contexts/CartContext';
 import type { GalleryItem } from '@/lib/api/gallery';
 import { incrementView } from '@/lib/api/views';
 import { GalleryLightbox } from './gallery-lightbox';
@@ -86,12 +83,10 @@ function PortraitGalleryCard({ item, locale, hasMultiple, onOpenLightbox, views 
   return (
     <Card className="group h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
       <div className="relative aspect-[3/4] cursor-pointer overflow-hidden bg-gray-100" onClick={onOpenLightbox}>
-        <Image
+        <img
           src={resolveImageUrl(item.cover_image)}
           alt={title}
-          fill
-          className="object-cover transition-transform group-hover:scale-105"
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-105"
         />
         <div className="absolute left-2 top-2 flex flex-col gap-1">
           {item.featured && (
@@ -168,12 +163,10 @@ function LandscapeGalleryCard({ item, locale, hasMultiple, onOpenLightbox, views
   return (
     <Card className="group h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
       <div className="relative aspect-[4/3] cursor-pointer overflow-hidden bg-gray-100" onClick={onOpenLightbox}>
-        <Image
+        <img
           src={resolveImageUrl(item.cover_image)}
           alt={title}
-          fill
-          className="object-cover transition-transform group-hover:scale-105"
-          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-105"
         />
         <div className="absolute left-2 top-2 flex flex-col gap-1">
           {item.featured && (

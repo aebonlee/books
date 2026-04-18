@@ -1,10 +1,7 @@
-'use client';
-
-import Image from 'next/image';
-import { Link } from '@/i18n/navigation';
+import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Eye, Presentation, ShoppingCart, Check } from 'lucide-react';
-import { useCart } from '@/contexts/cart-context';
+import { useCart } from '@/contexts/CartContext';
 import { formatPrice, resolveImageUrl } from '@/lib/utils';
 import type { ReportItem } from '@/lib/api/reports';
 
@@ -47,19 +44,17 @@ export function ReportCard({ report, locale, viewCount }: { report: ReportItem; 
 
   return (
     <Link
-      href={`/reports/_?id=${report.id}`}
+      to={`/reports/_?id=${report.id}`}
       className="group overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md hover:border-gray-300"
     >
       {/* Thumbnail Image */}
       <div className="relative">
         {report.cover_image ? (
           <div className="relative aspect-[16/9] w-full overflow-hidden bg-gray-100">
-            <Image
+            <img
               src={resolveImageUrl(report.cover_image)}
               alt={report.title}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
           </div>
         ) : (

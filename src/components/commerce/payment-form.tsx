@@ -1,11 +1,9 @@
-'use client';
-
 import { useState, useEffect, useRef } from 'react';
-import { useLocale } from 'next-intl';
-import { useRouter } from '@/i18n/navigation';
-import { useAuth } from '@/contexts/auth-context';
-import { useCart } from '@/contexts/cart-context';
-import { useToast } from '@/components/ui/toast';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/contexts/CartContext';
+import { useToast } from '@/contexts/ToastContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -20,8 +18,8 @@ import { CreditCard, Loader2, ShieldCheck } from 'lucide-react';
 const BUYER_STORAGE_KEY = 'dreamitbiz_checkout_buyer';
 
 export function PaymentForm() {
-  const locale = useLocale();
-  const router = useRouter();
+  const { language } = useLanguage();
+  const navigate = useNavigate();
   const { user, profile, isLoggedIn } = useAuth();
   const { items, clearCart } = useCart();
   const { toast } = useToast();
@@ -123,7 +121,7 @@ export function PaymentForm() {
           clearCart();
           // 결제 완료 시 sessionStorage 정리
           try { sessionStorage.removeItem(BUYER_STORAGE_KEY); } catch { /* ignore */ }
-          router.push(`/checkout/success?orderId=${order.orderId}`);
+          navigate(`/checkout/success?orderId=${order.orderId}`);
           return;
         }
         throw new Error('Payment verification failed');
@@ -131,12 +129,12 @@ export function PaymentForm() {
 
       clearCart();
       try { sessionStorage.removeItem(BUYER_STORAGE_KEY); } catch { /* ignore */ }
-      router.push(`/checkout/success?orderId=${order.orderId}`);
+      navigate(`/checkout/success?orderId=${order.orderId}`);
     } catch (err) {
       toast(
         err instanceof Error
           ? err.message
-          : locale === 'ko'
+          : language === 'ko'
             ? '결제 처리 중 오류가 발생했습니다'
             : 'An error occurred during payment',
         'error',
@@ -152,20 +150,20 @@ export function PaymentForm() {
         <div className="lg:col-span-3 space-y-6">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">
-              {locale === 'ko' ? '주문자 정보' : 'Buyer Information'}
+              {language === 'ko' ? '주문자 정보' : 'Buyer Information'}
             </h2>
             <Separator className="my-4" />
             <div className="space-y-4">
               <div>
-                <Label htmlFor="buyerName">{locale === 'ko' ? '이름' : 'Name'}</Label>
+                <Label htmlFor="buyerName">{language === 'ko' ? '이름' : 'Name'}</Label>
                 <Input id="buyerName" value={buyerName} onChange={(e) => setBuyerName(e.target.value)} required className="mt-1" />
               </div>
               <div>
-                <Label htmlFor="buyerEmail">{locale === 'ko' ? '이메일' : 'Email'}</Label>
+                <Label htmlFor="buyerEmail">{language === 'ko' ? '이메일' : 'Email'}</Label>
                 <Input id="buyerEmail" type="email" value={buyerEmail} onChange={(e) => setBuyerEmail(e.target.value)} required className="mt-1" />
               </div>
               <div>
-                <Label htmlFor="buyerPhone">{locale === 'ko' ? '연락처' : 'Phone'}</Label>
+                <Label htmlFor="buyerPhone">{language === 'ko' ? '연락처' : 'Phone'}</Label>
                 <Input id="buyerPhone" type="tel" value={buyerPhone} onChange={(e) => setBuyerPhone(e.target.value)} required placeholder="010-0000-0000" className="mt-1" />
               </div>
             </div>
@@ -173,15 +171,15 @@ export function PaymentForm() {
 
           <div>
             <h2 className="text-lg font-semibold text-gray-900">
-              {locale === 'ko' ? '결제 수단' : 'Payment Method'}
+              {language === 'ko' ? '결제 수단' : 'Payment Method'}
             </h2>
             <Separator className="my-4" />
             <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
               <div className="flex items-center gap-3">
                 <CreditCard className="h-5 w-5 text-blue-600" />
                 <div>
-                  <p className="font-medium text-gray-900">{locale === 'ko' ? '카드 결제' : 'Credit Card'}</p>
-                  <p className="text-sm text-gray-500">{locale === 'ko' ? '신용카드/체크카드로 결제합니다' : 'Pay with credit or debit card'}</p>
+                  <p className="font-medium text-gray-900">{language === 'ko' ? '카드 결제' : 'Credit Card'}</p>
+                  <p className="text-sm text-gray-500">{language === 'ko' ? '신용카드/체크카드로 결제합니다' : 'Pay with credit or debit card'}</p>
                 </div>
               </div>
             </div>
@@ -190,13 +188,13 @@ export function PaymentForm() {
           <div className="flex items-start gap-2">
             <input type="checkbox" id="agree" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} className="mt-1 h-4 w-4 rounded border-gray-300" />
             <label htmlFor="agree" className="text-sm text-gray-600">
-              {locale === 'ko' ? '주문 내용을 확인하였으며, 결제에 동의합니다' : 'I have reviewed my order and agree to proceed with payment'}
+              {language === 'ko' ? '주문 내용을 확인하였으며, 결제에 동의합니다' : 'I have reviewed my order and agree to proceed with payment'}
             </label>
           </div>
 
           <Button type="submit" size="lg" className="w-full" disabled={loading || !agreed || items.length === 0}>
             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ShieldCheck className="mr-2 h-4 w-4" />}
-            {locale === 'ko' ? '결제하기' : 'Pay Now'}
+            {language === 'ko' ? '결제하기' : 'Pay Now'}
           </Button>
         </div>
 

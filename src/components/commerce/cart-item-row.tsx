@@ -1,9 +1,6 @@
-'use client';
-
-import Image from 'next/image';
-import { useLocale } from 'next-intl';
-import { Link } from '@/i18n/navigation';
-import { useCart } from '@/contexts/cart-context';
+import { Link } from 'react-router-dom';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { formatPrice } from '@/lib/utils';
 import type { CartItem } from '@/types/commerce';
@@ -14,29 +11,28 @@ interface CartItemRowProps {
 }
 
 export function CartItemRow({ item }: CartItemRowProps) {
-  const locale = useLocale();
+  const { language } = useLanguage();
   const { removeItem } = useCart();
 
   return (
     <div className="flex items-center gap-4 py-4">
-      <Link href={`/books/${item.slug}`} className="shrink-0">
+      <Link to={`/books/${item.slug}`} className="shrink-0">
         <div className="relative h-20 w-14 overflow-hidden rounded bg-gray-100">
-          <Image
+          <img
             src={item.coverImage}
-            alt={locale === 'ko' ? item.title : (item.titleEn || item.title)}
-            fill
-            className="object-cover"
+            alt={language === 'ko' ? item.title : (item.titleEn || item.title)}
+            className="absolute inset-0 h-full w-full object-cover"
           />
         </div>
       </Link>
       <div className="flex-1 min-w-0">
-        <Link href={`/books/${item.slug}`}>
+        <Link to={`/books/${item.slug}`}>
           <h3 className="truncate font-medium text-gray-900 hover:text-blue-600">
-            {locale === 'ko' ? item.title : (item.titleEn || item.title)}
+            {language === 'ko' ? item.title : (item.titleEn || item.title)}
           </h3>
         </Link>
         <p className="mt-1 text-sm font-semibold text-gray-700">
-          {formatPrice(item.price, locale)}
+          {formatPrice(item.price, language)}
         </p>
       </div>
       <Button

@@ -1,19 +1,18 @@
-'use client';
-
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { useLocale } from 'next-intl';
-import { Link, usePathname } from '@/i18n/navigation';
-import { useAuth } from '@/contexts/auth-context';
-import { useToast } from '@/components/ui/toast';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/contexts/ToastContext';
 import { Button } from '@/components/ui/button';
 import { User, Users, BookOpen, LogOut, Settings, FileText, GraduationCap } from 'lucide-react';
 
 export function UserMenu() {
-  const locale = useLocale();
+  const { language } = useLanguage();
   const { user, profile, isLoggedIn, isAdmin, isLoading, signOut } = useAuth();
   const { toast } = useToast();
-  const pathname = usePathname();
+  const location = useLocation();
+  const pathname = location.pathname;
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -67,7 +66,7 @@ export function UserMenu() {
     const loginHref = `/login?from=${encodeURIComponent(pathname)}`;
     return (
       <Link
-        href={loginHref}
+        to={loginHref}
         className="inline-flex items-center justify-center rounded-full bg-blue-600 px-[18px] py-[7px] text-[13px] font-semibold text-white tracking-wide transition-all hover:bg-blue-700 hover:-translate-y-px hover:shadow-[0_4px_12px_rgba(0,70,200,0.3)]"
       >
         Login
@@ -93,46 +92,46 @@ export function UserMenu() {
         </div>
       </div>
       <Link
-        href="/library"
+        to="/library"
         className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
         onClick={() => setMenuOpen(false)}
       >
         <BookOpen className="h-4 w-4" />
-        {locale === 'ko' ? '내 서재' : 'My Library'}
+        {language === 'ko' ? '내 서재' : 'My Library'}
       </Link>
       {isAdmin && (
         <>
           <Link
-            href="/admin/gallery"
+            to="/admin/gallery"
             className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
             onClick={() => setMenuOpen(false)}
           >
             <Settings className="h-4 w-4" />
-            {locale === 'ko' ? '갤러리 관리' : 'Gallery Admin'}
+            {language === 'ko' ? '갤러리 관리' : 'Gallery Admin'}
           </Link>
           <Link
-            href="/admin/reports"
+            to="/admin/reports"
             className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
             onClick={() => setMenuOpen(false)}
           >
             <FileText className="h-4 w-4" />
-            {locale === 'ko' ? '보고서 관리' : 'Reports Admin'}
+            {language === 'ko' ? '보고서 관리' : 'Reports Admin'}
           </Link>
           <Link
-            href="/admin/learning-content"
+            to="/admin/learning-content"
             className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
             onClick={() => setMenuOpen(false)}
           >
             <GraduationCap className="h-4 w-4" />
-            {locale === 'ko' ? '학습 콘텐츠 관리' : 'Learning Admin'}
+            {language === 'ko' ? '학습 콘텐츠 관리' : 'Learning Admin'}
           </Link>
           <Link
-            href="/admin/members"
+            to="/admin/members"
             className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
             onClick={() => setMenuOpen(false)}
           >
             <Users className="h-4 w-4" />
-            {locale === 'ko' ? '회원 관리' : 'Members'}
+            {language === 'ko' ? '회원 관리' : 'Members'}
           </Link>
         </>
       )}
@@ -141,14 +140,14 @@ export function UserMenu() {
           await signOut();
           setMenuOpen(false);
           toast(
-            locale === 'ko' ? '로그아웃되었습니다' : 'Logged out successfully',
+            language === 'ko' ? '로그아웃되었습니다' : 'Logged out successfully',
             'info',
           );
         }}
         className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
       >
         <LogOut className="h-4 w-4" />
-        {locale === 'ko' ? '로그아웃' : 'Logout'}
+        {language === 'ko' ? '로그아웃' : 'Logout'}
       </button>
     </div>,
     document.body,

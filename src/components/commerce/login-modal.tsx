@@ -1,11 +1,9 @@
-'use client';
-
 import { useState, useEffect } from 'react';
-import { useLocale, useTranslations } from 'next-intl';
-import { useToast } from '@/components/ui/toast';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useToast } from '@/contexts/ToastContext';
 import { signInWithGoogle, signInWithKakao, signInWithEmail } from '@/lib/auth';
 import { Dialog } from '@/components/ui/dialog';
-import '@/app/auth.css';
+// auth styles are in index.css
 
 interface LoginModalProps {
   open: boolean;
@@ -14,8 +12,7 @@ interface LoginModalProps {
 }
 
 export function LoginModal({ open, onClose, onSuccess }: LoginModalProps) {
-  const locale = useLocale();
-  const t = useTranslations('auth');
+  const { t, language } = useLanguage();
   const { toast } = useToast();
   const [step, setStep] = useState<'method' | 'email'>('method');
   const [form, setForm] = useState({ email: '', password: '' });
@@ -36,7 +33,7 @@ export function LoginModal({ open, onClose, onSuccess }: LoginModalProps) {
       if (provider === 'google') await signInWithGoogle();
       else await signInWithKakao();
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('loginError'));
+      setError(err instanceof Error ? err.message : t('auth.loginError'));
     }
   };
 
@@ -48,13 +45,13 @@ export function LoginModal({ open, onClose, onSuccess }: LoginModalProps) {
     try {
       await signInWithEmail(form.email, form.password);
       toast(
-        locale === 'ko' ? '로그인되었습니다' : 'Logged in successfully',
+        language === 'ko' ? '로그인되었습니다' : 'Logged in successfully',
         'success',
       );
       onClose();
       onSuccess?.();
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('loginError'));
+      setError(err instanceof Error ? err.message : t('auth.loginError'));
     } finally {
       setLoading(false);
     }
@@ -68,8 +65,8 @@ export function LoginModal({ open, onClose, onSuccess }: LoginModalProps) {
           <span className="brand-it">IT</span>{' '}
           <span className="brand-biz">Biz</span>
         </div>
-        <h2 className="auth-heading">{t('loginTitle')}</h2>
-        <p className="auth-sub">{t('loginSubtitle')}</p>
+        <h2 className="auth-heading">{t('auth.loginTitle')}</h2>
+        <p className="auth-sub">{t('auth.loginSubtitle')}</p>
 
         {step === 'method' ? (
           <>
@@ -110,9 +107,9 @@ export function LoginModal({ open, onClose, onSuccess }: LoginModalProps) {
             {error && <div className="auth-error">{error}</div>}
 
             <div className="auth-bottom-link">
-              <span>{t('noAccount')}</span>
+              <span>{t('auth.noAccount')}</span>
               <a href="https://www.dreamitbiz.com/register" target="_blank" rel="noopener noreferrer">
-                {t('signUp')}
+                {t('auth.signUp')}
               </a>
             </div>
           </>
@@ -124,7 +121,7 @@ export function LoginModal({ open, onClose, onSuccess }: LoginModalProps) {
                   type="email"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  placeholder={t('emailPlaceholder')}
+                  placeholder={t('auth.emailPlaceholder')}
                   required
                   autoFocus
                 />
@@ -134,7 +131,7 @@ export function LoginModal({ open, onClose, onSuccess }: LoginModalProps) {
                   type="password"
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  placeholder={t('passwordPlaceholder')}
+                  placeholder={t('auth.passwordPlaceholder')}
                   required
                 />
               </div>
@@ -147,23 +144,23 @@ export function LoginModal({ open, onClose, onSuccess }: LoginModalProps) {
                   className="auth-back-btn"
                   onClick={() => { setStep('method'); setError(''); }}
                 >
-                  {t('back')}
+                  {t('auth.back')}
                 </button>
                 <button type="submit" className="auth-next-btn" disabled={loading}>
-                  {loading ? t('loggingIn') : t('login')}
+                  {loading ? t('auth.loggingIn') : t('auth.login')}
                 </button>
               </div>
             </form>
 
             <div className="auth-forgot-link">
               <a href="https://www.dreamitbiz.com/forgot-password" target="_blank" rel="noopener noreferrer">
-                {t('forgotPassword')}
+                {t('auth.forgotPassword')}
               </a>
             </div>
             <div className="auth-bottom-link">
-              <span>{t('noAccount')}</span>
+              <span>{t('auth.noAccount')}</span>
               <a href="https://www.dreamitbiz.com/register" target="_blank" rel="noopener noreferrer">
-                {t('signUp')}
+                {t('auth.signUp')}
               </a>
             </div>
           </>

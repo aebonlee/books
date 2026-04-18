@@ -1,0 +1,409 @@
+import { useEffect, useState, useCallback } from 'react';
+import { Plus, Pencil, Trash2, Loader2, X as XIcon } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/contexts/ToastContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { SEOHead } from '@/components/SEOHead';
+import {
+  getGalleryItemsAdmin,
+  createGalleryItem,
+  updateGalleryItem,
+  deleteGalleryItem,
+} from '@/lib/api/gallery';
+import type { GalleryItem, GalleryCategory, CreateGalleryItemData } from '@/lib/api/gallery';
+import { slugify, formatPrice, resolveImageUrl } from '@/lib/utils';
+
+const CATEGORY_OPTIONS: { value: GalleryCategory; labelKo: string; labelEn: string }[] = [
+  { value: 'digital', labelKo: '전자출판', labelEn: 'E-Publishing' },
+  { value: 'textbooks', labelKo: '도서 & 교육교재', labelEn: 'Books & Textbooks' },
+  { value: 'lectures', labelKo: '강의안 및 실습자료', labelEn: 'Lectures & Labs' },
+];
+
+interface FormState {
+  title: string;
+  title_en: string;
+  slug: string;
+  category: GalleryCategory;
+  description: string;
+  description_en: string;
+  cover_image: string;
+  sub_images: string[];
+  price: string;
+  is_free: boolean;
+  featured: boolean;
+  is_published: boolean;
+  sort_order: string;
+  author_name: string;
+  tags: string;
+}
+
+const EMPTY_FORM: FormState = {
+  title: '',
+  title_en: '',
+  slug: '',
+  category: 'digital',
+  description: '',
+  description_en: '',
+  cover_image: '',
+  sub_images: [],
+  price: '0',
+  is_free: false,
+  featured: false,
+  is_published: true,
+  sort_order: '0',
+  author_name: '',
+  tags: '',
+};
+
+export default function AdminGalleryPage() {
+  const { language } = useLanguage();
+  const ko = language === 'ko';
+  const { isLoggedIn, isAdmin, isLoading: authLoading } = useAuth();
+  const { showToast } = useToast();
+
+  const [items, setItems] = useState<GalleryItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filterCategory, setFilterCategory] = useState<GalleryCategory | ''>('');
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<GalleryItem | null>(null);
+  const [form, setForm] = useState<FormState>(EMPTY_FORM);
+  const [saving, setSaving] = useState(false);
+  const [newSubImageUrl, setNewSubImageUrl] = useState('');
+
+  const loadItems = useCallback(async () => {
+    setLoading(true);
+    const data = await getGalleryItemsAdmin(filterCategory || undefined);
+    setItems(data);
+    setLoading(false);
+  }, [filterCategory]);
+
+  useEffect(() => {
+    if (isAdmin) loadItems();
+  }, [isAdmin, loadItems]);
+
+  useEffect(() => {
+    if (!editingItem && form.title) {
+      setForm((prev) => ({ ...prev, slug: slugify(prev.title) }));
+    }
+  }, [form.title, editingItem]);
+
+  if (authLoading) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+      </div>
+    );
+  }
+
+  if (!isLoggedIn || !isAdmin) {
+    return (
+      <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          {ko ? '접근 권한 없음' : 'Access Denied'}
+        </h1>
+        <p className="text-gray-500">{ko ? '관리자만 접근할 수 있습니다.' : 'Only administrators can access this page.'}</p>
+      </div>
+    );
+  }
+
+  const openCreateDialog = () => {
+    setEditingItem(null);
+    setForm(EMPTY_FORM);
+    setNewSubImageUrl('');
+    setDialogOpen(true);
+  };
+
+  const openEditDialog = (item: GalleryItem) => {
+    setEditingItem(item);
+    setForm({
+      title: item.title,
+      title_en: item.title_en || '',
+      slug: item.slug,
+      category: item.category,
+      description: item.description,
+      description_en: item.description_en || '',
+      cover_image: item.cover_image,
+      sub_images: item.sub_images || [],
+      price: String(item.price),
+      is_free: item.is_free,
+      featured: item.featured,
+      is_published: item.is_published,
+      sort_order: String(item.sort_order),
+      author_name: item.author_name || '',
+      tags: (item.tags || []).join(', '),
+    });
+    setNewSubImageUrl('');
+    setDialogOpen(true);
+  };
+
+  const handleSave = async () => {
+    if (!form.title || !form.slug || !form.category) {
+      showToast(ko ? '필수 항목을 입력해주세요' : 'Please fill in required fields', 'error');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const payload: CreateGalleryItemData = {
+        slug: form.slug,
+        title: form.title,
+        title_en: form.title_en || undefined,
+        description: form.description,
+        description_en: form.description_en || undefined,
+        category: form.category,
+        cover_image: form.cover_image || '/images/covers/default.png',
+        sub_images: form.sub_images,
+        price: parseInt(form.price) || 0,
+        is_free: form.is_free,
+        featured: form.featured,
+        is_published: form.is_published,
+        sort_order: parseInt(form.sort_order) || 0,
+        author_name: form.author_name || undefined,
+        tags: form.tags ? form.tags.split(',').map((t) => t.trim()).filter(Boolean) : [],
+      };
+
+      if (editingItem) {
+        await updateGalleryItem(editingItem.id, payload);
+        showToast(ko ? '항목이 수정되었습니다' : 'Item updated', 'success');
+      } else {
+        await createGalleryItem(payload);
+        showToast(ko ? '항목이 등록되었습니다' : 'Item created', 'success');
+      }
+
+      setDialogOpen(false);
+      loadItems();
+    } catch (err) {
+      console.error('Save failed:', err);
+      showToast(ko ? '저장에 실패했습니다' : 'Save failed', 'error');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async (item: GalleryItem) => {
+    const msg = ko ? `"${item.title}" 항목을 삭제하시겠습니까?` : `Delete "${item.title}"?`;
+    if (!window.confirm(msg)) return;
+
+    try {
+      await deleteGalleryItem(item.id);
+      showToast(ko ? '삭제되었습니다' : 'Deleted', 'success');
+      loadItems();
+    } catch (err) {
+      console.error('Delete failed:', err);
+      showToast(ko ? '삭제에 실패했습니다' : 'Delete failed', 'error');
+    }
+  };
+
+  const updateField = <K extends keyof FormState>(key: K, value: FormState[K]) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const getCategoryLabel = (cat: GalleryCategory) => {
+    const opt = CATEGORY_OPTIONS.find((c) => c.value === cat);
+    return ko ? opt?.labelKo : opt?.labelEn;
+  };
+
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <SEOHead title={ko ? '갤러리 관리' : 'Gallery Management'} />
+
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          {ko ? '갤러리 관리' : 'Gallery Management'}
+        </h1>
+        <Button onClick={openCreateDialog}>
+          <Plus className="mr-2 h-4 w-4" />
+          {ko ? '항목 추가' : 'Add Item'}
+        </Button>
+      </div>
+
+      <div className="mb-6 flex gap-2">
+        <Button variant={filterCategory === '' ? 'default' : 'outline'} size="sm" onClick={() => setFilterCategory('')}>
+          {ko ? '전체' : 'All'}
+        </Button>
+        {CATEGORY_OPTIONS.map((cat) => (
+          <Button key={cat.value} variant={filterCategory === cat.value ? 'default' : 'outline'} size="sm" onClick={() => setFilterCategory(cat.value)}>
+            {ko ? cat.labelKo : cat.labelEn}
+          </Button>
+        ))}
+      </div>
+
+      {loading ? (
+        <div className="flex items-center justify-center py-16">
+          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+        </div>
+      ) : items.length === 0 ? (
+        <div className="py-16 text-center text-gray-500">
+          {ko ? '등록된 항목이 없습니다' : 'No items found'}
+        </div>
+      ) : (
+        <div className="overflow-x-auto rounded-lg border border-gray-200">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50 dark:bg-gray-700">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">{ko ? '이미지' : 'Image'}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">{ko ? '제목' : 'Title'}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">{ko ? '카테고리' : 'Category'}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">{ko ? '가격' : 'Price'}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">{ko ? '상태' : 'Status'}</th>
+                <th className="px-4 py-3 text-right text-xs font-medium uppercase text-gray-500">{ko ? '작업' : 'Actions'}</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 bg-white dark:bg-gray-800">
+              {items.map((item) => (
+                <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <td className="px-4 py-3">
+                    <div className="h-12 w-10 overflow-hidden rounded bg-gray-100">
+                      <img src={resolveImageUrl(item.cover_image)} alt={item.title} className="h-full w-full object-cover" />
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="text-sm font-medium text-gray-900 dark:text-white">{item.title}</div>
+                    {item.author_name && <div className="text-xs text-gray-500">{item.author_name}</div>}
+                  </td>
+                  <td className="px-4 py-3">
+                    <Badge variant="outline" className="text-xs">{getCategoryLabel(item.category)}</Badge>
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                    {item.is_free ? (ko ? '무료' : 'Free') : formatPrice(item.price, language)}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex gap-1">
+                      <Badge variant={item.is_published ? 'default' : 'secondary'} className="text-xs">
+                        {item.is_published ? (ko ? '공개' : 'Published') : (ko ? '비공개' : 'Draft')}
+                      </Badge>
+                      {item.featured && <Badge variant="default" className="text-xs">{ko ? '추천' : 'Featured'}</Badge>}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <div className="flex justify-end gap-1">
+                      <Button variant="ghost" size="icon" onClick={() => openEditDialog(item)} title={ko ? '수정' : 'Edit'}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => handleDelete(item)} title={ko ? '삭제' : 'Delete'}>
+                        <Trash2 className="h-4 w-4 text-red-500" />
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>
+            {editingItem ? (ko ? '항목 수정' : 'Edit Item') : (ko ? '항목 추가' : 'Add Item')}
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="max-h-[60vh] space-y-4 overflow-y-auto">
+          <div>
+            <Label>{ko ? '제목 (한국어) *' : 'Title (Korean) *'}</Label>
+            <Input value={form.title} onChange={(e) => updateField('title', e.target.value)} />
+          </div>
+          <div>
+            <Label>{ko ? '제목 (영어)' : 'Title (English)'}</Label>
+            <Input value={form.title_en} onChange={(e) => updateField('title_en', e.target.value)} />
+          </div>
+          <div>
+            <Label>{ko ? '슬러그 *' : 'Slug *'}</Label>
+            <Input value={form.slug} onChange={(e) => updateField('slug', e.target.value)} disabled={!!editingItem} />
+          </div>
+          <div>
+            <Label>{ko ? '카테고리 *' : 'Category *'}</Label>
+            <Select value={form.category} onChange={(e) => updateField('category', e.target.value as GalleryCategory)}>
+              {CATEGORY_OPTIONS.map((cat) => (
+                <option key={cat.value} value={cat.value}>{ko ? cat.labelKo : cat.labelEn}</option>
+              ))}
+            </Select>
+          </div>
+          <div>
+            <Label>{ko ? '설명 (한국어)' : 'Description (Korean)'}</Label>
+            <textarea className="flex min-h-[80px] w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm" value={form.description} onChange={(e) => updateField('description', e.target.value)} />
+          </div>
+          <div>
+            <Label>{ko ? '설명 (영어)' : 'Description (English)'}</Label>
+            <textarea className="flex min-h-[80px] w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm" value={form.description_en} onChange={(e) => updateField('description_en', e.target.value)} />
+          </div>
+          <div>
+            <Label>{ko ? '커버 이미지 URL *' : 'Cover Image URL *'}</Label>
+            <Input value={form.cover_image} onChange={(e) => updateField('cover_image', e.target.value)} />
+          </div>
+          <div>
+            <Label>{ko ? '서브 이미지 URL (최대 5장)' : 'Sub Image URLs (max 5)'}</Label>
+            {form.sub_images.length > 0 && (
+              <div className="mt-2 space-y-1">
+                {form.sub_images.map((url, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <Input value={url} readOnly className="flex-1 text-xs" />
+                    <button type="button" onClick={() => setForm((prev) => ({ ...prev, sub_images: prev.sub_images.filter((_, idx) => idx !== i) }))} className="shrink-0 rounded p-1 text-red-500 hover:bg-red-50">
+                      <XIcon className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            {form.sub_images.length < 5 && (
+              <div className="mt-2 flex gap-2">
+                <Input value={newSubImageUrl} onChange={(e) => setNewSubImageUrl(e.target.value)} className="flex-1" />
+                <Button type="button" variant="outline" size="sm" disabled={!newSubImageUrl.trim()} onClick={() => { if (newSubImageUrl.trim()) { setForm((prev) => ({ ...prev, sub_images: [...prev.sub_images, newSubImageUrl.trim()] })); setNewSubImageUrl(''); } }}>
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+          </div>
+          <div>
+            <Label>{ko ? '가격 (원) *' : 'Price (KRW) *'}</Label>
+            <Input type="number" value={form.price} onChange={(e) => updateField('price', e.target.value)} min="0" />
+          </div>
+          <div className="flex flex-wrap gap-6">
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" checked={form.is_free} onChange={(e) => updateField('is_free', e.target.checked)} className="rounded border-gray-300" />
+              {ko ? '무료' : 'Free'}
+            </label>
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" checked={form.featured} onChange={(e) => updateField('featured', e.target.checked)} className="rounded border-gray-300" />
+              {ko ? '추천' : 'Featured'}
+            </label>
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" checked={form.is_published} onChange={(e) => updateField('is_published', e.target.checked)} className="rounded border-gray-300" />
+              {ko ? '공개' : 'Published'}
+            </label>
+          </div>
+          <div>
+            <Label>{ko ? '정렬 순서' : 'Sort Order'}</Label>
+            <Input type="number" value={form.sort_order} onChange={(e) => updateField('sort_order', e.target.value)} min="0" />
+          </div>
+          <div>
+            <Label>{ko ? '저자명' : 'Author Name'}</Label>
+            <Input value={form.author_name} onChange={(e) => updateField('author_name', e.target.value)} />
+          </div>
+          <div>
+            <Label>{ko ? '태그 (쉼표 구분)' : 'Tags (comma-separated)'}</Label>
+            <Input value={form.tags} onChange={(e) => updateField('tags', e.target.value)} />
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setDialogOpen(false)} disabled={saving}>
+            {ko ? '취소' : 'Cancel'}
+          </Button>
+          <Button onClick={handleSave} disabled={saving}>
+            {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {editingItem ? (ko ? '수정' : 'Update') : (ko ? '등록' : 'Create')}
+          </Button>
+        </DialogFooter>
+      </Dialog>
+    </div>
+  );
+}

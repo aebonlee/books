@@ -1,4 +1,4 @@
-import { Link } from '@/i18n/navigation';
+import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   BookOpen,
@@ -29,7 +29,7 @@ export function CategoryCard({ category, locale = 'ko', bookCount }: CategoryCar
   const Icon = iconMap[category.icon] || BookOpen;
 
   return (
-    <Link href={`/category/${category.slug}`}>
+    <Link to={`/category/${category.slug}`}>
       <Card className="group h-full transition-all hover:shadow-md hover:-translate-y-0.5">
         <CardContent className="flex items-center gap-4 p-5 sm:flex-col sm:text-center sm:p-6">
           <div

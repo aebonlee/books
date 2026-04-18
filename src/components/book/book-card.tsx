@@ -1,5 +1,4 @@
-import Image from 'next/image';
-import { Link } from '@/i18n/navigation';
+import { Link } from 'react-router-dom';
 import { Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -20,16 +19,14 @@ export function BookCard({ book, locale = 'ko', layout = 'portrait', viewCount }
   }
 
   return (
-    <Link href={`/books/${book.slug}`}>
+    <Link to={`/books/${book.slug}`}>
       <Card className="group h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
         {/* Cover Image */}
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
-          <Image
+          <img
             src={book.coverImage}
             alt={book.title}
-            fill
-            className="object-cover transition-transform group-hover:scale-105"
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-105"
           />
           {/* Badges */}
           <div className="absolute left-2 top-2 flex flex-col gap-1">
@@ -91,16 +88,14 @@ export function BookCard({ book, locale = 'ko', layout = 'portrait', viewCount }
 /** PT/슬라이드 스타일 가로형 카드 (4:3 비율) */
 function LandscapeBookCard({ book, locale = 'ko', viewCount }: { book: Book; locale?: string; viewCount?: number }) {
   return (
-    <Link href={`/books/${book.slug}`}>
+    <Link to={`/books/${book.slug}`}>
       <Card className="group h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
         {/* 가로형 커버 (4:3 슬라이드 비율) */}
         <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
-          <Image
+          <img
             src={book.coverImage}
             alt={book.title}
-            fill
-            className="object-cover transition-transform group-hover:scale-105"
-            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-105"
           />
           {/* Badges */}
           <div className="absolute left-2 top-2 flex flex-col gap-1">

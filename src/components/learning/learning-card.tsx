@@ -1,6 +1,3 @@
-'use client';
-
-import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Eye, ExternalLink, Globe, GraduationCap, Gamepad2, Wrench } from 'lucide-react';
 import { resolveImageUrl } from '@/lib/utils';
@@ -68,12 +65,10 @@ export function LearningCard({
       <div className="relative">
         {item.cover_image ? (
           <div className="relative aspect-[16/9] w-full overflow-hidden bg-gray-100">
-            <Image
+            <img
               src={resolveImageUrl(item.cover_image)}
               alt={item.title}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
           </div>
         ) : (

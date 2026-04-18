@@ -1,8 +1,5 @@
-'use client';
-
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import Image from 'next/image';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 interface GalleryLightboxProps {
@@ -52,13 +49,10 @@ export function GalleryLightbox({ images, title, description, onClose }: Gallery
       <div className="relative flex w-full max-w-4xl flex-col items-center">
         {/* Main image */}
         <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-black">
-          <Image
+          <img
             src={images[current]}
             alt={`${title} - ${current + 1}`}
-            fill
-            className="object-contain"
-            sizes="(max-width: 1024px) 100vw, 896px"
-            priority
+            className="absolute inset-0 h-full w-full object-contain"
           />
         </div>
 
@@ -91,7 +85,7 @@ export function GalleryLightbox({ images, title, description, onClose }: Gallery
                   i === current ? 'border-white opacity-100' : 'border-transparent opacity-50 hover:opacity-80'
                 }`}
               >
-                <Image src={img} alt={`${title} thumbnail ${i + 1}`} fill className="object-cover" sizes="56px" />
+                <img src={img} alt={`${title} thumbnail ${i + 1}`} className="absolute inset-0 h-full w-full object-cover" />
               </button>
             ))}
           </div>

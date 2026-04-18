@@ -1,6 +1,7 @@
 /**
- * Supabase Auth 헬퍼 — www.dreamitbiz.com과 동일 방식
+ * Supabase Auth 헬퍼 함수
  */
+import type { UserProfile } from '../types';
 import { getSupabase } from './supabase';
 
 /** 현재 페이지 URL (hash 제외) — OAuth 리다이렉트용 */
@@ -53,7 +54,7 @@ export async function signOut() {
 }
 
 /** 프로필 조회 */
-export async function getProfile(userId: string) {
+export async function getProfile(userId: string): Promise<UserProfile | null> {
   const client = getSupabase();
   if (!client) return null;
   const { data, error } = await client
@@ -61,18 +62,26 @@ export async function getProfile(userId: string) {
     .select('*')
     .eq('id', userId)
     .single();
-  if (error) return null;
-  return data;
+  if (error) {
+    console.error('getProfile error:', error);
+    return null;
+  }
+  return data as UserProfile;
 }
 
-export interface UserProfile {
-  id: string;
-  email: string;
-  display_name: string;
-  name?: string;
-  phone?: string;
-  avatar_url?: string;
-  provider?: string;
-  role?: string;
-  signup_domain?: string;
+/** 프로필 업데이트 */
+export async function updateProfile(
+  userId: string,
+  updates: Record<string, unknown>
+): Promise<UserProfile | null> {
+  const client = getSupabase();
+  if (!client) return null;
+  const { data, error } = await client
+    .from('user_profiles')
+    .update({ ...updates, updated_at: new Date().toISOString() })
+    .eq('id', userId)
+    .select()
+    .single();
+  if (error) throw error;
+  return data as UserProfile;
 }

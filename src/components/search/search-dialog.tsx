@@ -1,13 +1,17 @@
-'use client';
-
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useLocale } from 'next-intl';
-import { useRouter } from '@/i18n/navigation';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { searchBooks } from '@/lib/content';
+import { getSupabase } from '@/lib/supabase';
 import { Search, X } from 'lucide-react';
-import type { SearchResult } from '@/types/book';
+
+interface SearchResult {
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+}
 
 interface SearchDialogProps {
   open: boolean;
@@ -15,8 +19,8 @@ interface SearchDialogProps {
 }
 
 export function SearchDialog({ open, onClose }: SearchDialogProps) {
-  const locale = useLocale();
-  const router = useRouter();
+  const { language } = useLanguage();
+  const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
@@ -28,21 +32,42 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
   }, [open]);
 
   useEffect(() => {
-    if (query.length >= 2) {
-      const searchResults = searchBooks(query);
-      setResults(searchResults);
-    } else {
+    if (query.length < 2) {
       setResults([]);
+      return;
     }
-  }, [query]);
+
+    const search = async () => {
+      const supabase = getSupabase();
+      if (!supabase) return;
+      const { data } = await supabase
+        .from('books_gallery')
+        .select('slug, title, title_en, description, description_en, category')
+        .or(`title.ilike.%${query}%,title_en.ilike.%${query}%,description.ilike.%${query}%`)
+        .eq('is_published', true)
+        .limit(10);
+
+      if (data) {
+        setResults(data.map((item) => ({
+          slug: item.slug,
+          title: language === 'ko' ? item.title : (item.title_en || item.title),
+          description: language === 'ko' ? item.description : (item.description_en || item.description),
+          category: item.category,
+        })));
+      }
+    };
+
+    const timer = setTimeout(search, 300);
+    return () => clearTimeout(timer);
+  }, [query, language]);
 
   const handleSelect = useCallback(
     (slug: string) => {
-      router.push(`/books/${slug}`);
+      navigate(`/books/${slug}`);
       onClose();
       setQuery('');
     },
-    [router, onClose]
+    [navigate, onClose]
   );
 
   useEffect(() => {
@@ -60,17 +85,14 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-20">
-      {/* Backdrop */}
       <div className="fixed inset-0 bg-black/50" onClick={onClose} />
 
-      {/* Dialog */}
       <div className="relative w-full max-w-lg rounded-lg bg-white shadow-2xl mx-4">
-        {/* Search Input */}
         <div className="flex items-center border-b border-gray-200 px-4">
           <Search className="h-4 w-4 text-gray-400" />
           <Input
             ref={inputRef}
-            placeholder={locale === 'ko' ? '도서, 저자, 키워드 검색...' : 'Search books, authors, keywords...'}
+            placeholder={language === 'ko' ? '도서, 저자, 키워드 검색...' : 'Search books, authors, keywords...'}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="border-0 focus-visible:ring-0"
@@ -80,7 +102,6 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
           </button>
         </div>
 
-        {/* Results */}
         {results.length > 0 && (
           <div className="max-h-96 overflow-y-auto p-2">
             {results.map((result) => (
@@ -103,17 +124,15 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
           </div>
         )}
 
-        {/* No Results */}
         {query.length >= 2 && results.length === 0 && (
           <div className="p-8 text-center text-gray-500">
-            {locale === 'ko' ? '검색 결과가 없습니다' : 'No results found'}
+            {language === 'ko' ? '검색 결과가 없습니다' : 'No results found'}
           </div>
         )}
 
-        {/* Hint */}
         {query.length < 2 && (
           <div className="p-8 text-center text-sm text-gray-400">
-            {locale === 'ko' ? '2자 이상 입력해주세요' : 'Type at least 2 characters'}
+            {language === 'ko' ? '2자 이상 입력해주세요' : 'Type at least 2 characters'}
           </div>
         )}
       </div>

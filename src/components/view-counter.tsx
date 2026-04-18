@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useState } from 'react';
 import { Eye } from 'lucide-react';
 import { incrementView, getViewCount } from '@/lib/api/views';

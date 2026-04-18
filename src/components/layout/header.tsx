@@ -1,21 +1,19 @@
-'use client';
-
 import { useState, useEffect } from 'react';
-import { useTranslations, useLocale } from 'next-intl';
-import { Link, usePathname, useRouter } from '@/i18n/navigation';
-import { mainNav } from '@/config/navigation';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLanguage } from '@/contexts/LanguageContext';
+import site from '@/config/site';
 import { Input } from '@/components/ui/input';
 import { CartIcon } from '@/components/commerce/cart-icon';
 import { UserMenu } from '@/components/commerce/user-menu';
-import { useAuth } from '@/contexts/auth-context';
+import { useAuth } from '@/contexts/AuthContext';
 import { MobileNav } from './mobile-nav';
 import { Search, X } from 'lucide-react';
 
 export function Header() {
-  const t = useTranslations('common');
-  const locale = useLocale();
-  const pathname = usePathname();
-  const router = useRouter();
+  const { t, language } = useLanguage();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const pathname = location.pathname;
   const { isLoggedIn } = useAuth();
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -28,8 +26,10 @@ export function Header() {
   }, []);
 
   const switchLocale = () => {
-    const nextLocale = locale === 'ko' ? 'en' : 'ko';
-    router.replace(pathname, { locale: nextLocale });
+    const nextLanguage = language === 'ko' ? 'en' : 'ko';
+    // Language switching is handled by LanguageContext
+    // Navigate to the same path (language is managed via context, not URL)
+    navigate(pathname);
   };
 
   const isActive = (href: string) => {
@@ -41,7 +41,7 @@ export function Header() {
     <header className={`dit-navbar${scrolled ? ' scrolled' : ''}`}>
       <div className="dit-navbar-inner">
         {/* Logo — DreamIT Biz branding */}
-        <Link href="/" className="dit-logo" style={{ textDecoration: 'none' }}>
+        <Link to="/" className="dit-logo" style={{ textDecoration: 'none' }}>
           <h1>
             <span className="brand-dream">Dream</span>
             <span className="brand-it">IT</span>{' '}
@@ -52,13 +52,13 @@ export function Header() {
 
         {/* Desktop Nav */}
         <nav className="dit-nav">
-          {mainNav.map((item) => (
+          {site.menuItems.filter(m => m.path !== '/').map((item) => (
             <Link
-              key={item.href}
-              href={item.href}
-              className={`dit-nav-link${isActive(item.href) ? ' active' : ''}`}
+              key={item.path}
+              to={item.path}
+              className={`dit-nav-link${isActive(item.path) ? ' active' : ''}`}
             >
-              {locale === 'ko' ? item.titleKo : item.titleEn}
+              {t(item.labelKey)}
             </Link>
           ))}
         </nav>
@@ -69,7 +69,7 @@ export function Header() {
           {searchOpen ? (
             <div className="flex items-center gap-1">
               <Input
-                placeholder={t('searchPlaceholder')}
+                placeholder={t('common.searchPlaceholder')}
                 className="w-40 sm:w-56 h-9 text-sm"
                 autoFocus
                 onKeyDown={(e) => {
@@ -87,7 +87,7 @@ export function Header() {
             <button
               className="dit-icon-btn"
               onClick={() => setSearchOpen(true)}
-              aria-label={t('search')}
+              aria-label={t('common.search')}
             >
               <Search className="h-[18px] w-[18px]" />
             </button>
@@ -97,9 +97,9 @@ export function Header() {
           <button
             className="dit-lang-btn"
             onClick={switchLocale}
-            aria-label={t('language')}
+            aria-label={t('common.language')}
           >
-            {locale === 'ko' ? 'EN' : 'KR'}
+            {language === 'ko' ? 'EN' : 'KR'}
           </button>
 
           {/* Cart */}
@@ -109,7 +109,7 @@ export function Header() {
           {isLoggedIn ? (
             <UserMenu />
           ) : (
-            <Link href="/login" className="dit-login-btn hidden sm:flex">
+            <Link to="/login" className="dit-login-btn hidden sm:flex">
               Login
             </Link>
           )}
