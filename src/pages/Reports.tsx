@@ -51,7 +51,7 @@ export default function Reports() {
         description={ko ? '최신 IT 교육 연구보고서 및 프레젠테이션 자료' : 'Latest IT education research reports and presentations'}
       />
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">

@@ -85,7 +85,7 @@ export default function Reader() {
 
   if (error || !asset) {
     return (
-      <div className="container mx-auto px-4 py-16 text-center">
+      <div className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8">
         <p className="text-lg text-red-500">{error || (ko ? '콘텐츠를 찾을 수 없습니다' : 'Content not found')}</p>
         <Link to="/catalog" className="mt-4 inline-flex items-center gap-1 text-blue-600 hover:underline">
           <ArrowLeft className="h-4 w-4" />
@@ -99,7 +99,7 @@ export default function Reader() {
     <>
       <SEOHead title={title} />
 
-      <div className="container mx-auto px-4 py-4">
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
         <Link
           to={`/books/${id}`}
           className="mb-4 inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600"

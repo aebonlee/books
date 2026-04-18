@@ -82,7 +82,7 @@ export default function ReportDetail() {
 
   if (!report) {
     return (
-      <div className="container mx-auto px-4 py-16 text-center">
+      <div className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           {ko ? '보고서를 찾을 수 없습니다' : 'Report not found'}
         </h1>
@@ -102,7 +102,7 @@ export default function ReportDetail() {
     <>
       <SEOHead title={title} description={description} />
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Back */}
         <Link
           to="/reports"

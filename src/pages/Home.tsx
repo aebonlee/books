@@ -90,7 +90,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 py-20 text-white">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2260%22%20height%3D%2260%22%3E%3Cpath%20d%3D%22M0%200h60v60H0z%22%20fill%3D%22none%22/%3E%3Cpath%20d%3D%22M30%205v50M5%2030h50%22%20stroke%3D%22rgba(255%2C255%2C255%2C0.05)%22%20stroke-width%3D%221%22/%3E%3C/svg%3E')]" />
-        <div className="container relative mx-auto px-4 text-center">
+        <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
             {t('home.heroTitle')}
           </h1>
@@ -115,7 +115,7 @@ export default function Home() {
       </section>
 
       {/* Categories */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('home.categories')}</h2>
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((cat) => (
@@ -126,7 +126,7 @@ export default function Home() {
 
       {/* Featured Books */}
       <section className="bg-gray-50 dark:bg-gray-900 py-16">
-        <div className="container mx-auto px-4">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('home.featuredBooks')}</h2>
             <Link to="/catalog" className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700">
@@ -150,7 +150,7 @@ export default function Home() {
       </section>
 
       {/* New Releases */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('home.newReleases')}</h2>
           <Link to="/catalog" className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700">

@@ -63,7 +63,7 @@ export default function EPublishing() {
 
       {/* Hero */}
       <section className="bg-gradient-to-br from-indigo-600 to-purple-700 py-20 text-white">
-        <div className="container mx-auto px-4 text-center">
+        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
             {ko ? '전자출판 서비스' : 'E-Publishing Services'}
           </h1>
@@ -83,7 +83,7 @@ export default function EPublishing() {
       </section>
 
       {/* Services */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <h2 className="text-center text-2xl font-bold text-gray-900 dark:text-white">
           {ko ? '서비스 안내' : 'Our Services'}
         </h2>
@@ -112,7 +112,7 @@ export default function EPublishing() {
 
       {/* Features */}
       <section className="bg-gray-50 dark:bg-gray-900 py-16">
-        <div className="container mx-auto px-4">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-center text-2xl font-bold text-gray-900 dark:text-white">
             {ko ? '왜 드림아이티비즈인가?' : 'Why DreamIT Biz?'}
           </h2>
@@ -130,7 +130,7 @@ export default function EPublishing() {
       </section>
 
       {/* CTA */}
-      <section className="container mx-auto px-4 py-16 text-center">
+      <section className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
           {ko ? '맞춤 제작이 필요하신가요?' : 'Need custom content?'}
         </h2>
