@@ -11,6 +11,7 @@ import {
 import type { User } from '@supabase/supabase-js';
 import { getSupabase } from '@/lib/supabase';
 import { getProfile, signOut as authSignOut, type UserProfile } from '@/lib/auth';
+import { useIdleTimeout } from '../hooks/useIdleTimeout';
 
 const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'aebon@kakao.com,aebon@kyonggi.ac.kr')
   .split(',')
@@ -109,6 +110,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error('Auth initialization failed:', err);
       setIsLoading(false);
     }
+
+
+  // 10분 무동작 세션 타임아웃
+  useIdleTimeout({
+    enabled: !!user,
+    onTimeout: () => {
+      authSignOut().catch(() => {});
+    },
+  });
 
     return () => {
       if (fallbackTimer) clearTimeout(fallbackTimer);
