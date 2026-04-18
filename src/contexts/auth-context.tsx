@@ -11,7 +11,6 @@ import {
 import type { User } from '@supabase/supabase-js';
 import { getSupabase } from '@/lib/supabase';
 import { getProfile, signOut as authSignOut, type UserProfile } from '@/lib/auth';
-import { useIdleTimeout } from '../hooks/useIdleTimeout';
 import ProfileCompleteModal from '@/components/ProfileCompleteModal';
 
 const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'aebon@kakao.com,aebon@kyonggi.ac.kr')
@@ -138,14 +137,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // 프로필 미완성 체크 (name 또는 phone 누락)
   const needsProfileCompletion = !!user && !!profile && (!profile.name || !profile.phone);
-
-  // 10분 무동작 세션 타임아웃
-  useIdleTimeout({
-  enabled: !!user,
-  onTimeout: () => {
-  authSignOut().catch(() => {});
-  },
-  });
 
   return (
     <AuthContext.Provider
