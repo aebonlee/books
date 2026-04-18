@@ -111,15 +111,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
     }
 
-
-  // 10분 무동작 세션 타임아웃
-  useIdleTimeout({
-    enabled: !!user,
-    onTimeout: () => {
-      authSignOut().catch(() => {});
-    },
-  });
-
     return () => {
       if (fallbackTimer) clearTimeout(fallbackTimer);
       if (subscription) subscription.unsubscribe();
@@ -142,6 +133,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     profile?.email,
   ].filter(Boolean).map((e) => (e as string).toLowerCase());
   const isAdmin = allEmails.some((e) => ADMIN_EMAILS.includes(e));
+
+
+  // 10분 무동작 세션 타임아웃
+  useIdleTimeout({
+  enabled: !!user,
+  onTimeout: () => {
+  authSignOut().catch(() => {});
+  },
+  });
 
   return (
     <AuthContext.Provider
