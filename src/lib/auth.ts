@@ -69,6 +69,8 @@ export interface UserProfile {
   id: string;
   email: string;
   display_name: string;
+  name?: string;
+  phone?: string;
   avatar_url?: string;
   provider?: string;
   role?: string;
