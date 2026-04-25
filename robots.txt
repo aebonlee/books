@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+Disallow: /api/
+Disallow: /reader/
+Disallow: /*/admin/
+Disallow: /*/login
+Disallow: /*/checkout
+Disallow: /*/cart
+
+Sitemap: https://books.dreamitbiz.com/sitemap.xml

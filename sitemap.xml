@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!-- Home pages -->
+  <url>
+    <loc>https://books.dreamitbiz.com/ko</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/en</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Catalog -->
+  <url>
+    <loc>https://books.dreamitbiz.com/ko/catalog</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/catalog"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/catalog"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/en/catalog</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/catalog"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/catalog"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- E-Publishing Guide -->
+  <url>
+    <loc>https://books.dreamitbiz.com/ko/e-publishing</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/e-publishing"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/e-publishing"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/en/e-publishing</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/e-publishing"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/e-publishing"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Reports -->
+  <url>
+    <loc>https://books.dreamitbiz.com/ko/reports</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/reports"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/reports"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/en/reports</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/reports"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/reports"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Learning Content -->
+  <url>
+    <loc>https://books.dreamitbiz.com/ko/learning</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/learning"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/learning"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/en/learning</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/learning"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/learning"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Custom Order -->
+  <url>
+    <loc>https://books.dreamitbiz.com/ko/custom-order</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/custom-order"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/custom-order"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/en/custom-order</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/custom-order"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/custom-order"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Library -->
+  <url>
+    <loc>https://books.dreamitbiz.com/ko/library</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/library"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/library"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/en/library</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/library"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/library"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Categories -->
+  <url>
+    <loc>https://books.dreamitbiz.com/ko/category/digital</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/category/digital"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/category/digital"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/en/category/digital</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/category/digital"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/category/digital"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/ko/category/textbooks</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/category/textbooks"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/category/textbooks"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/en/category/textbooks</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/category/textbooks"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/category/textbooks"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/ko/category/lectures</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/category/lectures"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/category/lectures"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/en/category/lectures</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/category/lectures"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/category/lectures"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Individual book pages -->
+  <url>
+    <loc>https://books.dreamitbiz.com/ko/books/python-programming-basics</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/books/python-programming-basics"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/books/python-programming-basics"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/en/books/python-programming-basics</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/books/python-programming-basics"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/books/python-programming-basics"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/ko/books/ai-trends-2025</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/books/ai-trends-2025"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/books/ai-trends-2025"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/en/books/ai-trends-2025</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/books/ai-trends-2025"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/books/ai-trends-2025"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/ko/books/cloud-computing-news</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/books/cloud-computing-news"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/books/cloud-computing-news"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/en/books/cloud-computing-news</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/books/cloud-computing-news"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/books/cloud-computing-news"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/ko/books/web-development-lecture</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/books/web-development-lecture"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/books/web-development-lecture"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/en/books/web-development-lecture</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/books/web-development-lecture"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/books/web-development-lecture"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/ko/books/database-workshop</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/books/database-workshop"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/books/database-workshop"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/en/books/database-workshop</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/books/database-workshop"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/books/database-workshop"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/ko/books/interactive-javascript</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/books/interactive-javascript"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/books/interactive-javascript"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://books.dreamitbiz.com/en/books/interactive-javascript</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://books.dreamitbiz.com/ko/books/interactive-javascript"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://books.dreamitbiz.com/en/books/interactive-javascript"/>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>
