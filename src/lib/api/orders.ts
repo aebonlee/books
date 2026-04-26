@@ -55,9 +55,6 @@ export async function createOrder(data: OrderRequest): Promise<OrderResponse> {
   }
 
   // Supabase에 주문 저장
-  const session = await client.auth.getSession();
-  const userId = session.data.session?.user?.id;
-
   const orderPayload: Record<string, unknown> = {
     order_number: orderNumber,
     user_email: data.buyer.email,
@@ -66,32 +63,37 @@ export async function createOrder(data: OrderRequest): Promise<OrderResponse> {
     total_amount: totalAmount,
     payment_method: data.paymentMethod,
   };
-  if (userId) orderPayload.user_id = userId;
 
-  const { data: order, error: orderError } = await client
+  const { error: orderError } = await client
     .from('orders')
-    .insert(orderPayload)
-    .select()
-    .single();
+    .insert(orderPayload);
 
   if (orderError) throw orderError;
 
-  // 주문 항목 저장
+  // 주문 항목 저장 (별도 조회 후 삽입 — bare INSERT 후 id를 모르므로)
   if (data.items.length > 0) {
-    const { error: itemsError } = await client.from('order_items').insert(
-      data.items.map((item) => ({
-        order_id: order.id,
-        product_title: item.title,
-        quantity: item.quantity,
-        unit_price: item.price,
-        subtotal: item.price * item.quantity,
-      })),
-    );
-    if (itemsError) console.error('Failed to insert order items:', itemsError.message);
+    try {
+      const { data: row } = await client
+        .from('orders')
+        .select('id')
+        .eq('order_number', orderNumber)
+        .maybeSingle();
+      if (row?.id) {
+        await client.from('order_items').insert(
+          data.items.map((item) => ({
+            order_id: row.id,
+            product_title: item.title,
+            quantity: item.quantity,
+            unit_price: item.price,
+            subtotal: item.price * item.quantity,
+          })),
+        );
+      }
+    } catch { /* order_items 실패해도 결제 진행 */ }
   }
 
   return {
-    orderId: order.id,
+    orderId: orderNumber,
     merchantUid: orderNumber,
     amount: totalAmount,
     status: 'pending',
