@@ -1,1 +1,0 @@
-import{j as o,i as s}from"./index-DpS7NQO2.js";function i({className:r,orientation:a="horizontal"}){return o.jsx("div",{className:s("shrink-0 bg-gray-200",a==="horizontal"?"h-px w-full":"h-full w-px",r)})}export{i as S};
